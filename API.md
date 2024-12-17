@@ -1,6 +1,6 @@
 # FRESHLY API Documentation
 
-![Screen Shot 2024-12-17 at 11 52 33 AM](https://github.com/user-attachments/assets/002cc7b8-d301-43d4-b95e-5b5782e92ac9)
+![DBSchemaV1](https://github.com/user-attachments/assets/8957bcc6-de54-4fd0-9e0e-af66d65682d5)
 
 ## 1. User Authentication
 
