@@ -1,0 +1,96 @@
+Table users {
+  id integer [primary key]
+  username string
+  nickname string
+  email string
+  hashed_password string.binary
+  // admin boolean
+  created_at timestamp
+}
+
+Table user_to_notification_relation {
+  id integer [primary key]
+  user_id integer
+  notification_id integer
+}
+
+Table notifications {
+  id integer [primary key]
+  message text
+}
+
+Table container_to_user_relation {
+  id integer [primary key]
+  user_id integer
+  container_id integer
+  // primary_user boolean
+}
+
+Table containers {
+  id integer [primary key]
+  storage_type string [note: 'Between Pantry, Fridge, Freezer']
+}
+
+Table container_to_food_relation {
+  id integer [primary key]
+  container_id integer
+  food_id integer
+  amount string [note: 'Measurement amounts can be a number of things. Should be discussed on db normalization']
+  expiration date [note: 'Optional or based on type?']
+}
+
+Table food_items {
+  id integer [primary key]
+  name string
+  // type string [note: 'Something that is optional']
+  // default expiration?
+}
+
+Table food_to_recipe_relation {
+  id integer [primary key]
+  food_id integer
+  recipe_id integer
+  amount string [note: 'Measurement amounts can be a number of things. Should be discussed on db normalization']
+}
+
+Table recipes {
+  id integer [primary key]
+  user_id integer
+  directions text [note: 'Main Body with Directions']
+}
+
+Table user_to_grocery_relation {
+  id integer [primary key]
+  user_id integer
+  grocery_id integer
+  // primary_user boolean
+}
+
+Table food_to_grocery_relation {
+  id integer [primary key]
+  grocery_id integer
+  food_id integer
+  amount string [note: 'Measurement amounts can be a number of things. Should be discussed on db normalization']
+  purchased boolean
+}
+
+Table grocery_lists {
+  id integer [primary key]
+  date date
+  name string
+  completed boolean
+}
+
+Ref: recipes.user_id > users.id // many-to-one
+Ref: users.id < container_to_user_relation.user_id
+Ref: users.id < user_to_notification_relation.user_id
+Ref: notifications.id < user_to_notification_relation.notification_id
+Ref: containers.id < container_to_user_relation.container_id
+Ref: containers.id < container_to_food_relation.container_id
+Ref: food_items.id < container_to_food_relation.food_id
+Ref: food_items.id < food_to_grocery_relation.food_id
+Ref: grocery_lists.id < food_to_grocery_relation.grocery_id
+Ref: users.id < user_to_grocery_relation.user_id
+Ref: grocery_lists.id < user_to_grocery_relation.grocery_id
+Ref: food_items.id < food_to_recipe_relation.food_id
+Ref: recipes.id < food_to_recipe_relation.recipe_id
