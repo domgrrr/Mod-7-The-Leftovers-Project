@@ -1,10 +1,12 @@
+// Paste in here to see more: https://dbdiagram.io
+
 Table users {
   id integer [primary key]
   username string
   nickname string
   email string
   hashed_password string.binary
-  // admin boolean
+  // admin boolean (for V2)
   created_at timestamp
 }
 
@@ -41,7 +43,7 @@ Table container_to_food_relation {
 
 Table food_items {
   id integer [primary key]
-  name string
+  name string [unique]
   // type string [note: 'Something that is optional']
   // default expiration?
 }
@@ -81,6 +83,40 @@ Table grocery_lists {
   completed boolean
 }
 
+// V2 Requested Food Items DB Naturalization Idea
+Table request_food_items_alias {
+  id integer [primary key]
+  name string [note: 'will need to deal with redundancy and uniqueness based on already existing food items']
+  alias boolean
+  food_id integer [note: 'in case of alias']
+  reviewed boolean
+}
+
+Table request_to_recipe_relation {
+  id integer [primary key]
+  recipe_id integer
+  food_id integer
+  amount string [note: 'Measurement amounts can be a number of things. Should be discussed on db normalization']
+}
+
+Table container_to_request_relation {
+  id integer [primary key]
+  container_id integer
+  food_id integer
+  amount string [note: 'Measurement amounts can be a number of things. Should be discussed on db normalization']
+  expiration date [note: 'Optional or based on type?']
+}
+
+Table request_to_grocery_relation {
+  id integer [primary key]
+  grocery_id integer
+  food_id integer
+  amount string [note: 'Measurement amounts can be a number of things. Should be discussed on db normalization']
+  purchased boolean
+}
+
+// End of V2 Tables
+
 Ref: recipes.user_id > users.id // many-to-one
 Ref: users.id < container_to_user_relation.user_id
 Ref: users.id < user_to_notification_relation.user_id
@@ -91,6 +127,18 @@ Ref: food_items.id < container_to_food_relation.food_id
 Ref: food_items.id < food_to_grocery_relation.food_id
 Ref: grocery_lists.id < food_to_grocery_relation.grocery_id
 Ref: users.id < user_to_grocery_relation.user_id
+Ref: grocery_lists.id < user_to_grocery_relation.grocery_id
+Ref: food_items.id < food_to_recipe_relation.food_id
+Ref: recipes.id < food_to_recipe_relation.recipe_id
+
+// V2 Refs
+Ref: request_food_items_alias.food_id > food_items.id
+Ref: containers.id < container_to_request_relation.container_id
+Ref: request_food_items_alias.id < container_to_request_relation.food_id
+Ref: recipes.id < request_to_recipe_relation.recipe_id
+Ref: request_food_items_alias.id < request_to_recipe_relation.food_id
+Ref: grocery_lists.id < request_to_grocery_relation.grocery_id
+Ref: request_food_items_alias.id < request_to_grocery_relation.grocery_id
 Ref: grocery_lists.id < user_to_grocery_relation.grocery_id
 Ref: food_items.id < food_to_recipe_relation.food_id
 Ref: recipes.id < food_to_recipe_relation.recipe_id
