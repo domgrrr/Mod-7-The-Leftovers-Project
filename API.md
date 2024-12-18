@@ -279,23 +279,8 @@
 
 ---
 
-## 5. Notifications
 
-### Get Notifications
-- **Endpoint**: `GET /api/notifications`
-- **Description**: Retrieves notifications for low-stock or expiring items.
-- **Response**:
-  - **200 OK**:
-    ```json
-    [
-      {"message": "Milk is expiring soon (06-20-2024)"},
-      {"message": "Eggs are running low (3 left)"}
-    ]
-    ```
-
----
-
-## 6. Error Handling
+## 5. Error Handling
 
 ### Standardized Error Response Format
 ```json
