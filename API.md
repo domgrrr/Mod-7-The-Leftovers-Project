@@ -1,6 +1,6 @@
 # FRESHLY API Documentation
 
-![DBSchemaV1](https://github.com/user-attachments/assets/8957bcc6-de54-4fd0-9e0e-af66d65682d5)
+![DBSchemaV1](https://github.com/user-attachments/assets/3685ec73-d2c7-46f7-8c33-ce8c1dd68d3c)
 
 ## 1. User Authentication
 
