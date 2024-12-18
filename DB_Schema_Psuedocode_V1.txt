@@ -1,3 +1,5 @@
+// Paste in here to see more: https://dbdiagram.io
+
 Table users {
   id integer [primary key]
   username string
