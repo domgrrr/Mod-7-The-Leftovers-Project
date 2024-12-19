@@ -1,0 +1,15 @@
+User Stories
+
+As a user, I want to create an account so that I can save my pantry data and access it from any device.
+As a user, I want to log in to my account so that I can manage my pantry items.
+As a user, I want to add items to my pantry so that I can keep track of what I have.
+As a user, I want to edit pantry items so that I can update quantities and expiration dates.
+As a user, I want to delete pantry items so that I can remove items I no longer have.
+As a user, I want to categorize pantry items so that I can organize them by type (e.g., grains, spices, canned goods).
+As a user, I want to create a grocery list so that I can plan my shopping trips.
+As a user, I want to add items from my pantry to my grocery list so that I can restock items that are running low.
+As a user, I want to mark items as purchased on my grocery list so that I can keep track of what I've bought.
+As a user, I want to search and filter pantry items so that I can quickly find what I need.
+As a user, I want to view recipes based on my pantry items so that I can plan meals.
+As a user, I want to save and share recipes so that I can keep track of my favorite dishes.
+As a user, I want to customize categories for my pantry items so that I can organize them in a way that makes sense to me.
