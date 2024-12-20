@@ -4,9 +4,9 @@ def seed_recipes():
     demo_recipes = [
         #just some example recipes that will be given to the user once loggied in / signed up
         #setting the user id to 0 means that it is a default recipe that all users will have access to, so nothing specific to user
-        Recipe(user_id=0, name='Demo Recipe 1', directions='Mix ingredients...', image_url='http://example.com/image1.jpg', ingredients=["flour", "sugar", "butter"]),
-        Recipe(user_id=0, name='Demo Recipe 2', directions='Bake at 350 degrees...', image_url='http://example.com/image2.jpg', ingredients=["eggs", "milk", "vanilla"]),
-        Recipe(user_id=0, name='Demo Recipe 3', directions='Boil water...', image_url='http://example.com/image3.jpg', ingredients=["pasta", "salt", "olive oil"]),
+        Recipe(user_id=1, name='Demo Recipe 1', directions='Mix ingredients...', image_url='http://example.com/image1.jpg', ),
+        Recipe(user_id=1, name='Demo Recipe 2', directions='Bake at 350 degrees...', image_url='http://example.com/image2.jpg', ),
+        Recipe(user_id=1, name='Demo Recipe 3', directions='Boil water...', image_url='http://example.com/image3.jpg', ),
         # Add recipes before completing the seed
     ]
 
