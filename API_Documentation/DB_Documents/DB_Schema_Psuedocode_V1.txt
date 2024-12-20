@@ -33,8 +33,10 @@ Table container_to_food_relation {
 Table food_items {
   id integer [primary key]
   name string [unique]
+  type string
   image_url string [note: 'url']
-  // type string [note: 'Something that is optional']
+  alias_boolean boolean
+  alias_id integer
   // default expiration?
 }
 
