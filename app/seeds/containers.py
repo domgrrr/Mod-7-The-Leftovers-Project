@@ -19,7 +19,7 @@ def seed_containers():
 
 def undo_containers():
     if environment == "production":
-        db.session.execute(f"TRUNCATE table {SCHEMA}.users RESTART IDENTITY CASCADE;")
+        db.session.execute(f"TRUNCATE table {SCHEMA}.containers RESTART IDENTITY CASCADE;")
     else: 
         db.session.execute(text("DELETE FROM containers"))
         
