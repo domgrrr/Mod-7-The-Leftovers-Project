@@ -1,91 +1,90 @@
 from app.models import db, Grocery, environment, SCHEMA
 from sqlalchemy.sql import text
+from datetime import datetime
 
 def seed_grocery_lists():
     #seeder for the grocery_lists table
     grocery_lists = [
-        {
-            "user_id": 1,
-            "name": "Pantry",
-            "date": "2024-12-01",
-            "completed": False
-        },
-        {
-            "user_id": 1,
-            "name": "Freezer",
-            "date": "2024-12-01",
-            "completed": False
-        },
-        {
-            "user_id": 1,
-            "name": "Fridge",
-            "date": "2024-12-01",
-            "completed": False
-        },
-        {
-            "user_id": 1,
-            "name": "Holiday",
-            "date": "2024-12-23",
-            "completed": False
-        },
-        {
-            "user_id": 2,
-            "name": "Pantry",
-            "date": "2024-12-01",
-            "completed": False
-        },
-        {
-            "user_id": 2,
-            "name": "Freezer",
-            "date": "2024-12-01",
-            "completed": False
-        },
-        {
-            "user_id": 2,
-            "name": "Fridge",
-            "date": "2024-12-01",
-            "completed": False
-        },
-        {
-            "user_id": 2,
-            "name": "Holiday",
-            "date": "2024-12-23",
-            "completed": False
-        },
-        {
-            "user_id": 3,
-            "name": "Pantry",
-            "date": "2024-12-01",
-            "completed": False
-        },
-        {
-            "user_id": 3,
-            "name": "Freezer",
-            "date": "2024-12-01",
-            "completed": False
-        },
-        {
-            "user_id": 3,
-            "name": "Fridge",
-            "date": "2024-12-01",
-            "completed": False
-        },
-        {
-            "user_id": 3,
-            "name": "Holiday",
-            "date": "2024-12-23",
-            "completed": False
-        }
+        Grocery(
+            user_id=1,
+            name="Pantry",
+            date=datetime.strptime("2024-12-01", "%Y-%m-%d").date(),
+            completed=False
+        ),
+        Grocery(
+            user_id=1,
+            name="Freezer",
+            date=datetime.strptime("2024-12-01", "%Y-%m-%d").date(),
+            completed=False
+        ),
+        Grocery(
+            user_id=1,
+            name="Fridge",
+            date=datetime.strptime("2024-12-01", "%Y-%m-%d").date(),
+            completed=False
+        ),
+        Grocery(
+            user_id=1,
+            name="Holiday",
+            date=datetime.strptime("2024-12-23", "%Y-%m-%d").date(),
+            completed=False
+        ),
+        Grocery(
+            user_id=2,
+            name="Pantry",
+            date=datetime.strptime("2024-12-01", "%Y-%m-%d").date(),
+            completed=False
+        ),
+        Grocery(
+            user_id=2,
+            name="Freezer",
+            date=datetime.strptime("2024-12-01", "%Y-%m-%d").date(),
+            completed=False
+        ),
+        Grocery(
+            user_id=2,
+            name="Fridge",
+            date=datetime.strptime("2024-12-01", "%Y-%m-%d").date(),
+            completed=False
+        ),
+        Grocery(
+            user_id=2,
+            name="Holiday",
+            date=datetime.strptime("2024-12-23", "%Y-%m-%d").date(),
+            completed=False
+        ),
+        Grocery(
+            user_id=3,
+            name="Pantry",
+            date=datetime.strptime("2024-12-01", "%Y-%m-%d").date(),
+            completed=False
+        ),
+        Grocery(
+            user_id=3,
+            name="Freezer",
+            date=datetime.strptime("2024-12-01", "%Y-%m-%d").date(),
+            completed=False
+        ),
+        Grocery(
+            user_id=3,
+            name="Fridge",
+            date=datetime.strptime("2024-12-01", "%Y-%m-%d").date(),
+            completed=False
+        ),
+        Grocery(
+            user_id=3,
+            name="Holiday",
+            date=datetime.strptime("2024-12-23", "%Y-%m-%d").date(),
+            completed=False
+        )
     ]
-    for grocery in grocery_lists:
-        new_grocery = Grocery(**grocery)  # Unpack dictionary into model
-        db.session.add(new_grocery)
+    db.session.add_all(grocery_lists)
     
     db.session.commit()
 
 def undo_grocery_lists():
     if environment == "production":
-        db.session.execute(f"TRUNCATE table {SCHEMA}.groceery_lists RESTART IDENTITY CASCADE;")
+        db.session.execute(f"TRUNCATE table {SCHEMA}.grocery_lists RESTART IDENTITY CASCADE;")
     else: 
         db.session.execute(text("DELETE FROM grocery_lists"))
         
