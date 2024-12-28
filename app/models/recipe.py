@@ -17,8 +17,6 @@ class Recipe(db.Model):
     image_url = db.Column(db.String, nullable=True)  
     # ingredients = db.Column(JSON, nullable=False)  
 
-    #TODO:  Add food relationship to recipe
-
     # def to_dict(self): #is this needed? 
     #     return {
     #         'id': self.id,
@@ -27,3 +25,14 @@ class Recipe(db.Model):
     #         'image_url': self.image_url,
     #         'ingredients': self.ingredients  
     #     }
+
+class Recipe_Food(db.Model):
+    __tablename__ = 'recipe_foods'
+
+    if environment == "production":
+        __container_args__ = {'schema': SCHEMA}
+
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
+    food_id = db.Column(db.Integer, db.ForeignKey('foods.id'), nullable=False)
+    amount = db.Column(db.String)
