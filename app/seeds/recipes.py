@@ -2,7 +2,7 @@ from app.models import db, environment, SCHEMA, Recipe
 
 def seed_recipes():
     demo_recipes = [
-        #just some example recipes that will be given to the user once loggied in / signed up
+        #just some example recipes that will be given to the user once logged in / signed up
         #setting the user id to 0 means that it is a default recipe that all users will have access to, so nothing specific to user
         Recipe(user_id=1, name='Demo Recipe 1', directions='Mix ingredients...', image_url='http://example.com/image1.jpg', ),
         Recipe(user_id=1, name='Demo Recipe 2', directions='Bake at 350 degrees...', image_url='http://example.com/image2.jpg', ),
@@ -10,8 +10,7 @@ def seed_recipes():
         # Add recipes before completing the seed
     ]
 
-    for recipe in demo_recipes:
-        db.session.add(recipe)
+    db.session.add_all(demo_recipes)
 
     db.session.commit()
 

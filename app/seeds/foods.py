@@ -8,7 +8,7 @@ def seed_foods():
         # )
         # db.session.add(food_item)
     apple = Food (
-        name='apple', type='fruit', image_url='https://i.ibb.co/ZMwV2mV/apple-1834639-1280.jpg', alias_boolean=False, alias_id=None
+        name='apple', type='fruit', image_url='https://i.ibb.co/ZMwV2mV/apple-1834639-1280.jpg', alias_bool=False, alias_id=None
     )
     db.session.add(apple)
     db.session.commit()
@@ -17,6 +17,6 @@ def undo_foods():
     if environment == "production":
         db.session.execute(f"TRUNCATE table {SCHEMA}.foods RESTART IDENTITY CASCADE;")
     else: 
-        db.session.execute(text("DELETE FROM containers"))
+        db.session.execute(text("DELETE FROM foods"))
         
     db.session.commit()
