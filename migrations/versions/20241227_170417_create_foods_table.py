@@ -26,7 +26,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('type', sa.String(), nullable=False),
-    sa.Column('image_url', sa.String(), nullable=False),
+    sa.Column('image_url', sa.String(), nullable=True),
     sa.Column('alias_bool', sa.Boolean(), nullable=False),
     sa.Column('alias_id', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
