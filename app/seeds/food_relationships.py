@@ -17,6 +17,8 @@ def seed_container_foods():
     db.session.add_all(foods)
     db.session.commit()
 
+# def seed_recipe_foods():
+
 def undo_container_foods():
     if environment == "production":
         db.session.execute(f"TRUNCATE table {SCHEMA}.container_foods RESTART IDENTITY CASCADE;")
