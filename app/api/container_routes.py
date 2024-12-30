@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask_login import current_user, login_required
-from app.models import Container, Container_Food, Food
+from app.models import Container, Container_Food, Food, db
 
 container_routes = Blueprint('containers', __name__)
 
@@ -19,29 +19,30 @@ def container(id):
     """
     Returns foods in container
     """
-    curr_container = Container.query.get(id)
-    container_foods = Container_Food.query.filter(Container_Food.container_id == curr_container.id)
-    food_objects = [
-        (food, Food.query.get(food.food_id))
-        for food in container_foods
-    ]
+    container_info = db.session.query(
+        Container,
+        Container_Food,
+        Food
+    ).join(Container_Food, Container_Food.container_id == Container.id).join(
+        Food, Food.id == Container_Food.food_id
+    ).filter(Container.id == id).all()
     food_arr = [
         {
-            "food_id": food.food_id,
+            "food_id": food_relation.food_id,
             "name": food_obj.name,
             "type": food_obj.type,
             "image_url": food_obj.image_url,
-            "amount": food.amount,
-            "expiration": food.expiration,
+            "amount": food_relation.amount,
+            "expiration": food_relation.expiration,
             "alias_bool": food_obj.alias_bool,
             "alias_id": food_obj.alias_id
-        } for (food, food_obj) in food_objects
+        } for (_, food_relation, food_obj) in container_info
     ]
     # food_objs_starting_with_c = [
     #     food_obj
     #     for (food, food_obj) in food_objects
     #     if food_obj.name[0] = 'c'
     # ]
-    return {curr_container.storage_type: food_arr}
+    return {container_info[0][0].storage_type: food_arr}
     # return {'foods': [food.to_dict() for food in container_foods]}
     
