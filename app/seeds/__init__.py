@@ -4,6 +4,7 @@ from .containers import seed_containers, undo_containers
 from .foods import seed_foods, undo_foods
 from .grocery import seed_grocery_lists, undo_grocery_lists
 from .recipes import seed_recipes, undo_recipes
+from .food_relationships import seed_container_foods, undo_container_foods
 
 
 from app.models.db import db, environment, SCHEMA
@@ -26,11 +27,13 @@ def seed():
         undo_foods()
         undo_grocery_lists()
         undo_recipes()
+        undo_container_foods()
     seed_users()
     seed_containers()
     seed_foods()
     seed_grocery_lists()
     seed_recipes()
+    seed_container_foods()
     # Add other seed functions here
 
 
@@ -42,4 +45,5 @@ def undo():
     undo_foods()
     undo_grocery_lists()
     undo_recipes()
+    undo_container_foods()
     # Add other undo functions here

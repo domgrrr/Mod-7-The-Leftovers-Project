@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.models import User, db
+from app.models import User, Container, db
 from app.forms import LoginForm
 from app.forms import SignUpForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -60,7 +60,15 @@ def sign_up():
         # TODO: once we have add(container) add fridge, freezer, pantry to session
         db.session.commit()
         login_user(user)
-        return user.to_dict()
+        new_user = user.to_dict()
+        pantry = Container( user_id=new_user['id'], storage_type='pantry' )
+        fridge = Container( user_id=new_user['id'], storage_type='fridge' )
+        freezer = Container( user_id=new_user['id'], storage_type='freezer' )
+        db.session.add(pantry)
+        db.session.add(fridge)
+        db.session.add(freezer)
+        db.session.commit()
+        return new_user
     return form.errors, 401
 
 

@@ -10,6 +10,13 @@ class Container(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     storage_type = db.Column(db.String(12), nullable=False)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'storage_type': self.storage_type
+        }
+
 class Container_Food(db.Model):
     __tablename__ = 'container_foods'
 
@@ -21,3 +28,8 @@ class Container_Food(db.Model):
     food_id = db.Column(db.Integer, db.ForeignKey('foods.id'), nullable=False)
     amount = db.Column(db.String)
     expiration = db.Column(db.Date)
+
+    def to_dict(self):
+        return {
+            "food_id": self.food_id
+        }
