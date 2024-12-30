@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 from app.models import Recipe, db, Food, Recipe_Food
 
 recipe_routes = Blueprint('recipes', __name__)
+
 # '/' get all recipes
 @recipe_routes.route('/')
 def all_recipes():
@@ -11,8 +12,8 @@ def all_recipes():
     """
     all_recipes = Recipe.query.all()
     return {'recipes': [recipe.to_dict() for recipe in all_recipes]}
-# '/user' get all users recipes
 
+# '/user' get all users recipes
 @recipe_routes.route('/user')
 @login_required
 def user_recipes():
@@ -21,9 +22,10 @@ def user_recipes():
     """
     all_user_recipes = Recipe.query.filter(Recipe.user_id == current_user.id)
     return {'recipes': [recipe.to_dict() for recipe in all_user_recipes]}
+
 # '/<int:id>' get all ingredients for specific recipe 
 @recipe_routes.route('/<int:id>')
-@login_required
+# @login_required
 def recipe(id):
     """
     Returns details of a specific recipe along with its ingredients
@@ -39,17 +41,17 @@ def recipe(id):
     if not recipe_info: #if theres no recipe id just return this error
         return {'error': 'Recipe not found'}, 404
 
-    recipe_details = {  #do we need all the recipe details?
-        "id": recipe_info.id,
-        "name": recipe_info.name,
-        "directions": recipe_info.directions,
-        "image_url": recipe_info.image_url,
-        "user_id": recipe_info.user_id,
+    recipe_details = { 
+        "id": recipe_info[0][0].id,
+        "name": recipe_info[0][0].name,
+        "directions": recipe_info[0][0].directions,
+        "image_url": recipe_info[0][0].image_url,
+        "user_id": recipe_info[0][0].user_id,
         "ingredients": [
             {
                 "food_id": food_relation.food_id,
                 "name": food_obj.name,
-                "amount": food_relation.amount #uhhhh do we need this?
+                "amount": food_relation.amount
             } for (_, food_relation, food_obj) in recipe_info
         ]
     }
