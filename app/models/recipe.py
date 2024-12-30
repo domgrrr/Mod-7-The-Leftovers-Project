@@ -14,7 +14,8 @@ class Recipe(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) #added
     name = db.Column(db.String(100), nullable=False) #added (name of recipe)
     directions = db.Column(db.Text, nullable=False)  
-    image_url = db.Column(db.String, nullable=True)  
+    image_url = db.Column(db.String, nullable=True)
+    # private = db.Column(db.Boolean, nullable=False)  
     # ingredients = db.Column(JSON, nullable=False)  
 
     # def to_dict(self): #is this needed? 
