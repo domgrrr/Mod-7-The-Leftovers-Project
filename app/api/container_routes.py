@@ -26,6 +26,7 @@ def container(id):
     ).join(Container_Food, Container_Food.container_id == Container.id).join(
         Food, Food.id == Container_Food.food_id
     ).filter(Container.id == id).all()
+    # To see this in the console: print("OBJECT HERE:", container_info)
     food_arr = [
         {
             "food_id": food_relation.food_id,
