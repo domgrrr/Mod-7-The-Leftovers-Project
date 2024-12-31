@@ -28,7 +28,7 @@ class ContainerForm(FlaskForm):
 
     # Validate the storage type
     def validate_storage_type(self, field):
-        valid_storage_types = ["fridge", "freezer", "pantry", "shelf"]
+        valid_storage_types = ["fridge", "freezer", "pantry"]
         if field.data.lower() not in valid_storage_types:
             raise ValidationError(
                 f"Invalid storage type. Must be one of: {', '.join(valid_storage_types)}."
