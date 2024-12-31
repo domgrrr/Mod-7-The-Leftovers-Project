@@ -65,6 +65,7 @@ def new_recipe():
     """
     Creates a new recipe with ingredients
     """
+    # see signup post route in auth_routes for ex
 
     # recipe_form = RecipeForm()
     # food_item = RecipeFood()
