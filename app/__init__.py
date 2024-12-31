@@ -9,6 +9,7 @@ from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
 from .api.container_routes import container_routes
 from .api.recipe_routes import recipe_routes #added
+from .api.grocery_routes import grocery_routes
 from .seeds import seed_commands
 from .config import Config
 
@@ -32,6 +33,7 @@ app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
 app.register_blueprint(container_routes, url_prefix='/api/container')
 app.register_blueprint(recipe_routes, url_prefix='/api/recipe') #added
+app.register_blueprint(grocery_routes, url_prefix='/api/grocery')
 db.init_app(app)
 Migrate(app, db)
 
