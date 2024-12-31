@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask_login import current_user, login_required
+# import correct forms here
 from app.models import Recipe, db, Food, Recipe_Food
 
 recipe_routes = Blueprint('recipes', __name__)
@@ -64,6 +65,16 @@ def new_recipe():
     """
     Creates a new recipe with ingredients
     """
+
+    # recipe_form = RecipeForm()
+    # food_item = RecipeFood()
+
+    # def food_item_iterable():
+    #   process food item
+    #   add to session db.session.add(item)
+
+    # food_item_iterable for ...
+
     data = request.get_json()
     name = data.get('name')
     directions = data.get('directions')
