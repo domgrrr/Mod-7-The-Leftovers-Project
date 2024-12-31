@@ -56,4 +56,4 @@ def recipe(id):
         ]
     }
     
-    return recipe_details
+    return recipe_details if len(recipe_info) > 0 else {"Empty"}
