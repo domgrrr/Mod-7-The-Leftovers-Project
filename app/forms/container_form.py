@@ -15,21 +15,22 @@ class FoodItemForm(FlaskForm):
         if not food_item:
             raise ValidationError(f"Food ID {field.data} does not exist in the database.")
 
-class ContainerForm(FlaskForm):
-    user_id = IntegerField("User ID", validators=[DataRequired()])
-    storage_type = StringField(
-        "Storage Type", 
-        validators=[DataRequired(message="Storage type is required.")]
-    )
-    # Add a list of food items to the container
-    food_items = FieldList(FormField(FoodItemForm), min_entries=1, label="Food Items")
+# unneeded due to containers being preset
+# class ContainerForm(FlaskForm):
+#     user_id = IntegerField("User ID", validators=[DataRequired()])
+#     storage_type = StringField(
+#         "Storage Type", 
+#         validators=[DataRequired(message="Storage type is required.")]
+#     )
+#     # Add a list of food items to the container
+#     food_items = FieldList(FormField(FoodItemForm), min_entries=1, label="Food Items")
 
-    submit = SubmitField("Submit")
+#     submit = SubmitField("Submit")
 
-    # Validate the storage type
-    def validate_storage_type(self, field):
-        valid_storage_types = ["fridge", "freezer", "pantry"]
-        if field.data.lower() not in valid_storage_types:
-            raise ValidationError(
-                f"Invalid storage type. Must be one of: {', '.join(valid_storage_types)}."
-            )
+#     # Validate the storage type
+#     def validate_storage_type(self, field):
+#         valid_storage_types = ["fridge", "freezer", "pantry"]
+#         if field.data.lower() not in valid_storage_types:
+#             raise ValidationError(
+#                 f"Invalid storage type. Must be one of: {', '.join(valid_storage_types)}."
+#             )
