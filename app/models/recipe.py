@@ -18,14 +18,13 @@ class Recipe(db.Model):
     # private = db.Column(db.Boolean, nullable=False)  
     # ingredients = db.Column(JSON, nullable=False)  
 
-    # def to_dict(self): #is this needed? 
-    #     return {
-    #         'id': self.id,
-    #         'name': self.name,
-    #         'directions': self.directions,
-    #         'image_url': self.image_url,
-    #         'ingredients': self.ingredients  
-    #     }
+    def to_dict(self): #is this needed? 
+        return {
+            'id': self.id,
+            'name': self.name,
+            'directions': self.directions,
+            'image_url': self.image_url,  
+        }
 
 class Recipe_Food(db.Model):
     __tablename__ = 'recipe_foods'
