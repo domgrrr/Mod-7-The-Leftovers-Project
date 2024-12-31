@@ -55,5 +55,40 @@ def recipe(id):
             } for (_, food_relation, food_obj) in recipe_info
         ]
     }
-    
     return recipe_details if len(recipe_info) > 0 else {"Empty"}
+
+#POST RECIPEEEE
+@recipe_routes.route('/new') #post new recipe
+@login_required
+def new_recipe():
+    """
+    Creates a new recipe with ingredients
+    """
+    data = request.get_json()
+    name = data.get('name')
+    directions = data.get('directions')
+    image_url = data.get('image_url')
+    ingredients = data.get('ingredients', [])
+
+    recipe = Recipe(
+        name=name,
+        directions=directions,
+        image_url=image_url,
+        user_id=current_user.id
+    )
+    db.session.add(recipe)
+    db.session.commit()
+
+    for ingredient in ingredients:
+        food_id = ingredient.get('food_id')
+        amount = ingredient.get('amount')
+        recipe_food = Recipe_Food(
+            recipe_id=recipe.id,
+            food_id=food_id,
+            amount=amount
+        )
+        db.session.add(recipe_food)
+
+    db.session.commit()
+    return recipe.to_dict()
+
