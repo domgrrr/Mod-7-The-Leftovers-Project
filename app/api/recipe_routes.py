@@ -25,7 +25,7 @@ def user_recipes():
 
 # '/<int:id>' get all ingredients for specific recipe 
 @recipe_routes.route('/<int:id>')
-# @login_required
+@login_required
 def recipe(id):
     """
     Returns details of a specific recipe along with its ingredients
