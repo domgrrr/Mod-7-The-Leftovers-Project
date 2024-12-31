@@ -1,4 +1,4 @@
-from app.models import db, Container_Food, Recipe_Food, environment, SCHEMA
+from app.models import db, Container_Food, Recipe_Food, Grocery_Food, environment, SCHEMA
 from sqlalchemy.sql import text
 from datetime import datetime
 
@@ -32,6 +32,13 @@ def seed_recipe_foods():
     db.session.add_all(foods)
     db.session.commit()
 
+def seed_grocery_foods():
+    foods =[
+        Grocery_Food( grocery_id=1, food_id=34, amount=None, purchased=False )
+    ]
+    db.session.add_all(foods)
+    db.session.commit()
+
 def undo_container_foods():
     if environment == "production":
         db.session.execute(f"TRUNCATE table {SCHEMA}.container_foods RESTART IDENTITY CASCADE;")
@@ -45,5 +52,13 @@ def undo_recipe_foods():
         db.session.execute(f"TRUNCATE table {SCHEMA}.recipe_foods RESTART IDENTITY CASCADE;")
     else: 
         db.session.execute(text("DELETE FROM recipe_foods"))
+        
+    db.session.commit()
+
+def undo_grocery_foods():
+    if environment == "production":
+        db.session.execute(f"TRUNCATE table {SCHEMA}.grocery_foods RESTART IDENTITY CASCADE;")
+    else: 
+        db.session.execute(text("DELETE FROM grocery_foods"))
         
     db.session.commit()

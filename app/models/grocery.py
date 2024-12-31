@@ -12,6 +12,15 @@ class Grocery(db.Model):
     name = db.Column(db.String(20), nullable=False)
     completed = db.Column(db.Boolean, nullable=False)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'date': self.date,
+            'name': self.name,
+            'completed': self.completed
+        }
+
 class Grocery_Food(db.Model):
     __tablename__ = 'grocery_list_foods'
 

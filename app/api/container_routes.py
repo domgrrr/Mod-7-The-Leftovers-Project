@@ -44,7 +44,7 @@ def container(id):
     #     for (food, food_obj) in food_objects
     #     if food_obj.name[0] = 'c'
     # ]
-    return {container_info[0][0].storage_type: food_arr}
+    return {container_info[0][0].storage_type: food_arr} if len(container_info) > 0 else {"Empty"}
     # return {'foods': [food.to_dict() for food in container_foods]}
     
 #master list of all foods in ALL containers

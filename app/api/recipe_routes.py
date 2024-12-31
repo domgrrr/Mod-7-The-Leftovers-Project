@@ -55,9 +55,7 @@ def recipe(id):
             } for (_, food_relation, food_obj) in recipe_info
         ]
     }
-    
-    return recipe_details
-
+    return recipe_details if len(recipe_info) > 0 else {"Empty"}
 
 #POST RECIPEEEE
 @recipe_routes.route('/new') #post new recipe
@@ -93,3 +91,4 @@ def new_recipe():
 
     db.session.commit()
     return recipe.to_dict()
+
