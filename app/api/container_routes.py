@@ -48,7 +48,7 @@ def container(id):
     # return {'foods': [food.to_dict() for food in container_foods]}
     
 #master list of all foods in ALL containers
-@container_routes.route('/master-list') #we can change this to /all or /list-all whichever preferred
+@container_routes.route('/masterlist') #we can change this to /all or /list-all whichever preferred
 @login_required
 def master_list(): #we can change def name based off of preference
     """
