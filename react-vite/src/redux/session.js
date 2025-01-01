@@ -63,6 +63,9 @@ export const thunkSignup = createAsyncThunk(
         body: JSON.stringify({ username, email, password }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        return rejectWithValue(data);
+      }
       return data.user;
     } catch (error) {
       return rejectWithValue(error.message || "Signup Error");

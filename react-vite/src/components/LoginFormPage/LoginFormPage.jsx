@@ -24,7 +24,7 @@ function LoginFormPage() {
       })
     );
 
-    if (serverResponse) {
+    if (serverResponse.type === "session/login/rejected") {
       setErrors(serverResponse);
     } else {
       navigate("/");
