@@ -7,59 +7,61 @@ const initialState = {
 };
 
 export const thunkAuthenticate = createAsyncThunk(
-  "session/setUser",
-  async (_, { rejectedWithValue }) => {
+  "session/authenticate",
+  async (_, { rejectWithValue }) => {
     try {
-      const res = await csrfFetch("/api/auth/");
+      const res = await fetch("/api/auth/");
       const data = await res.json();
       return data.user;
     } catch (error) {
-      return rejectedWithValue(error.message || "Error in Returning Current User");
+      return rejectWithValue(error.message || "Error in Returning Current User");
     }
   }
 );
 
 export const thunkLogin = createAsyncThunk(
-  "session/setUser",
-  async ({ credential, password }, { rejectedWithValue }) => {
+  "session/login",
+  async (credentials, { rejectWithValue }) => {
     try {
-      const res = await csrfFetch("/api/auth/login", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
-        body: JSON.stringify({ credential, password }),
+        header: {"Content-Type": "application/json"},
+        body: JSON.stringify(credentials),
       });
       const data = await res.json();
       return data.user;
     } catch (error) {
-      return rejectedWithValue(error.message || "Login Error");
+      console.log(rejectWithValue(error.message || "Login Error"));
+      return rejectWithValue(error.message || "Login Error");
     }
   }
 );
 
 export const thunkLogout = createAsyncThunk(
-  "session/removeUser",
-  async (_, { rejectedWithValue }) => {
+  "session/logout",
+  async (_, { rejectWithValue }) => {
     try {
-      await csrfFetch("/api/auth/logout");
+      await fetch("/api/auth/logout");
       const data = await res.json();
       return data.message;
     } catch (error) {
-      return rejectedWithValue(error.message || "Logout Error");
+      return rejectWithValue(error.message || "Logout Error");
     }
   }
 );
 
 export const thunkSignup = createAsyncThunk(
-  "session/setUser",
-  async ({ username, email, password }, { rejectedWithValue }) => {
+  "session/signup",
+  async ({ username, email, password }, { rejectWithValue }) => {
     try {
-      const res = await csrfFetch("/api/auth/signup", {
+      const res = await fetch("/api/auth/signup", {
         method: "POST",
         body: JSON.stringify({ username, email, password }),
       });
       const data = await res.json();
       return data.user;
     } catch (error) {
-      return rejectedWithValue(error.message || "Signup Error");
+      return rejectWithValue(error.message || "Signup Error");
     }
   }
 )

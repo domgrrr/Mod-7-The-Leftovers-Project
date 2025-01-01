@@ -1,4 +1,4 @@
-import { configureStore } from "reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import { default as logger } from "redux-logger";
 import sessionReducer from "./session";
 
