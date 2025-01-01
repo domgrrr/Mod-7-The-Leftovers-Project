@@ -21,17 +21,21 @@ export const thunkAuthenticate = createAsyncThunk(
 
 export const thunkLogin = createAsyncThunk(
   "session/login",
-  async (credentials, { rejectWithValue }) => {
+  async ({ email, password }, { rejectWithValue }) => {
+    console.log("credential", email, password)
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         header: {"Content-Type": "application/json"},
-        body: JSON.stringify(credentials),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      return data.user;
+      if (!res.ok) {
+        return rejectWithValue(data);
+      }
+      console.log(data);
+      return data;
     } catch (error) {
-      console.log(rejectWithValue(error.message || "Login Error"));
       return rejectWithValue(error.message || "Login Error");
     }
   }
@@ -41,7 +45,7 @@ export const thunkLogout = createAsyncThunk(
   "session/logout",
   async (_, { rejectWithValue }) => {
     try {
-      await fetch("/api/auth/logout");
+      const res = await fetch("/api/auth/logout");
       const data = await res.json();
       return data.message;
     } catch (error) {
@@ -104,8 +108,9 @@ const sessionSlice = createSlice({
         state.loading = false;
         state.errors = action.payload;
       })
-      .addCase(thunkLogout.fulfilled, (state, action) => {
+      .addCase(thunkLogout.fulfilled, (state) => {
         state.loading = false;
+        state.user = null;
       })
       .addCase(thunkAuthenticate.pending, (state) => {
         state.loading = true;
