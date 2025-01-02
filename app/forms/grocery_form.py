@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateField, FieldList, FormField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, ValidationError, Optional, NumberRange
-from your_app.models import FoodItem, Recipe  # Assuming FoodItem and Recipe models exist in your app
+from app.models import FoodItem, Recipe  # Assuming FoodItem and Recipe models exist in your app
 
 # Sub-form for individual grocery list items
 class GroceryItemForm(FlaskForm):
