@@ -1,0 +1,24 @@
+.grocery-item-form {
+    margin-top: 20px;
+  }
+  
+  .grocery-item-form input {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #2a6f3e;
+    border-radius: 5px;
+  }
+  
+  .grocery-item-form button {
+    background-color: #2a6f3e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .grocery-item-form button:hover {
+    background-color: #1e5a31;
+  }
+
