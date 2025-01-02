@@ -30,10 +30,10 @@ export const thunkLogin = createAsyncThunk(
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
+      console.log(data);
       if (!res.ok) {
         return rejectWithValue(data);
       }
-      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error.message || "Login Error");
@@ -130,7 +130,9 @@ const sessionSlice = createSlice({
   }
 });
 
-export default sessionSlice.reducer;
+const sessionReducer = sessionSlice.reducer;
+
+export default sessionReducer;
 
 // const SET_USER = 'session/setUser';
 // const REMOVE_USER = 'session/removeUser';
