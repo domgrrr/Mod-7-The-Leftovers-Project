@@ -1,17 +1,26 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
-const API_BASE_URL = "http://127.0.0.1:5000/grocery_lists";
+// Helper function to handle fetch requests and check for errors
+const fetchData = async (url, options = {}) => {
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Something went wrong");
+  }
+
+  return response.json();
+};
 
 // Fetch all grocery lists for the current user
 export const fetchGroceryLists = createAsyncThunk(
   "groceryLists/fetchGroceryLists",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/`);
-      return response.data.grocery_lists; // Access the "grocery_lists" key
+      const data = await fetchData(`/api/grocery_lists/`);
+      return data.grocery_lists; // Access the "grocery_lists" key
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+      return thunkAPI.rejectWithValue(error.message || "Something went wrong");
     }
   }
 );
@@ -21,36 +30,52 @@ export const fetchGroceryListFoods = createAsyncThunk(
   "groceryLists/fetchGroceryListFoods",
   async (listId, thunkAPI) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/${listId}`);
-      return { listId, foods: response.data[listId] || [] }; // Return the listId and foods array
+      const data = await fetchData(`/api/grocery_lists/${listId}`);
+      return { listId, foods: data[listId] || [] }; // Return the listId and foods array
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+      return thunkAPI.rejectWithValue(error.message || "Something went wrong");
     }
   }
 );
 
 // Action to create a new grocery list
 export const createGroceryList = createAsyncThunk(
-    "groceryLists/createGroceryList",
-    async (groceryList, thunkAPI) => {
-      try {
-        const response = await axios.post(`${API_BASE_URL}/new`, groceryList);
-        return response.data;
-      } catch (error) {
-        return thunkAPI.rejectWithValue(error.response?.data || error.message);
-      }
+  "groceryLists/createGroceryList",
+  async (groceryList, thunkAPI) => {
+    try {
+      const response = await fetch(`/api/grocery_lists/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(groceryList),
+      });
+
+      const data = await response.json();
+      return data; // Return the new grocery list
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
     }
-  );
+  }
+);
 
 // Update a grocery list
 export const updateGroceryList = createAsyncThunk(
   "groceryLists/updateGroceryList",
   async ({ id, name }, thunkAPI) => {
     try {
-      const response = await axios.put(`${API_BASE_URL}/${id}`, { name });
-      return response.data; // Updated grocery list
+      const response = await fetch(`/api/grocery_lists/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      });
+
+      const data = await response.json();
+      return data; // Updated grocery list
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
@@ -60,10 +85,12 @@ export const deleteGroceryList = createAsyncThunk(
   "groceryLists/deleteGroceryList",
   async (id, thunkAPI) => {
     try {
-      await axios.delete(`${API_BASE_URL}/${id}`);
+      await fetch(`/api/grocery_lists/${id}`, {
+        method: "DELETE",
+      });
       return id; // Return the ID of the deleted list
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );

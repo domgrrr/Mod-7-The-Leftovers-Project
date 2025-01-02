@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { default as logger } from "redux-logger";
 import sessionReducer from "./session";
+import groceryListsReducer from "./groceryLists";
 
 const store = configureStore({
   reducer: {
     session: sessionReducer,
-    groceryLists: require("./groceryLists").groceryListsReducer // Import the groceryLists reducer
+    groceryLists: groceryListsReducer,
   },
   middleware: (getDefaultMiddleware) => {
     const middlewares = getDefaultMiddleware();
