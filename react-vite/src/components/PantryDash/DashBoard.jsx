@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function DashBoard() {
+    const user = useSelector((store) => store.session.user);
+
+    if (!user) {
+        
+    }
+
     return (
         <div>
             <div>

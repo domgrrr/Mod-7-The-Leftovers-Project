@@ -58,7 +58,6 @@ def sign_up():
             password=form.data['password']
         )
         db.session.add(user)
-        # TODO: once we have add(container) add fridge, freezer, pantry to session
         db.session.commit()
         login_user(user)
         new_user = user.to_dict()
