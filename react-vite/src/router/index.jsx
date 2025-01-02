@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import LoginFormPage from '../components/LoginFormPage';
 import SignupFormPage from '../components/SignupFormPage';
 import DashBoard from '../components/PantryDash';
+import GroceryListPage from '../components/GroceryListPage';
 import Layout from './Layout';
 
 export const router = createBrowserRouter([
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         path: "/dash",
         element: <DashBoard />
+      },
+      {
+        path: "/groceries",
+        element: <GroceryListPage />
       }
     ],
   },
