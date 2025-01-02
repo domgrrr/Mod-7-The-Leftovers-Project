@@ -1,12 +1,21 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateField, FieldList, FormField, BooleanField, IntegerField
-from wtforms.validators import DataRequired, ValidationError, Optional
-from your_app.models import FoodItem, Recipe  # Assuming you have FoodItem and Recipe models
+from wtforms.validators import DataRequired, ValidationError, Optional, NumberRange
+from your_app.models import FoodItem, Recipe  # Assuming FoodItem and Recipe models exist in your app
 
 # Sub-form for individual grocery list items
 class GroceryItemForm(FlaskForm):
-    food_id = IntegerField("Food ID", validators=[DataRequired()])
-    quantity = StringField("Quantity", validators=[DataRequired(message="Quantity is required.")])
+    food_id = IntegerField(
+        "Food ID",
+        validators=[
+            DataRequired(message="Food ID is required."),
+            NumberRange(min=1, message="Food ID must be a positive integer."),
+        ],
+    )
+    quantity = StringField(
+        "Quantity", 
+        validators=[DataRequired(message="Quantity is required.")],
+    )
     purchased = BooleanField("Purchased", default=False)
 
     # Validation to ensure food_id exists in the FoodItem table
@@ -17,13 +26,28 @@ class GroceryItemForm(FlaskForm):
 
 # Main form for creating a grocery list
 class GroceryForm(FlaskForm):
-    name = StringField("List Name", validators=[DataRequired(message="List name is required.")])
-    date = DateField("Date", validators=[Optional()])  # Date of the grocery list
+    name = StringField(
+        "List Name", 
+        validators=[DataRequired(message="List name is required.")],
+    )
+    date = DateField(
+        "Date", 
+        validators=[Optional()],  # Optional date field
+    )
     completed = BooleanField("Completed", default=False)  # If the grocery list is completed
-    items = FieldList(FormField(GroceryItemForm), min_entries=1)  # List of grocery items
+    items = FieldList(
+        FormField(GroceryItemForm), 
+        min_entries=1,  # At least one item must be included in the list
+    )
 
     # Field to add items to the grocery list from a recipe
-    recipe_id = IntegerField("Recipe ID", validators=[Optional()])
+    recipe_id = IntegerField(
+        "Recipe ID",
+        validators=[
+            Optional(),
+            NumberRange(min=1, message="Recipe ID must be a positive integer."),
+        ],
+    )
 
     # Validation to ensure recipe_id exists if provided
     def validate_recipe_id(self, field):

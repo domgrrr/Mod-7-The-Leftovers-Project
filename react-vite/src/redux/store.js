@@ -5,6 +5,7 @@ import sessionReducer from "./session";
 const store = configureStore({
   reducer: {
     session: sessionReducer,
+    groceryLists: require("./groceryLists").groceryListsReducer // Import the groceryLists reducer
   },
   middleware: (getDefaultMiddleware) => {
     const middlewares = getDefaultMiddleware();
