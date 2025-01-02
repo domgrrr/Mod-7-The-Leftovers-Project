@@ -12,7 +12,7 @@ export const thunkAuthenticate = createAsyncThunk(
     try {
       const res = await fetch("/api/auth/");
       const data = await res.json();
-      return data.user;
+      return data;
     } catch (error) {
       return rejectWithValue(error.message || "Error in Returning Current User");
     }
@@ -22,15 +22,13 @@ export const thunkAuthenticate = createAsyncThunk(
 export const thunkLogin = createAsyncThunk(
   "session/login",
   async ({ email, password }, { rejectWithValue }) => {
-    console.log("credential", email, password)
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
-        header: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      console.log(data);
       if (!res.ok) {
         return rejectWithValue(data);
       }
@@ -60,6 +58,7 @@ export const thunkSignup = createAsyncThunk(
     try {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ username, email, password }),
       });
       const data = await res.json();
@@ -79,15 +78,15 @@ const sessionSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(thunkSignup.pending, (state) => {
+      .addCase(thunkAuthenticate.pending, (state) => {
         state.loading = true;
         state.errors = null;
       })
-      .addCase(thunkSignup.rejected, (state, action) => {
+      .addCase(thunkAuthenticate.rejected, (state, action) => {
         state.loading = false;
         state.errors = action.payload;
       })
-      .addCase(thunkSignup.fulfilled, (state, action) => {
+      .addCase(thunkAuthenticate.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
       })
@@ -115,24 +114,22 @@ const sessionSlice = createSlice({
         state.loading = false;
         state.user = null;
       })
-      .addCase(thunkAuthenticate.pending, (state) => {
+      .addCase(thunkSignup.pending, (state) => {
         state.loading = true;
         state.errors = null;
       })
-      .addCase(thunkAuthenticate.rejected, (state, action) => {
+      .addCase(thunkSignup.rejected, (state, action) => {
         state.loading = false;
         state.errors = action.payload;
       })
-      .addCase(thunkAuthenticate.fulfilled, (state, action) => {
+      .addCase(thunkSignup.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
       })
   }
 });
 
-const sessionReducer = sessionSlice.reducer;
-
-export default sessionReducer;
+export default sessionSlice.reducer;
 
 // const SET_USER = 'session/setUser';
 // const REMOVE_USER = 'session/removeUser';
