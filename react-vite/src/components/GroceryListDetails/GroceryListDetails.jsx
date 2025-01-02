@@ -1,14 +1,14 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { updateItemStatus, addItemToGroceryList } from "../store/groceryListsSlice";
-import GroceryItemForm from "./GroceryItemForm";
+import { updateGroceryList } from "../../redux/groceryListsSlice";
+import GroceryForm from "../GroceryForm";
 import "./GroceryListDetails.css";
 
 const GroceryListDetails = ({ list }) => {
   const dispatch = useDispatch();
 
   const handleItemPurchase = (itemId) => {
-    dispatch(updateItemStatus({ listId: list.id, itemId, purchased: true }));
+    dispatch(updateGroceryList({ listId: list.id, itemId, purchased: true }));
   };
 
   return (
@@ -24,7 +24,7 @@ const GroceryListDetails = ({ list }) => {
           </li>
         ))}
       </ul>
-      <GroceryItemForm listId={list.id} />
+      <GroceryForm listId={list.id} />
     </div>
   );
 };

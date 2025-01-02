@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchGroceryLists } from "../store/groceryListsSlice";
-import GroceryListDetails from "./GroceryListDetails";
+import { fetchGroceryLists } from "../../redux/groceryListsSlice";
+import GroceryListDetails from "../GroceryListDetails";
 import "./GroceryListPage.css";
 
 const GroceryListPage = () => {

@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateField, FieldList, FormField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, ValidationError, Optional, NumberRange
-from app.models import FoodItem, Recipe  # Assuming FoodItem and Recipe models exist in your app
+from app.models import Food, Recipe  # Assuming FoodItem and Recipe models exist in your app
 
 # Sub-form for individual grocery list items
 class GroceryItemForm(FlaskForm):
@@ -20,7 +20,7 @@ class GroceryItemForm(FlaskForm):
 
     # Validation to ensure food_id exists in the FoodItem table
     def validate_food_id(self, field):
-        food_item = FoodItem.query.get(field.data)
+        food_item = Food.query.get(field.data)
         if not food_item:
             raise ValidationError(f"Food ID {field.data} does not exist in the database.")
 

@@ -17,7 +17,9 @@ export const fetchGroceryLists = createAsyncThunk(
   "groceryLists/fetchGroceryLists",
   async (_, thunkAPI) => {
     try {
-      const data = await fetchData(`/api/grocery_lists/`);
+      const res = await fetch(`/api/grocery_lists/`);
+      const data = await res.json();
+      console.log("GROCERY_LISTS", data);
       return data.grocery_lists; // Access the "grocery_lists" key
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message || "Something went wrong");

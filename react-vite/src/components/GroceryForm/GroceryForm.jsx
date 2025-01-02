@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createGroceryList } from "../store/groceryListsSlice";
+import { createGroceryList } from "../../redux/groceryListsSlice";
 
 const GroceryForm = () => {
   const dispatch = useDispatch();
