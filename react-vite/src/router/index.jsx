@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
         element: <SignupFormPage />,
       },
       {
-        path: "recipes", // ADDED THE RECIPE PAGE PATH
+        path: "/recipes", // ADDED THE RECIPE PAGE PATH
         element: <RecipePage />,
       }
     ],
