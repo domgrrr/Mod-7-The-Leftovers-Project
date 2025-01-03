@@ -30,6 +30,7 @@ def upgrade():
     sa.Column('alias_bool', sa.Boolean(), nullable=False),
     sa.Column('alias_id', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
+    sa.ForeignKeyConstraint(['alias_id'], ['foods.id'], ),
     sa.UniqueConstraint('name')
     )
 

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import { thunkSignup } from "../../redux/session";
 import "./SignupForm.css";
 
 function SignupFormModal() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -12,6 +14,8 @@ function SignupFormModal() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+
+  //TODO: doesn't reset home page to change to logged in profile button
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,17 +35,18 @@ function SignupFormModal() {
       })
     );
 
-    if (serverResponse) {
+    if (serverResponse.type === "session/signup/rejected") {
       setErrors(serverResponse);
     } else {
       closeModal();
+      navigate('/dash');
     }
   };
 
   return (
     <>
       <h1>Sign Up</h1>
-      {errors.server && <p>{errors.server}</p>}
+      {errors.payload?.server && <p>{errors.payload?.server}</p>}
       <form onSubmit={handleSubmit}>
         <label>
           Email
@@ -52,7 +57,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
+        {errors.payload?.email && <p>{errors.payload?.email}</p>}
         <label>
           Username
           <input
@@ -62,7 +67,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.username && <p>{errors.username}</p>}
+        {errors.payload?.username && <p>{errors.payload?.username}</p>}
         <label>
           Password
           <input

@@ -26,6 +26,7 @@ def login():
     # Get the csrf_token from the request cookie and put it into the
     # form manually to validate_on_submit can be used
     form['csrf_token'].data = request.cookies['csrf_token']
+    print("FORM", form.data)
     if form.validate_on_submit():
         # Add the user to the session, we are logged in!
         user = User.query.filter(User.email == form.data['email']).first()
@@ -57,7 +58,6 @@ def sign_up():
             password=form.data['password']
         )
         db.session.add(user)
-        # TODO: once we have add(container) add fridge, freezer, pantry to session
         db.session.commit()
         login_user(user)
         new_user = user.to_dict()
