@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { useDispatch } from "react-redux";
 import { updateGroceryList } from "../../redux/groceryListsSlice";
 import GroceryForm from "../GroceryForm";
@@ -15,11 +15,11 @@ const GroceryListDetails = ({ list }) => {
     <div className="grocery-list-details">
       <h2>{list.name}</h2>
       <ul>
-        {list.items.map((item) => (
-          <li key={item.id} className={item.purchased ? "purchased" : ""}>
-            {item.name} - {item.amount}
-            <button onClick={() => handleItemPurchase(item.id)}>
-              {item.purchased ? "Purchased" : "Mark as Purchased"}
+        {list.items.map(({ id, name, amount, purchased }) => (
+          <li key={id} className={purchased ? "purchased" : ""}>
+            {name} - {amount}
+            <button onClick={() => handleItemPurchase(id)}>
+              {purchased ? "Purchased" : "Mark as Purchased"}
             </button>
           </li>
         ))}
@@ -30,3 +30,4 @@ const GroceryListDetails = ({ list }) => {
 };
 
 export default GroceryListDetails;
+
