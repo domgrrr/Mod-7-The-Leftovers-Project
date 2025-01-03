@@ -6,6 +6,7 @@ import OpenModalMenuItem from "./OpenModalMenuItem";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
 import "./Navigation.css";
+import logo from "../../../../images/freshly-logo.png";
 
 function Navigation() {
   const [showMenu, setShowMenu] = useState(false);
@@ -29,8 +30,13 @@ function Navigation() {
   
   const closeMenu = () => setShowMenu(false);
 
-  return (
-    <ul>
+  return ( //added a classname for css without changing format just wrapped in a nav
+    //added a div for the logo also we need to have when logo is clicked its brought to whatever our home page is
+  <nav className="navbar"> 
+    <div className="navbar-logo">
+      <img src={logo} alt="Freshly Logo"className="navbar-logo"/> 
+    </div>
+    <ul className="navbar-menu">
       {user?.username ? (
         <div>
           <li>
@@ -58,6 +64,7 @@ function Navigation() {
         </>
       )}
     </ul>
+  </nav> 
   );
 }
 
