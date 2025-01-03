@@ -19,7 +19,7 @@ function DashBoard() {
                 <Link>Pantry</Link>
                 <Link>Fridge</Link>
                 <Link>Freezer</Link>
-                <Link>All</Link>
+                {/*<Link>All</Link>*/}
             </div>
         </div>
 

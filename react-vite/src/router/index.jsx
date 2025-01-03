@@ -25,6 +25,7 @@ export const router = createBrowserRouter([
         path: "/dash",
         element: <DashBoard />
       },
+      
       {
         path: "/groceries",
         element: <GroceryListPage />
