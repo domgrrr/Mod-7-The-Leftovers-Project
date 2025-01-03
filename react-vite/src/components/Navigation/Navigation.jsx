@@ -34,9 +34,11 @@ function Navigation() {
       {user?.username ? (
         <div>
           <li>
-          <NavLink to="/dash">Home</NavLink>
+            <NavLink to="/dash">Home</NavLink>
           </li>
-
+          <li>
+            <NavLink to="/recipes">Recipes</NavLink>
+          </li>
           <li>
             <ProfileButton />
           </li>
