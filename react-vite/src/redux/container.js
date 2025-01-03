@@ -7,7 +7,7 @@ const initialState = {
   errors: null,
 };
 
-export const getAllContainers = createAsyncThunk(
+export const getAllContainers = createAsyncThunk( //spelling issue "get all containers is not defined" it was missing a s in the name
   "containers/getAll",
   async (_, { rejectWithValue }) => {
     try {
