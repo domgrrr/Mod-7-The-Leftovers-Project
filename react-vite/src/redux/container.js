@@ -7,7 +7,7 @@ const initialState = {
   errors: null,
 };
 
-export const getAllContainer = createAsyncThunk(
+export const getAllContainers = createAsyncThunk(
   "containers/getAll",
   async (_, { rejectWithValue }) => {
     try {
