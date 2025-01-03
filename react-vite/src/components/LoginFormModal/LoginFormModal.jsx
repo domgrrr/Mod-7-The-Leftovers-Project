@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { thunkLogin } from "../../redux/session";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
 
 function LoginFormModal() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,10 +23,11 @@ function LoginFormModal() {
       })
     );
 
-    if (serverResponse) {
+    if (serverResponse.type === "session/login/rejected") {
       setErrors(serverResponse);
     } else {
       closeModal();
+      navigate("/dash");
     }
   };
 
@@ -41,7 +44,7 @@ function LoginFormModal() {
             required
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
+        {errors.payload?.email && <p>{errors.payload?.email}</p>}
         <label>
           Password
           <input
@@ -51,7 +54,7 @@ function LoginFormModal() {
             required
           />
         </label>
-        {errors.password && <p>{errors.password}</p>}
+        {errors.payload?.password && <p>{errors.payload?.password}</p>}
         <button type="submit">Log In</button>
       </form>
     </>

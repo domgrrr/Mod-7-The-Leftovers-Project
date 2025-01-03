@@ -1,1 +1,184 @@
-/* TODO: Add sitewide styles */
+/* Global Styles */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  background-color: #f4f9f7; /* Light background to create a Freshly vibe */
+  color: #333; /* Dark gray text for readability */
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Focus States (for accessibility) */
+:focus {
+  outline: 3px solid #66cc66; /* Highlight focus state with green */
+  outline-offset: 2px;
+}
+
+a:focus,
+button:focus {
+  outline: 3px solid #66cc66;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Arial', sans-serif;
+  font-weight: 600;
+  color: #2d6a4f; /* Deep green for headings */
+}
+
+p {
+  color: #555; /* Slightly lighter gray for paragraph text */
+  font-size: 1rem;
+}
+
+/* Links */
+a {
+  color: #2d6a4f; /* Green link color */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover,
+a:focus {
+  color: #3a9d73; /* Lighter green on hover/focus for interactivity */
+}
+
+/* Header Styles */
+header {
+  background-color: #2d6a4f; /* Fresh green header */
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+header nav {
+  margin-top: 1rem;
+}
+
+header nav a {
+  margin: 0 15px;
+  color: #fff;
+  font-weight: 500;
+}
+
+header nav a:hover,
+header nav a:focus {
+  color: #eaf4e4; /* Light green for hover state in navigation */
+}
+
+/* Main Content */
+main {
+  padding: 2rem 1.5rem;
+}
+
+/* Button Styles */
+button {
+  background-color: #66cc66; /* Fresh, vibrant green */
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover,
+button:focus {
+  background-color: #3a9d73; /* Slightly darker green on hover */
+}
+
+button:disabled {
+  background-color: #cccccc; /* Disabled button state */
+  cursor: not-allowed;
+}
+
+/* Forms */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #66cc66; /* Green border on focus */
+}
+
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+/* Card Component (for listing items or features) */
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+.card h3 {
+  font-size: 1.5rem;
+  color: #2d6a4f;
+}
+
+.card p {
+  color: #555;
+  font-size: 1rem;
+}
+
+/* Footer Styles */
+footer {
+  background-color: #2d6a4f;
+  color: white;
+  padding: 1.5rem 0;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+footer p {
+  font-size: 0.9rem;
+}
+
+/* Accessibility: High Contrast Mode */
+@media (prefers-contrast: high) {
+  body {
+    background-color: #000;
+    color: #fff;
+  }
+
+  a {
+    color: #ffff00; /* Yellow links for better contrast */
+  }
+
+  header, footer {
+    background-color: #003d2d; /* Darker green for better visibility */
+  }
+
+  .card {
+    background-color: #1a3e2e;
+    color: #fff;
+  }
+}
+

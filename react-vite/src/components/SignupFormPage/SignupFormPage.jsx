@@ -33,17 +33,17 @@ function SignupFormPage() {
       })
     );
 
-    if (serverResponse) {
+    if (serverResponse.type === "session/signup/rejected") {
       setErrors(serverResponse);
     } else {
-      navigate("/");
+      navigate("/dash");
     }
   };
 
   return (
     <>
       <h1>Sign Up</h1>
-      {errors.server && <p>{errors.server}</p>}
+      {errors.payload?.server && <p>{errors.payload?.server}</p>}
       <form onSubmit={handleSubmit}>
         <label>
           Email
@@ -54,7 +54,7 @@ function SignupFormPage() {
             required
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
+        {errors.payload?.email && <p>{errors.payload?.email}</p>}
         <label>
           Username
           <input
@@ -64,7 +64,7 @@ function SignupFormPage() {
             required
           />
         </label>
-        {errors.username && <p>{errors.username}</p>}
+        {errors.payload?.username && <p>{errors.payload?.username}</p>}
         <label>
           Password
           <input
@@ -74,7 +74,7 @@ function SignupFormPage() {
             required
           />
         </label>
-        {errors.password && <p>{errors.password}</p>}
+        {errors.payload?.password && <p>{errors.payload?.password}</p>}
         <label>
           Confirm Password
           <input

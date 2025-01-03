@@ -1,0 +1,19 @@
+.grocery-list-details ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .grocery-list-details li {
+    padding: 10px;
+    border: 1px solid #2a6f3e;
+    margin: 5px 0;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .grocery-list-details .purchased {
+    text-decoration: line-through;
+    color: #888;
+  }
+  

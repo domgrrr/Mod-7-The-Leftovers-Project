@@ -11,4 +11,4 @@ class Food(db.Model):
     type = db.Column(db.String, nullable=False)
     image_url = db.Column(db.String)
     alias_bool = db.Column(db.Boolean, nullable=False)
-    alias_id = db.Column(db.Integer)
+    alias_id = db.Column(db.Integer, db.ForeignKey("foods.id"))
