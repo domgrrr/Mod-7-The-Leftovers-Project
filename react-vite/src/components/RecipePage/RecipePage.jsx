@@ -9,7 +9,7 @@ const RecipePage = () => {
 
   //uhh i use useeffect to fetch the recipes from the backend not sure
   useEffect(() => {
-    fetch('/api/recipes') // ADDED THE FETCH REQUEST fetch from back
+    fetch('/api/recipe') // ADDED THE FETCH REQUEST fetch from back
       .then(response => {
         if (!response.ok) { //if response is not ok throw error
           throw new Error('Network response was not ok');
