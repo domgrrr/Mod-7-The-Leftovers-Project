@@ -17,7 +17,7 @@ export const fetchGroceryLists = createAsyncThunk(
   "groceryLists/fetchGroceryLists",
   async (_, thunkAPI) => {
     try {
-      const res = await fetch(`/api/grocery_lists/`);
+      const res = await fetch(`/api/grocery/`);
       const data = await res.json();
       console.log("GROCERY_LISTS", data);
       return data.grocery_lists; // Access the "grocery_lists" key
@@ -32,7 +32,7 @@ export const fetchGroceryListFoods = createAsyncThunk(
   "groceryLists/fetchGroceryListFoods",
   async (listId, thunkAPI) => {
     try {
-      const data = await fetchData(`/api/grocery_lists/${listId}`);
+      const data = await fetchData(`/api/grocery/${listId}`);
       return { listId, foods: data[listId] || [] }; // Return the listId and foods array
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message || "Something went wrong");
@@ -45,7 +45,7 @@ export const createGroceryList = createAsyncThunk(
   "groceryLists/createGroceryList",
   async (groceryList, thunkAPI) => {
     try {
-      const response = await fetch(`/api/grocery_lists/new`, {
+      const response = await fetch(`/api/grocery/new`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +66,7 @@ export const updateGroceryList = createAsyncThunk(
   "groceryLists/updateGroceryList",
   async ({ id, name }, thunkAPI) => {
     try {
-      const response = await fetch(`/api/grocery_lists/${id}`, {
+      const response = await fetch(`/api/grocery/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export const deleteGroceryList = createAsyncThunk(
   "groceryLists/deleteGroceryList",
   async (id, thunkAPI) => {
     try {
-      await fetch(`/api/grocery_lists/${id}`, {
+      await fetch(`/api/grocery/${id}`, {
         method: "DELETE",
       });
       return id; // Return the ID of the deleted list
