@@ -63,27 +63,29 @@ def create_grocery_list():
     if form.validate_on_submit():
         try:
             # Create new grocery list
-            new_grocery = Grocery(
+            grocery_list = GroceryList(
                 name=form.name.data,
                 date=form.date.data,
                 completed=form.completed.data,
                 user_id=current_user.id,
             )
-            db.session.add(new_grocery)
+            db.session.add(grocery_list)
             db.session.commit()
 
             # Add items to the grocery list
-            for item_data in form.items.data:
-                new_item = Grocery_Food(
-                    grocery_id=new_grocery.id,
+            for item in form.items.data:
+                grocery_item = Grocery_Food(
+                    grocery_id=grocery_list.id,
                     food_id=item_data['food_id'],
                     amount=item_data['quantity'],
                     purchased=item_data['purchased'],
                 )
-                db.session.add(new_item)
+                db.session.add(grocery_item)
+
+            # Commit the transaction
             db.session.commit()
 
-            return jsonify(new_grocery.to_dict()), 201
+            return jsonify(grocery_list.to_dict()), 201
         except Exception as e:
             return jsonify({'error': str(e)}), 500
     else:

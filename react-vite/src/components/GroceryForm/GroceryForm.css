@@ -1,24 +1,67 @@
-.grocery-item-form {
-    margin-top: 20px;
-  }
-  
-  .grocery-item-form input {
-    padding: 10px;
-    margin-right: 10px;
-    border: 1px solid #2a6f3e;
-    border-radius: 5px;
-  }
-  
-  .grocery-item-form button {
-    background-color: #2a6f3e;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .grocery-item-form button:hover {
-    background-color: #1e5a31;
-  }
+/* GroceryForm styles */
+.grocery-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.grocery-form label {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.grocery-form input[type="text"],
+.grocery-form input[type="date"],
+.grocery-form input[type="number"],
+.grocery-form input[type="checkbox"] {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.grocery-form input[type="checkbox"] {
+  width: auto;
+  margin-left: 10px;
+}
+
+.grocery-form button {
+  margin-top: 20px;
+  width: 100%;
+  background-color: #28a745;
+  padding: 12px;
+  border-radius: 5px;
+}
+
+.grocery-form button:hover {
+  background-color: #218838;
+}
+
+.grocery-form .add-item-button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+}
+
+.grocery-form .add-item-button:hover {
+  background-color: #0056b3;
+}
+
+.grocery-form .remove-item-button {
+  margin-top: 10px;
+  background-color: #dc3545;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+
+.grocery-form .remove-item-button:hover {
+  background-color: #c82333;
+}
 

@@ -1,19 +1,89 @@
+.grocery-list-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px;
+}
+
+.grocery-list-details h2 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #343a40;
+  margin-bottom: 20px;
+}
+
 .grocery-list-details ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .grocery-list-details li {
-    padding: 10px;
-    border: 1px solid #2a6f3e;
-    margin: 5px 0;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .grocery-list-details .purchased {
-    text-decoration: line-through;
-    color: #888;
-  }
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.grocery-list-details li {
+  background-color: #ffffff;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.grocery-list-details li:hover {
+  transform: translateY(-5px);
+}
+
+.grocery-list-details .purchased {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+.grocery-list-details button {
+  background-color: #007bff;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 8px 15px;
+  margin-left: 15px;
+}
+
+.grocery-list-details button:hover {
+  background-color: #0056b3;
+}
+
+.grocery-list-details .form-container {
+  margin-top: 40px;
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.grocery-list-details .form-container h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.grocery-list-details .form-container input,
+.grocery-list-details .form-container select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.grocery-list-details .form-container button {
+  width: 100%;
+  background-color: #28a745;
+}
+
+.grocery-list-details .form-container button:hover {
+  background-color: #218838;
+}
+
   

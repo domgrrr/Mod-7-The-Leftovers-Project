@@ -1,4 +1,3 @@
-// import React from "react";
 import { useDispatch } from "react-redux"; // Importing useDispatch to dispatch Redux actions.
 import { updateGroceryList } from "../../redux/groceryListsSlice"; // Importing the action to update a grocery list.
 import GroceryForm from "../GroceryForm"; // Importing a form component to add items to a grocery list.
@@ -39,3 +38,5 @@ const GroceryListDetails = ({ list }) => {
 };
 
 export default GroceryListDetails;
+
+

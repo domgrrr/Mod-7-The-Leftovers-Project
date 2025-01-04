@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createGroceryList } from "../../redux/groceryListsSlice";
 
-const GroceryForm = () => {
+const GroceryForm = ({ onClose }) => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -38,9 +38,36 @@ const GroceryForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(createGroceryList(formData));
+    try {
+      const response = await fetch(`/api/grocery_lists`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          csrf_token: document.cookie.split("=")[1], // CSRF token from cookies
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const createdList = await response.json();
+        dispatch(createGroceryList(createdList));
+        setFormData({
+          name: "",
+          date: "",
+          completed: false,
+          items: [{ food_id: "", quantity: "", purchased: false }],
+        });
+        if (onClose) {
+          onClose(); // Close the form
+        }
+      } else {
+        console.error("Failed to create grocery list");
+      }
+    } catch (error) {
+      console.error("Error creating grocery list:", error);
+    }
   };
 
   const { name, date, completed, items } = formData;
@@ -49,11 +76,20 @@ const GroceryForm = () => {
     <form onSubmit={handleSubmit}>
       <label>
         List Name:
-        <input type="text" value={name} onChange={(e) => handleChange("name", e.target.value)} required />
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => handleChange("name", e.target.value)}
+          required
+        />
       </label>
       <label>
         Date:
-        <input type="date" value={date} onChange={(e) => handleChange("date", e.target.value)} />
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => handleChange("date", e.target.value)}
+        />
       </label>
       <label>
         Completed:
@@ -84,7 +120,9 @@ const GroceryForm = () => {
             <input
               type="checkbox"
               checked={item.purchased}
-              onChange={(e) => handleItemChange(index, "purchased", e.target.checked)}
+              onChange={(e) =>
+                handleItemChange(index, "purchased", e.target.checked)
+              }
             />
             <button type="button" onClick={() => removeItem(index)}>
               Remove
@@ -101,4 +139,7 @@ const GroceryForm = () => {
 };
 
 export default GroceryForm;
+
+
+
 
