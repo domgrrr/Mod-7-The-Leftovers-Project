@@ -7,13 +7,13 @@
   text-align: center;
   font-weight: lighter;
   margin-bottom: 20px;
-  border-bottom: 1px solid #ddd;
+  color: #333;
+  /* border-bottom: 1px solid #ddd; */
 }
 
 .recipe-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(250px, 1fr)); 
-    padding-top: 35px;
     padding-left: 35px;
     padding-right: 35px;
     /* gap: 30px; not sure if needed idk */
@@ -29,7 +29,6 @@
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
-  padding: 20px;
   margin: 30px;
 }
 
@@ -39,8 +38,8 @@
 }
 
 .recipe-image {
-  width: 200px; /* we can edit how big we want the image */
-  height: 200px;
+  width: 100%; /* we can edit how big we want the image */
+  height: 100%;
   object-fit: cover;
   border-bottom: 1px solid #ddd;
   margin-bottom: 15px;
