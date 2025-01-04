@@ -5,14 +5,18 @@ export const fetchGroceryLists = createAsyncThunk(
   "groceryLists/fetchGroceryLists",
   async (_, thunkAPI) => {
     try {
+      console.log("Fetching all grocery lists...");
       const response = await fetch(`/api/grocery`);
       if (!response.ok) {
         const errorData = await response.json();
+        console.error("Error fetching grocery lists:", errorData.message);
         throw new Error(errorData.message || "Failed to fetch grocery lists");
       }
       const data = await response.json();
+      console.log("Fetched grocery lists successfully:", data);
       return data.grocery_lists; // Access the "grocery_lists" key
     } catch (error) {
+      console.error("Error in fetchGroceryLists:", error.message);
       return thunkAPI.rejectWithValue(error.message || "Something went wrong");
     }
   }
@@ -23,14 +27,18 @@ export const fetchGroceryListFoods = createAsyncThunk(
   "groceryLists/fetchGroceryListFoods",
   async (listId, thunkAPI) => {
     try {
+      console.log(`Fetching foods for grocery list with ID: ${listId}`);
       const response = await fetch(`/api/grocery/${listId}`);
       if (!response.ok) {
         const errorData = await response.json();
+        console.error("Error fetching grocery list foods:", errorData.message);
         throw new Error(errorData.message || "Failed to fetch list foods");
       }
       const data = await response.json();
+      console.log(`Fetched foods for list ${listId}:`, data);
       return { listId, foods: data[listId] || [] };
     } catch (error) {
+      console.error("Error in fetchGroceryListFoods:", error.message);
       return thunkAPI.rejectWithValue(error.message || "Something went wrong");
     }
   }
@@ -41,6 +49,7 @@ export const createGroceryList = createAsyncThunk(
   "groceryLists/createGroceryList",
   async (groceryList, thunkAPI) => {
     try {
+      console.log("Creating a new grocery list:", groceryList);
       const response = await fetch(`/api/grocery/new`, {
         method: "POST",
         headers: {
@@ -50,10 +59,14 @@ export const createGroceryList = createAsyncThunk(
       });
       if (!response.ok) {
         const errorData = await response.json();
+        console.error("Error creating grocery list:", errorData.message);
         throw new Error(errorData.message || "Failed to create grocery list");
       }
-      return await response.json();
+      const createdList = await response.json();
+      console.log("Created grocery list successfully:", createdList);
+      return createdList;
     } catch (error) {
+      console.error("Error in createGroceryList:", error.message);
       return thunkAPI.rejectWithValue(error.message || "Something went wrong");
     }
   }
@@ -64,6 +77,7 @@ export const updateGroceryList = createAsyncThunk(
   "groceryLists/updateGroceryList",
   async ({ id, name }, thunkAPI) => {
     try {
+      console.log(`Updating grocery list with ID: ${id}, New Name: ${name}`);
       const response = await fetch(`/api/grocery/${id}`, {
         method: "PUT",
         headers: {
@@ -73,10 +87,14 @@ export const updateGroceryList = createAsyncThunk(
       });
       if (!response.ok) {
         const errorData = await response.json();
+        console.error("Error updating grocery list:", errorData.message);
         throw new Error(errorData.message || "Failed to update grocery list");
       }
-      return await response.json();
+      const updatedList = await response.json();
+      console.log("Updated grocery list successfully:", updatedList);
+      return updatedList;
     } catch (error) {
+      console.error("Error in updateGroceryList:", error.message);
       return thunkAPI.rejectWithValue(error.message || "Something went wrong");
     }
   }
@@ -87,15 +105,19 @@ export const deleteGroceryList = createAsyncThunk(
   "groceryLists/deleteGroceryList",
   async (id, thunkAPI) => {
     try {
+      console.log(`Deleting grocery list with ID: ${id}`);
       const response = await fetch(`/api/grocery/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
         const errorData = await response.json();
+        console.error("Error deleting grocery list:", errorData.message);
         throw new Error(errorData.message || "Failed to delete grocery list");
       }
+      console.log("Deleted grocery list successfully:", id);
       return id;
     } catch (error) {
+      console.error("Error in deleteGroceryList:", error.message);
       return thunkAPI.rejectWithValue(error.message || "Something went wrong");
     }
   }
@@ -105,23 +127,27 @@ export const deleteGroceryList = createAsyncThunk(
 const groceryListsSlice = createSlice({
   name: "groceryLists",
   initialState: {
-    lists: [],
-    foodsByListId: {},
-    loading: false,
-    error: null,
+    lists: [], // Stores all grocery lists
+    foodsByListId: {}, // Stores foods grouped by their list ID
+    loading: false, // Indicates loading state
+    error: null, // Stores any errors
   },
   reducers: {},
   extraReducers: (builder) => {
+    // Handle the lifecycle of each async thunk
     builder
       .addCase(createGroceryList.pending, (state) => {
+        console.log("Creating grocery list...");
         state.loading = true;
         state.error = null;
       })
       .addCase(createGroceryList.fulfilled, (state, action) => {
+        console.log("Successfully created grocery list:", action.payload);
         state.loading = false;
         state.lists.push(action.payload);
       })
       .addCase(createGroceryList.rejected, (state, action) => {
+        console.error("Error creating grocery list:", action.payload);
         state.loading = false;
         state.error = action.payload;
       })
