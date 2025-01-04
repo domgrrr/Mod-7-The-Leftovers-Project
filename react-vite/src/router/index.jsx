@@ -5,6 +5,7 @@ import DashBoard from '../components/PantryDash';
 import GroceryListPage from '../components/GroceryListPage';
 import Layout from './Layout';
 import RecipePage from '../components/RecipePage/RecipePage';
+import ContainerPage from '../components/ContainerPage/ContainerPage';
 
 export const router = createBrowserRouter([
   {
@@ -26,7 +27,10 @@ export const router = createBrowserRouter([
         path: "/dash",
         element: <DashBoard />
       },
-      
+      {
+        path: "/container/:id",
+        element: <ContainerPage />
+      },
       {
         path: "/groceries",
         element: <GroceryListPage />

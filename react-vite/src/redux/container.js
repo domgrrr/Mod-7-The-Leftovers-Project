@@ -7,7 +7,7 @@ const initialState = {
   errors: null,
 };
 
-export const getAllContainer = createAsyncThunk(
+export const getAllContainers = createAsyncThunk(
   "containers/getAll",
   async (_, { rejectWithValue }) => {
     try {
@@ -21,17 +21,37 @@ export const getAllContainer = createAsyncThunk(
 );
 
 export const getContainer = createAsyncThunk(
-    "containers/getOne",
-    async (id, { rejectWithValue }) => {
-      try {
-        const res = await fetch(`/api/container/${id}`);
-        const data = await res.json();
-        return data;
-      } catch (error) {
-        return rejectWithValue(error.message || "Error in Returning Current User");
-      }
+  "containers/getOne",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await fetch(`/api/container/${id}`);
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message || "Error in Returning Current User");
     }
-  );
+  }
+);
+
+export const addFoodItems = createAsyncThunk(
+  "container/addFood",
+  async ({ id, addedFoodItems }, { rejectWithValue }) => {
+    try {
+      const res = await fetch(`/api/container/${id}/new`, {
+        method: "POST", 
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({food: addedFoodItems})
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return rejectWithValue(data);
+      }
+      return data // return data.food
+    } catch (error) {
+      return rejectWithValue(error.message || "Unsuccessful Food to Container")
+    }
+  }
+)
 
 // export const thunkLogin = createAsyncThunk(
 //   "session/login",
@@ -103,6 +123,30 @@ const containerSlice = createSlice({
       .addCase(getAllContainers.fulfilled, (state, action) => {
         state.loading = false;
         state.containers = action.payload;
+      })
+      .addCase(getContainer.pending, (state) => {
+        state.loading = true;
+        state.errors = null;
+      })
+      .addCase(getContainer.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload;
+      })
+      .addCase(getContainer.fulfilled, (state, action) => {
+        state.loading = false;
+        state.container = action.payload;
+      })
+      .addCase(addFoodItems.pending, (state) => {
+        state.loading = true;
+        state.errors = null;
+      })
+      .addCase(addFoodItems.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload;
+      })
+      .addCase(addFoodItems.fulfilled, (state, action) => {
+        state.loading = false;
+        // state.container = action.payload;
       })
   }
 });
