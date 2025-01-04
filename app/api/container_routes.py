@@ -1,6 +1,7 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from flask_login import current_user, login_required
 from app.models import Container, Container_Food, Food, db
+from app.forms import FoodItemForm
 
 container_routes = Blueprint('containers', __name__)
 
@@ -44,8 +45,41 @@ def container(id):
     #     for (food, food_obj) in food_objects
     #     if food_obj.name[0] = 'c'
     # ]
-    return {container_info[0][0].storage_type: food_arr} if len(container_info) > 0 else {"Empty"}
+    return {"storage_type": container_info[0][0].storage_type, "food_items": food_arr} if len(container_info) > 0 else {"Empty"}
     # return {'foods': [food.to_dict() for food in container_foods]}
+
+@container_routes.route('/<int:id>/new', methods=['POST'])
+@login_required
+def new_food(id):
+    """
+    Adds food to a container
+    """
+
+    # data = request.data[2:]  #.args.get['food']
+    # print("ARRAY DATA????:", data)
+    # print("id", id)
+    
+    def process_form(food):
+        form = FoodItemForm(data=food)
+        form['csrf_token'].data = request.cookies['csrf_token']
+        form['container_id'].data = id
+        print("Form_DATA", form.data)
+        if form.validate_on_submit():
+            food_item = Container_Food( 
+                food_id=form.data['food_id'], 
+                container_id=form.data['container_id'],
+                amount=form.data['amount'], 
+                expiration=form.data['expiration'] 
+            )
+            db.session.add(food_item)
+        return {'message': 'doing something'}
+    
+    data = request.get_json()['food']
+    for food in data:
+        process_form(food)
+    return {'message': 'doing something'}
+
+    
     
 #master list of all foods in ALL containers
 @container_routes.route('/masterlist') #we can change this to /all or /list-all whichever preferred
