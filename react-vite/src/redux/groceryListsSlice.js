@@ -5,7 +5,7 @@ export const fetchGroceryLists = createAsyncThunk(
   "groceryLists/fetchGroceryLists",
   async (_, thunkAPI) => {
     try {
-      const response = await fetch(`/api/grocery/`);
+      const response = await fetch(`/api/grocery`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to fetch grocery lists");
