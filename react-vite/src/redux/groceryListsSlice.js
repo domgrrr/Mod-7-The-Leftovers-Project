@@ -1,12 +1,25 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+// Helper function to handle fetch requests and check for errors
+const fetchData = async (url, options = {}) => {
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Something went wrong");
+  }
+
+  return response.json();
+};
+
 // Fetch all grocery lists for the current user
 export const fetchGroceryLists = createAsyncThunk(
   "groceryLists/fetchGroceryLists",
   async (_, thunkAPI) => {
     try {
+
       console.log("Fetching all grocery lists...");
-      const response = await fetch(`/api/grocery/`);
+      const response = await fetch(`/api/groceries/`);
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Error fetching grocery lists:", errorData.message);
@@ -14,9 +27,9 @@ export const fetchGroceryLists = createAsyncThunk(
       }
       const data = await response.json();
       console.log("Fetched grocery lists successfully:", data);
+
       return data.grocery_lists; // Access the "grocery_lists" key
     } catch (error) {
-      console.error("Error in fetchGroceryLists:", error.message);
       return thunkAPI.rejectWithValue(error.message || "Something went wrong");
     }
   }
@@ -27,8 +40,9 @@ export const fetchGroceryListFoods = createAsyncThunk(
   "groceryLists/fetchGroceryListFoods",
   async (listId, thunkAPI) => {
     try {
+
       console.log(`Fetching foods for grocery list with ID: ${listId}`);
-      const response = await fetch(`/api/grocery/${listId}`);
+      const response = await fetch(`/api/groceries/${listId}`);
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Error fetching grocery list foods:", errorData.message);
@@ -37,14 +51,14 @@ export const fetchGroceryListFoods = createAsyncThunk(
       const data = await response.json();
       console.log(`Fetched foods for list ${listId}:`, data);
       return { listId, foods: data[listId] || [] };
+
     } catch (error) {
-      console.error("Error in fetchGroceryListFoods:", error.message);
       return thunkAPI.rejectWithValue(error.message || "Something went wrong");
     }
   }
 );
 
-// Create a new grocery list
+// Action to create a new grocery list
 export const createGroceryList = createAsyncThunk(
   "groceryLists/createGroceryList",
   async (groceryList, thunkAPI) => {
@@ -56,17 +70,11 @@ export const createGroceryList = createAsyncThunk(
         },
         body: JSON.stringify(groceryList),
       });
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error creating grocery list:", errorData.message);
-        throw new Error(errorData.message || "Failed to create grocery list");
-      }
-      const createdList = await response.json();
-      console.log("Created grocery list successfully:", createdList);
-      return createdList;
+
+      const data = await response.json();
+      return data; // Return the new grocery list
     } catch (error) {
-      console.error("Error in createGroceryList:", error.message);
-      return thunkAPI.rejectWithValue(error.message || "Something went wrong");
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
@@ -83,17 +91,11 @@ export const updateGroceryList = createAsyncThunk(
         },
         body: JSON.stringify({ name }),
       });
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error updating grocery list:", errorData.message);
-        throw new Error(errorData.message || "Failed to update grocery list");
-      }
-      const updatedList = await response.json();
-      console.log("Updated grocery list successfully:", updatedList);
-      return updatedList;
+
+      const data = await response.json();
+      return data; // Updated grocery list
     } catch (error) {
-      console.error("Error in updateGroceryList:", error.message);
-      return thunkAPI.rejectWithValue(error.message || "Something went wrong");
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
@@ -103,20 +105,12 @@ export const deleteGroceryList = createAsyncThunk(
   "groceryLists/deleteGroceryList",
   async (id, thunkAPI) => {
     try {
-      console.log(`Deleting grocery list with ID: ${id}`);
-      const response = await fetch(`/api/grocery/${id}`, {
+      await fetch(`/api/grocery/${id}`, {
         method: "DELETE",
       });
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error deleting grocery list:", errorData.message);
-        throw new Error(errorData.message || "Failed to delete grocery list");
-      }
-      console.log("Deleted grocery list successfully:", id);
-      return id;
+      return id; // Return the ID of the deleted list
     } catch (error) {
-      console.error("Error in deleteGroceryList:", error.message);
-      return thunkAPI.rejectWithValue(error.message || "Something went wrong");
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
@@ -125,42 +119,42 @@ export const deleteGroceryList = createAsyncThunk(
 const groceryListsSlice = createSlice({
   name: "groceryLists",
   initialState: {
-    lists: [], // Stores all grocery lists
-    foodsByListId: {}, // Stores foods grouped by their list ID
-    loading: false, // Indicates loading state
-    error: null, // Stores any errors
+    lists: [],
+    foodsByListId: {}, // Store foods keyed by list ID
+    loading: false,
+    error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
-    // Handle the lifecycle of each async thunk
     builder
+      // Create a new grocery list
       .addCase(createGroceryList.pending, (state) => {
-        console.log("Creating grocery list...");
         state.loading = true;
         state.error = null;
       })
       .addCase(createGroceryList.fulfilled, (state, action) => {
-        console.log("Successfully created grocery list:", action.payload);
         state.loading = false;
-        state.lists.push(action.payload);
+        state.lists.push(action.payload); // Add the new list to the state    
       })
       .addCase(createGroceryList.rejected, (state, action) => {
-        console.error("Error creating grocery list:", action.payload);
         state.loading = false;
         state.error = action.payload;
       })
+      // Fetch all grocery lists
       .addCase(fetchGroceryLists.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchGroceryLists.fulfilled, (state, action) => {
         state.loading = false;
-        state.lists = action.payload;
+        state.lists = action.payload; // Save the lists
       })
       .addCase(fetchGroceryLists.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
+
+      // Fetch a specific grocery list's foods
       .addCase(fetchGroceryListFoods.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -168,12 +162,14 @@ const groceryListsSlice = createSlice({
       .addCase(fetchGroceryListFoods.fulfilled, (state, action) => {
         const { listId, foods } = action.payload;
         state.loading = false;
-        state.foodsByListId[listId] = foods;
+        state.foodsByListId[listId] = foods; // Save foods for the specific list
       })
       .addCase(fetchGroceryListFoods.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
+
+      // Update a grocery list
       .addCase(updateGroceryList.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -183,13 +179,15 @@ const groceryListsSlice = createSlice({
         const updatedList = action.payload;
         const index = state.lists.findIndex((list) => list.id === updatedList.id);
         if (index !== -1) {
-          state.lists[index] = updatedList;
+          state.lists[index] = updatedList; // Update the specific grocery list
         }
       })
       .addCase(updateGroceryList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
+
+      // Delete a grocery list
       .addCase(deleteGroceryList.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -197,7 +195,7 @@ const groceryListsSlice = createSlice({
       .addCase(deleteGroceryList.fulfilled, (state, action) => {
         state.loading = false;
         const id = action.payload;
-        state.lists = state.lists.filter((list) => list.id !== id);
+        state.lists = state.lists.filter((list) => list.id !== id); // Remove the deleted list
       })
       .addCase(deleteGroceryList.rejected, (state, action) => {
         state.loading = false;
