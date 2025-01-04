@@ -1,54 +1,68 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createGroceryList } from "../../redux/groceryListsSlice";
 
 const GroceryForm = () => {
   const dispatch = useDispatch();
 
-  const [name, setName] = useState("");
-  const [date, setDate] = useState("");
-  const [completed, setCompleted] = useState(false);
-  const [items, setItems] = useState([{ food_id: "", quantity: "", purchased: false }]);
+  const [formData, setFormData] = useState({
+    name: "",
+    date: "",
+    completed: false,
+    items: [{ food_id: "", quantity: "", purchased: false }],
+  });
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleItemChange = (index, field, value) => {
-    const updatedItems = [...items];
-    updatedItems[index][field] = value;
-    setItems(updatedItems);
+    setFormData((prev) => {
+      const updatedItems = [...prev.items];
+      updatedItems[index][field] = value;
+      return { ...prev, items: updatedItems };
+    });
   };
 
   const addItem = () => {
-    setItems([...items, { food_id: "", quantity: "", purchased: false }]);
+    setFormData((prev) => ({
+      ...prev,
+      items: [...prev.items, { food_id: "", quantity: "", purchased: false }],
+    }));
   };
 
   const removeItem = (index) => {
-    const updatedItems = items.filter((_, i) => i !== index);
-    setItems(updatedItems);
+    setFormData((prev) => ({
+      ...prev,
+      items: prev.items.filter((_, i) => i !== index),
+    }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const newGroceryList = { name, date, completed, items };
-    dispatch(createGroceryList(newGroceryList));
+    dispatch(createGroceryList(formData));
   };
+
+  const { name, date, completed, items } = formData;
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
-        <label>List Name:</label>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-      </div>
-      <div>
-        <label>Date:</label>
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-      </div>
-      <div>
-        <label>Completed:</label>
+      <label>
+        List Name:
+        <input type="text" value={name} onChange={(e) => handleChange("name", e.target.value)} required />
+      </label>
+      <label>
+        Date:
+        <input type="date" value={date} onChange={(e) => handleChange("date", e.target.value)} />
+      </label>
+      <label>
+        Completed:
         <input
           type="checkbox"
           checked={completed}
-          onChange={(e) => setCompleted(e.target.checked)}
+          onChange={(e) => handleChange("completed", e.target.checked)}
         />
-      </div>
+      </label>
       <div>
         <label>Items:</label>
         {items.map((item, index) => (
@@ -87,3 +101,4 @@ const GroceryForm = () => {
 };
 
 export default GroceryForm;
+

@@ -33,7 +33,7 @@ app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
 app.register_blueprint(container_routes, url_prefix='/api/container')
 app.register_blueprint(recipe_routes, url_prefix='/api/recipe') #added
-app.register_blueprint(grocery_routes, url_prefix='/api/grocery')
+app.register_blueprint(grocery_routes, url_prefix='/api/groceries')
 db.init_app(app)
 Migrate(app, db)
 
