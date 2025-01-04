@@ -10,7 +10,15 @@
   padding: 1rem;
   border-bottom: 1px solid #ddd;
 }
-
+.navbar-menu {
+  display: flex;
+  flex-direction: row; /* Ensures items are horizontal */
+  align-items: center;
+  gap: 2rem; /* Adds space between items */
+  list-style: none; 
+  margin: 10px;
+  padding: 0;
+}
 .navbar-logo-container {
   flex-shrink: 0;
 }

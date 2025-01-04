@@ -31,14 +31,14 @@ function Navigation() {
   const closeMenu = () => setShowMenu(false);
 
   return ( //added a classname for css without changing format just wrapped in a nav
-    //added a div for the logo also we need to have when logo is clicked its brought to whatever our home page is
+    //added a div for the logo also we need to have when logo is clicked its brought to whatever our home page
   <nav className="navbar"> 
     <div className="navbar-logo">
       <img src={logo} alt="Freshly Logo"className="navbar-logo"/> 
     </div>
     <ul className="navbar-menu">
       {user?.username ? (
-        <div>
+        <>
           <li>
             <NavLink to="/dash">Home</NavLink>
           </li>
@@ -48,7 +48,7 @@ function Navigation() {
           <li>
             <ProfileButton />
           </li>
-        </div>
+        </>
       ) : (
         <>
           <OpenModalMenuItem
