@@ -1,44 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { fetchRecipes } from '../../redux/recipeslice';
+import './RecipePage.css';
 
 //Define recipepage component so just like a list of recipes
 const RecipePage = () => {
-    //state for storing recipes and error messages
-  const [recipes, setRecipes] = useState([]);
-  const [error, setError] = useState(null);
+  const { recipes, loading, errors } = useSelector((state) => state.recipes);
+  const dispatch = useDispatch();
 
-  //uhh i use useeffect to fetch the recipes from the backend not sure
-  useEffect(() => {
-    fetch('/api/recipe') // ADDED THE FETCH REQUEST fetch from back
-      .then(response => {
-        if (!response.ok) { //if response is not ok throw error
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => setRecipes(data.recipes))
-      .catch(error => setError(error));
-  }, []);
+  useEffect(() => { //fetch recipes on page load
+    dispatch(fetchRecipes()); //using thunk to fetch recipes
+  }, [dispatch]); //dispatch does not change so no need to add it to the dependency array
 
-  if (error) { //if error return error message
-    return <div>Error: {error.message}</div>;
+  if (loading) { //if loading display loading
+    return <div>Loading...</div>;
+  }
+
+  if (errors) { //if errors display errors
+    return <div>Error: {errors}</div>;
   }
 
   return ( //return list of recipes 
     //map through recipes and display name, directions, image, and link to recipe details
     //link to recipe details so need a recipe details page?^
-    <div>
-      <h1>Recipes</h1>
-      <ul>
-        {recipes.map(recipe => (
-          <li key={recipe.id}> 
-            <h2>{recipe.name}</h2>
-            <p>{recipe.directions}</p> 
-            <img src={recipe.image_url} alt={recipe.name} />
-            <Link to={`/recipes/${recipe.id}`}>View Details</Link> 
-          </li>
-        ))} 
-      </ul>
+    <div className="recipe-page">
+      <h1 className="recipe-page-title">Browse Recipes Below</h1>
+      <div className="recipe-grid">
+        {recipes.map((recipe) => (
+          <div key={recipe.id} className="recipe-card">
+            
+            <img src={recipe.image_url} alt={recipe.name} className="recipe-image" />
+            <h2 className="recipe-name">{recipe.name}</h2>
+            <Link to={`/recipes/${recipe.id}`} className="view-details-button">View Details</Link>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

@@ -6,7 +6,7 @@ export const fetchGroceryLists = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       console.log("Fetching all grocery lists...");
-      const response = await fetch(`/api/groceries/`);
+      const response = await fetch(`/api/grocery/`);
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Error fetching grocery lists:", errorData.message);
@@ -49,7 +49,6 @@ export const createGroceryList = createAsyncThunk(
   "groceryLists/createGroceryList",
   async (groceryList, thunkAPI) => {
     try {
-      console.log("Creating a new grocery list:", groceryList);
       const response = await fetch(`/api/grocery/new`, {
         method: "POST",
         headers: {
@@ -77,7 +76,6 @@ export const updateGroceryList = createAsyncThunk(
   "groceryLists/updateGroceryList",
   async ({ id, name }, thunkAPI) => {
     try {
-      console.log(`Updating grocery list with ID: ${id}, New Name: ${name}`);
       const response = await fetch(`/api/grocery/${id}`, {
         method: "PUT",
         headers: {

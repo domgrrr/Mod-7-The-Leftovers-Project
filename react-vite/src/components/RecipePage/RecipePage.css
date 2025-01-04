@@ -1,0 +1,73 @@
+.recipe-page {
+  padding: 20px;
+}
+
+.recipe-page-title {
+  font-size: 35px;
+  text-align: center;
+  font-weight: lighter;
+  margin-bottom: 20px;
+  color: #333;
+  /* border-bottom: 1px solid #ddd; */
+}
+
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(250px, 1fr)); 
+    padding-left: 35px;
+    padding-right: 35px;
+    /* gap: 30px; not sure if needed idk */
+    margin: 0 auto; 
+  }
+
+.recipe-card {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 30px;
+}
+
+.recipe-name {
+  font-size: 20px;
+  margin: 10px 0;
+}
+
+.recipe-image {
+  width: 100%; /* we can edit how big we want the image */
+  height: 100%;
+  object-fit: cover;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 15px;
+}
+
+.view-details-button {
+  display: inline-block;
+  margin-top: 10px;
+  font-weight: lighter;
+  padding: 5px 10px;
+  color: #0f0d0d;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.view-details-button:hover {
+  background-color: #cfcfcf;
+}   
+
+
+@media (max-width: 768px) {
+    .recipe-grid {
+      grid-template-columns: repeat(2, minmax(200px, 1fr));
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .recipe-grid {
+      grid-template-columns: 1fr;
+    }
+  }
