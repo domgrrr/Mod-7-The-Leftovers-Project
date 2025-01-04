@@ -20,7 +20,7 @@ const GroceryListDetails = ({ list }) => {
 
       {/* Rendering the list of items in the grocery list */}
       <ul>
-        {list.items.map(({ id, name, amount, purchased }) => (
+        {list?.items.map(({ id, name, amount, purchased }) => (
           <li key={id} className={purchased ? "purchased" : ""}>
             {/* Displaying the item's name and amount */}
             {name} - {amount}
