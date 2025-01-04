@@ -2,11 +2,15 @@ import { configureStore } from "@reduxjs/toolkit";
 import { default as logger } from "redux-logger";
 import sessionReducer from "./session";
 import groceryListsReducer from "./groceryListsSlice";
+import containerReducer from "./container";
+import recipeReducer from "./recipeslice";
 
 const store = configureStore({
   reducer: {
     session: sessionReducer,
     groceryLists: groceryListsReducer,
+    container: containerReducer,
+    recipes: recipeReducer,
   },
   middleware: (getDefaultMiddleware) => {
     const middlewares = getDefaultMiddleware();

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import { thunkSignup } from "../../redux/session";
 import "./SignupForm.css";
 
 function SignupFormModal() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -37,6 +39,7 @@ function SignupFormModal() {
       setErrors(serverResponse);
     } else {
       closeModal();
+      navigate('/dash');
     }
   };
 
