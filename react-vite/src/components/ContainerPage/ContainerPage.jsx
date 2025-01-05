@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import {  useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { useEffect } from "react";
 import { getContainer } from "../../redux/container";
 import OpenModalButton from "../OpenModalButton";
@@ -23,8 +23,8 @@ function ContainerPage() {
                     modalComponent={<ContainerFoodFormModal />}
                 />
             </div>
-            {container?.food_items.map((item) => (
-                <div>
+            {container?.food_items.map((item, i) => (
+                <div key={i}>
                     <img src={item?.image_url} alt={item?.name}/>
                     <div>{item?.name}</div>
                     <div>

@@ -53,59 +53,6 @@ export const addFoodItems = createAsyncThunk(
   }
 )
 
-// export const thunkLogin = createAsyncThunk(
-//   "session/login",
-//   async ({ email, password }, { rejectWithValue }) => {
-//     try {
-//       const res = await fetch("/api/auth/login", {
-//         method: "POST",
-//         headers: {"Content-Type": "application/json"},
-//         body: JSON.stringify({ email, password }),
-//       });
-//       const data = await res.json();
-//       if (!res.ok) {
-//         return rejectWithValue(data);
-//       }
-//       return data;
-//     } catch (error) {
-//       return rejectWithValue(error.message || "Login Error");
-//     }
-//   }
-// );
-
-// export const thunkLogout = createAsyncThunk(
-//   "session/logout",
-//   async (_, { rejectWithValue }) => {
-//     try {
-//       const res = await fetch("/api/auth/logout");
-//       const data = await res.json();
-//       return data.message;
-//     } catch (error) {
-//       return rejectWithValue(error.message || "Logout Error");
-//     }
-//   }
-// );
-
-// export const thunkSignup = createAsyncThunk(
-//   "session/signup",
-//   async ({ username, email, password }, { rejectWithValue }) => {
-//     try {
-//       const res = await fetch("/api/auth/signup", {
-//         method: "POST",
-//         headers: {"Content-Type": "application/json"},
-//         body: JSON.stringify({ username, email, password }),
-//       });
-//       const data = await res.json();
-//       if (!res.ok) {
-//         return rejectWithValue(data);
-//       }
-//       return data.user;
-//     } catch (error) {
-//       return rejectWithValue(error.message || "Signup Error");
-//     }
-//   }
-// )
-
 const containerSlice = createSlice({
   name: "containers",
   initialState,
