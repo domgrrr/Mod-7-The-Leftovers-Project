@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
 // Helper function to handle fetch requests and check for errors
 // const fetchData = async (url, options = {}) => {
 //   const response = await fetch(url, options);

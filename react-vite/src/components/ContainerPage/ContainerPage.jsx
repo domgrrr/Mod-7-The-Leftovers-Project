@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { getContainer } from "../../redux/container";
 import OpenModalButton from "../OpenModalButton";
 import ContainerFoodFormModal from "./FoodFormModal";
-
+import "./ContainerPage.css";
 function ContainerPage() {
     const { id } = useParams();
     const dispatch = useDispatch();
@@ -15,7 +15,7 @@ function ContainerPage() {
     }, [dispatch])
 
     return (
-        <div>
+        <div className="container-page">
             <h1>{container?.storage_type.charAt(0).toUpperCase() + container?.storage_type.slice(1)}</h1>
             <div>
                 <OpenModalButton 
@@ -23,19 +23,23 @@ function ContainerPage() {
                     modalComponent={<ContainerFoodFormModal />}
                 />
             </div>
-            {container?.food_items.map((item, i) => (
-                <div key={i}>
+            <div className="food-grid">
+            {container?.food_items.map((item) => (
+                <div className="food-item" key={item.id}>
                     <img src={item?.image_url} alt={item?.name}/>
+                    <div className="food-item-details">  
                     <div>{item?.name}</div>
                     <div>
                         {`${item?.amount ? (`amount: ${item?.amount}`) : ''}
                           ${item?.amount && item?.expiration ? (', ') : ''}
                           ${item?.expiration ? (`expiration: ${item?.expiration.slice(5, 16)}`) : ''}`}
                     </div>
+                    </div>
                     <div>Buttons: remove or add to grocery</div>
                 </div>
             ))}
         </div>
+      </div>
     )
 };
 
