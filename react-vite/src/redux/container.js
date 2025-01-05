@@ -51,6 +51,17 @@ export const addFoodItems = createAsyncThunk(
       return rejectWithValue(error.message || "Unsuccessful Food to Container")
     }
   }
+);
+
+export const removeFood = createAsyncThunk(
+  "container/removeFood",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await fetch(``)
+    } catch (error) {
+      
+    }
+  }
 )
 
 const containerSlice = createSlice({

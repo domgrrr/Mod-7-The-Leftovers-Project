@@ -35,7 +35,9 @@ function ContainerPage() {
                           ${item?.expiration ? (`expiration: ${item?.expiration.slice(5, 16)}`) : ''}`}
                     </div>
                     </div>
-                    <div>Buttons: remove or add to grocery</div>
+                    <div>
+                        <button>Remove Item</button>
+                    </div>
                 </div>
             ))}
         </div>
