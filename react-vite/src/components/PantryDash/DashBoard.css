@@ -12,7 +12,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 20px; 
     justify-items: center; 
-    width: 80%;
+    width: 75%;
 }
 
 .bottom-row {
@@ -39,6 +39,7 @@
     color: black;
     font-size: 18px;
     transition: transform 0.2s, box-shadow 0.2s;
+    font-family: 'Courier New', monospace;
 }
 
 .dashboard-links a svg {
