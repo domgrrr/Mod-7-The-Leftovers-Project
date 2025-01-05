@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getAllContainers } from "../../redux/container";
@@ -8,15 +8,17 @@ import "./DashBoard.css";
 function DashBoard() {
     const dispatch = useDispatch();
     const containers = useSelector((store) => store.container.containers)
+    const user = useSelector((store) => store.auth?.user); //IF NO AUTHERIZED USER, REDIRECT TO WELCOME PAGE
+    
+
+    if (!user) {
+        return <Navigate to="/welcome" />; //IF NO AUTHERIZED USER, REDIRECT TO WELCOME PAGE
+    }
 
     useEffect(() => {
         dispatch(getAllContainers());
     }, [dispatch]);
     
-
-    // if (!user) {
-        
-    // }
 
     return (
         <div className="dashboard-container">
