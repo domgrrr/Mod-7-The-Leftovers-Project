@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import ProfileButton from "./ProfileButton";
 import { useSelector } from "react-redux";
 import { useState, useEffect, useRef } from "react";
@@ -12,8 +12,8 @@ function Navigation() {
   const [showMenu, setShowMenu] = useState(false);
   const user = useSelector((store) => store.session.user);
   const ulRef = useRef();
-  
-  
+  const location = useLocation(); // Get the current location object so /welcome route so no navbar loads
+
   useEffect(() => {
     if (!showMenu) return;
 
@@ -33,6 +33,10 @@ function Navigation() {
   if (!user) {
     return null; // Do not render the navigation bar if the user is not authenticated
   }
+  if (location.pathname === '/welcome') {
+    return null;
+  } // Do not render the navigation bar if the user is on the welcome page
+
 
   return ( //added a classname for css without changing format just wrapped in a nav
     //added that when logo is clicked it redirects to /dash (Home Page)
