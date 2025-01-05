@@ -1,16 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Helper function to handle fetch requests and check for errors
-const fetchData = async (url, options = {}) => {
-  const response = await fetch(url, options);
+// const fetchData = async (url, options = {}) => {
+//   const response = await fetch(url, options);
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Something went wrong");
-  }
+//   if (!response.ok) {
+//     const errorData = await response.json();
+//     throw new Error(errorData.message || "Something went wrong");
+//   }
 
-  return response.json();
-};
+//   return response.json();
+// };
 
 // Fetch all grocery lists for the current user
 export const fetchGroceryLists = createAsyncThunk(
