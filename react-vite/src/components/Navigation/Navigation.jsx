@@ -30,6 +30,10 @@ function Navigation() {
   
   const closeMenu = () => setShowMenu(false);
 
+  if (!user) {
+    return null; // Do not render the navigation bar if the user is not authenticated
+  }
+
   return ( //added a classname for css without changing format just wrapped in a nav
     //added that when logo is clicked it redirects to /dash (Home Page)
     //added a div for the logo also we need to have when logo is clicked its brought to whatever our home page
