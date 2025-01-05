@@ -3,49 +3,37 @@
     justify-items: center;
     align-items: center;
     height: 100vh;
-    grid-template-rows: auto auto; /* Explicitly define two rows */
-    grid-gap: 10px; /* Add gap between rows */
+    grid-template-rows: auto auto; 
+    grid-gap: 10px; 
 }
 
 .top-row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 30px; /* Add gap between columns */
-    justify-items: center; /* Center items horizontally */
-    width: 100%;
+    gap: 20px; 
+    justify-items: center; 
+    width: 80%;
 }
 
 .bottom-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 30px; /* Add gap between columns */
-    justify-items: center; /* Center items horizontally */
-    width: 100%;
+    gap: 20px;
+    justify-items: center; 
+    width: 90%;
 }
 
-.top-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    justify-content: center;/* 2 columns for the top row */
-    width: 100%;
-}
-
-.bottom-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columns for the bottom row */
-    width: 100%;
-    gap: 50px;
-    justify-content: center;
-}
 
 .dashboard-links a {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 200px; 
     height: 200px; 
     background-color: white;
     border-radius: 50%; 
+    border: 2px solid #8cccac;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-decoration: none;
     color: black;
@@ -53,7 +41,13 @@
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
+.dashboard-links a svg {
+    margin-bottom: 10px; 
+}
+
+
 .dashboard-links a:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    color: #16a34a;
 }

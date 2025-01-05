@@ -5,9 +5,8 @@
 .recipe-page-title {
   font-size: 35px;
   text-align: center;
-  font-weight: lighter;
   margin-bottom: 20px;
-  color: #333;
+  color: #25995c;
   /* border-bottom: 1px solid #ddd; */
 }
 
@@ -49,9 +48,10 @@
   display: inline-block;
   margin-top: 10px;
   font-weight: lighter;
-  padding: 5px 10px;
-  color: #0f0d0d;
+  padding: 2px 10px;
+  color: #25995c;
   border-radius: 4px;
+  text-decoration: none;
   transition: background-color 0.3s ease;
 }
 
