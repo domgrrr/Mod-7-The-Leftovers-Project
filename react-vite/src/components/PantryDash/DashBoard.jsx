@@ -8,13 +8,7 @@ import "./DashBoard.css";
 function DashBoard() {
     const dispatch = useDispatch();
     const containers = useSelector((store) => store.container.containers)
-    const user = useSelector((store) => store.auth?.user); //IF NO AUTHERIZED USER, REDIRECT TO WELCOME PAGE
     
-
-    if (!user) {
-        return <Navigate to="/welcome" />; //IF NO AUTHERIZED USER, REDIRECT TO WELCOME PAGE
-    }
-
     useEffect(() => {
         dispatch(getAllContainers());
     }, [dispatch]);
