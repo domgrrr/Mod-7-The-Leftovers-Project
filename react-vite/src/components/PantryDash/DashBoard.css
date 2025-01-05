@@ -1,0 +1,61 @@
+.dashboard-container {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    height: 100vh;
+    grid-template-rows: auto auto; /* Explicitly define two rows */
+    grid-gap: 10px; /* Add gap between rows */
+    background: url('https://img.freepik.com/premium-photo/green-leaves-white-background_636537-351413.jpg') no-repeat center center; /* Add background image */
+    background-size: cover;
+}
+
+.top-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px; /* Add gap between columns */
+    justify-items: center; /* Center items horizontally */
+    width: 100%;
+}
+
+.bottom-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px; /* Add gap between columns */
+    justify-items: center; /* Center items horizontally */
+    width: 100%;
+}
+
+.top-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    justify-content: center;/* 2 columns for the top row */
+    width: 100%;
+}
+
+.bottom-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for the bottom row */
+    width: 100%;
+    gap: 50px;
+    justify-content: center;
+}
+
+.dashboard-links a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px; 
+    height: 200px; 
+    background-color: white;
+    border-radius: 50%; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-links a:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
