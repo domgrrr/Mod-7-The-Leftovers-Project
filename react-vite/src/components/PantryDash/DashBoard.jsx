@@ -7,14 +7,18 @@ import "./DashBoard.css";
 
 function DashBoard() {
     const dispatch = useDispatch();
+    const user = useSelector((store) => store.session.user);
     const containers = useSelector((store) => store.container.containers)
+
+    if (!user) {
+        return <Navigate to="/welcome" />; //why isnt this working?
+    }
 
     useEffect(() => {
         dispatch(getAllContainers());
     }, [dispatch]);
     
     
-
     return (
         <div className="dashboard-container">
             <h1>Your Dashboard</h1>
