@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react"; // Importing necessary React hooks.
+import { useEffect, useState } from "react"; // Importing necessary React hooks.
 import { useSelector, useDispatch } from "react-redux"; // Importing Redux hooks.
 import { fetchGroceryLists } from "../../redux/groceryListsSlice"; // Importing the action to fetch grocery lists from the Redux slice.
 import GroceryListDetails from "../GroceryListDetails"; // Importing the GroceryListDetails component.
+import GroceryForm from "../GroceryForm"; // Importing the GroceryForm component.
 import "./GroceryListPage.css"; // Importing the CSS file for styling.
 
 const GroceryListPage = () => {
   const dispatch = useDispatch(); // Getting the dispatch function to trigger actions.
   const groceryLists = useSelector((state) => state.groceryLists.lists); // Selecting the grocery lists from the Redux store.
   const [selectedList, setSelectedList] = useState(null); // Local state to keep track of the currently selected list.
+  const [showForm, setShowForm] = useState(false); // State to control visibility of the GroceryForm.
 
   // Fetch the grocery lists when the component mounts.
   useEffect(() => {
@@ -21,9 +23,29 @@ const GroceryListPage = () => {
     setSelectedList(list); // Updating the local state with the selected list.
   };
 
+  // Toggles the form's visibility.
+  const toggleForm = () => {
+    setShowForm((prev) => !prev);
+  };
+
   return (
     <div className="grocery-list-page">
       <h1>My Grocery Lists</h1>
+
+      {/* Section to create a new grocery list */}
+      <div className="create-new-list">
+        <h3>Create a New Grocery List</h3>
+        <button onClick={toggleForm} className="open-form-button">
+          Add List
+        </button>
+      </div>
+
+      {/* Display the GroceryForm when showForm is true */}
+      {showForm && (
+        <div className="form-container">
+          <GroceryForm onClose={toggleForm} />
+        </div>
+      )}
 
       {/* Displaying the list of grocery lists */}
       <ul className="list-container">
@@ -53,4 +75,5 @@ const GroceryListPage = () => {
 };
 
 export default GroceryListPage;
+
 

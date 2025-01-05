@@ -12,3 +12,10 @@ class Food(db.Model):
     image_url = db.Column(db.String)
     alias_bool = db.Column(db.Boolean, nullable=False)
     alias_id = db.Column(db.Integer, db.ForeignKey("foods.id"))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'type': self.type
+        }
