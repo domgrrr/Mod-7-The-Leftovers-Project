@@ -8,14 +8,16 @@ import "./DashBoard.css";
 function DashBoard() {
     const dispatch = useDispatch();
     const containers = useSelector((store) => store.container.containers)
-    
+
     useEffect(() => {
         dispatch(getAllContainers());
     }, [dispatch]);
     
+    
 
     return (
         <div className="dashboard-container">
+            <h1>Your Dashboard</h1>
             <div className="dashboard-links top-row">
                 <Link to="/recipes">
                     <FaBook /> Recipes
