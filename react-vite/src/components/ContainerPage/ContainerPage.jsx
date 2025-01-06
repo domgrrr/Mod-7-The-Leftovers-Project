@@ -49,7 +49,7 @@ function ContainerPage() {
                         <OpenModalButton 
                             buttonText="Edit Item"
                             modalComponent={<ContainerFoodEditModal />}
-                            food={item}
+                            item={item}
                         />
                         
 
