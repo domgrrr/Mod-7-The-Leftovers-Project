@@ -14,6 +14,10 @@ function ContainerPage() {
         dispatch(getContainer(id));
     }, [dispatch])
 
+    const removeFood = (relation_id) => {
+
+    }
+
     return (
         <div className="container-page">
             <h1>{container?.storage_type.charAt(0).toUpperCase() + container?.storage_type.slice(1)}</h1>
@@ -36,7 +40,7 @@ function ContainerPage() {
                     </div>
                     </div>
                     <div>
-                        <button>Remove Item</button>
+                        <button type="button" onClick={removeFood}>Remove Item</button>
                     </div>
                 </div>
             ))}

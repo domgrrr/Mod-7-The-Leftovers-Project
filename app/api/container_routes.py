@@ -31,6 +31,7 @@ def container(id):
     # To see this in the console: print("OBJECT HERE:", container_info)
     food_arr = [
         {
+            "relation_id": food_relation.id,
             "food_id": food_relation.food_id,
             "name": food_obj.name,
             "type": food_obj.type,
@@ -66,7 +67,7 @@ def new_food(id):
                 food_id=form.data['food_id'], 
                 container_id=form.data['container_id'],
                 amount=form.data['amount'], 
-                expiration=datetime.strptime(form.data["expiration"], "%Y-%m-%d").date() if form.data['expiration'] else None
+                expiration=datetime.strptime(form.data["expiration"], "%Y-%m-%d").date() if form.data['expiration'] != "" else None
             )
             db.session.add(food_item)
         return {'message': 'doing something'}
@@ -86,9 +87,13 @@ def new_food(id):
 #     Edit food amount and/or expiration
 #     """ 
 
-# @container_routes.route('/<int:id>/delete')
-# @login_required
-# def delete_food():
+@container_routes.route('/<int:id>/delete')
+@login_required
+def delete_food(food_id):
+    """
+    Deletes food item from container
+    """
+    
     
 #master list of all foods in ALL containers
 @container_routes.route('/masterlist') #we can change this to /all or /list-all whichever preferred
