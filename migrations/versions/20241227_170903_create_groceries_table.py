@@ -28,7 +28,7 @@ def upgrade():
     sa.Column('date', sa.Date(), nullable=False),
     sa.Column('name', sa.String(length=20), nullable=False),
     sa.Column('completed', sa.Boolean(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['{SCHEMA}.users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
 
