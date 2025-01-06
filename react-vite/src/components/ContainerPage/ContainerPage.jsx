@@ -48,11 +48,10 @@ function ContainerPage() {
                          onClick={() => handleRemoveFood(item.relation_id)}>Remove Item</button>
                         <OpenModalButton 
                             buttonText="Edit Item"
-                            modalComponent={<ContainerFoodEditModal />}
-                            item={item}
+                            modalComponent={<ContainerFoodEditModal item={item}/>}
+                            
                         />
                         
-
                     </div>
                 </div>
             ))}
