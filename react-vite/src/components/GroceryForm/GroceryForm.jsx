@@ -1,16 +1,23 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllFoods } from "../../redux/food";
 import { createGroceryList } from "../../redux/groceryListsSlice";
 
 const GroceryForm = ({ onClose }) => {
   const dispatch = useDispatch();
+  const { foods } = useSelector((store) => store.food); // Fetch the foods from Redux state
 
   const [formData, setFormData] = useState({
     name: "",
     date: "",
     completed: false,
-    items: [{ food_id: "", quantity: "", purchased: false }],
+    items: [{ food_id: "", food_name: "", quantity: "", purchased: false }],
   });
+
+  // Fetch all foods from the Redux store when the component mounts
+  useEffect(() => {
+    dispatch(getAllFoods());
+  }, [dispatch]);
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -27,7 +34,7 @@ const GroceryForm = ({ onClose }) => {
   const addItem = () => {
     setFormData((prev) => ({
       ...prev,
-      items: [...prev.items, { food_id: "", quantity: "", purchased: false }],
+      items: [...prev.items, { food_id: "", food_name: "", quantity: "", purchased: false }],
     }));
   };
 
@@ -36,6 +43,19 @@ const GroceryForm = ({ onClose }) => {
       ...prev,
       items: prev.items.filter((_, i) => i !== index),
     }));
+  };
+
+  const setFoodName = (value, i) => {
+    const setID = () => {
+      const searchFood = foods?.find((food) => food.name === value);
+      return searchFood?.id || ""; // Ensure accurate ID matching
+    };
+
+    setFormData((prev) => {
+      const updatedItems = [...prev.items];
+      updatedItems[i] = { ...updatedItems[i], food_name: value, food_id: setID() };
+      return { ...prev, items: updatedItems };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -57,7 +77,7 @@ const GroceryForm = ({ onClose }) => {
           name: "",
           date: "",
           completed: false,
-          items: [{ food_id: "", quantity: "", purchased: false }],
+          items: [{ food_id: "", food_name: "", quantity: "", purchased: false }],
         });
         if (onClose) {
           onClose(); // Close the form
@@ -103,6 +123,21 @@ const GroceryForm = ({ onClose }) => {
         <label>Items:</label>
         {items.map((item, index) => (
           <div key={index}>
+            <label>
+              Food Name:
+              <select
+                value={item.food_name}
+                onChange={(e) => setFoodName(e.target.value, index)}
+                required
+              >
+                <option value="">--Choose an Option--</option>
+                {foods?.map((food) => (
+                  <option key={food.id} value={food.name}>
+                    {food.name}
+                  </option>
+                ))}
+              </select>
+            </label>
             <input
               type="number"
               placeholder="Food ID"
