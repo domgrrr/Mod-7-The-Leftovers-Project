@@ -22,7 +22,7 @@ function ContainerFoodEditModal({ item }) {
     e.preventDefault();
 
     const serverResponse = await dispatch(  
-      addFoodItems({ id, foodItem })
+      addFoodItems({ id, addedFoodItems: foodItem }) // Rename `foodItem` to `addedFoodItems`
     );
 
     if (serverResponse.type === "session/login/rejected") {
