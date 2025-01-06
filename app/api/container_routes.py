@@ -79,7 +79,16 @@ def new_food(id):
         db.session.commit()
         return {'message': 'doing something'}
 
-    
+# @container_routes.route('/<int:id>/edit')
+# @login_required
+# def edit_food():
+#     """
+#     Edit food amount and/or expiration
+#     """ 
+
+# @container_routes.route('/<int:id>/delete')
+# @login_required
+# def delete_food():
     
 #master list of all foods in ALL containers
 @container_routes.route('/masterlist') #we can change this to /all or /list-all whichever preferred
