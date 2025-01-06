@@ -68,6 +68,7 @@ export const removeFood = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message || "Unsuccessful Delete")
   }
+ }
 );
 
 const containerSlice = createSlice({
