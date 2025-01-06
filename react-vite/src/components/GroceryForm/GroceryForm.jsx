@@ -61,7 +61,7 @@ const GroceryForm = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/groceries/new", {
+      const response = await fetch("/api/groceries/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
