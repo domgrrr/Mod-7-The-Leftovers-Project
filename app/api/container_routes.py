@@ -57,6 +57,7 @@ def new_food(id):
     Adds food to a container
     """
     
+    # helper function to process each each individual form
     def process_form(food):
         form = FoodItemForm(data=food)
         form['csrf_token'].data = request.cookies['csrf_token']
