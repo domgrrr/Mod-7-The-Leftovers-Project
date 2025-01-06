@@ -52,7 +52,7 @@ export const fetchUserRecipes = createAsyncThunk(
 // Add a new recipe
 export const addRecipe = createAsyncThunk(
   'recipes/addRecipe',
-  async (recipe, { rejectWithValue }) => {
+  async (recipe, { dispatch, rejectWithValue }) => {
     try {
       const response = await fetch('/api/recipe/new', {
         method: 'POST',
@@ -65,6 +65,7 @@ export const addRecipe = createAsyncThunk(
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
+      dispatch(fetchRecipes()); // Fetch/checking if it refreshes all recipes after adding a new one
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -117,6 +118,7 @@ export const deleteRecipe = createAsyncThunk(
   const initialState = { //initial state for recipes , we can put it higher if needed not sure
     recipes: [],
     recipe: null,
+    recipeDetails: null,
     userRecipes: [],
     loading: false,
     errors: null,

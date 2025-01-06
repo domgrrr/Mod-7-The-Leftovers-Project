@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchUserRecipes, deleteRecipe } from '../../redux/recipeslice';
 import RecipeFormModal from '../RecipeFormModal/RecipeFormModal'; // Import the RecipeFormModal component
-
+import './UserRecipes.css'; // Import the UserRecipes component styles
 // Define UserRecipes component to display user's recipes
 const UserRecipes = () => {
   const { userRecipes, loading, errors } = useSelector((state) => state.recipes);
@@ -40,15 +40,16 @@ const UserRecipes = () => {
   return ( // Return list of user recipes
     <div className="recipe-page">
       <h1 className="recipe-page-title">Your Recipes</h1>
-      <button onClick={handleAddRecipe}>Add New Recipe</button>
+      <div className='button-container'>
+      <button className="recipe-button" onClick={handleAddRecipe}>Add New Recipe</button>
+      </div>
       <div className="recipe-grid">
         {userRecipes.map((recipe) => (
           <div key={recipe.id} className="recipe-card">
             <img src={recipe.image_url} alt={recipe.name} className="recipe-image" />
             <h2 className="recipe-name">{recipe.name}</h2>
-            <Link to={`/recipes/${recipe.id}`} className="view-details-button">View Details</Link>
-            <button onClick={() => handleEditRecipe(recipe)}>Edit</button>
-            <button onClick={() => handleDeleteRecipe(recipe.id)}>Delete</button>
+            <button className="button edit-button" onClick={() => handleEditRecipe(recipe)}>Edit</button>
+            <button className="button delete-button" onClick={() => handleDeleteRecipe(recipe.id)}>Delete</button>
           </div>
         ))}
       </div>
