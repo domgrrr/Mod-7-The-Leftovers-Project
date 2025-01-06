@@ -1,0 +1,89 @@
+/* General Page Layout */
+.page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #e9f5e1; /* Soft light green background */
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .signup-form-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+  }
+  
+  h1 {
+    font-size: 32px;
+    color: #4caf50; /* Fresh green for title */
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px; /* Space between form elements */
+  }
+  
+  label {
+    font-size: 16px;
+    color: #3a3a3a;
+    width: 100%;
+    text-align: left;
+  }
+  
+  input[type="text"],
+  input[type="password"] {
+    padding: 14px;
+    width: 90%;
+    border: 2px solid #d1e7dc; /* Soft green border */
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+  
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    outline: none;
+    border-color: #4caf50; /* Focused input border color */
+  }
+  
+  button[type="submit"] {
+    padding: 14px;
+    font-size: 18px;
+    background-color: #4caf50; /* Fresh green for the button */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }
+  
+  button[type="submit"]:focus {
+    outline: none;
+  }
+  
+  p {
+    color: #d9534f; /* Red color for error messages */
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  
+  /* Optional: Style for error messages to display group-style */
+  .errors-container {
+    color: #d9534f;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  
