@@ -6,7 +6,6 @@ import OpenModalButton from "../OpenModalButton";
 import ContainerFoodFormModal from "./FoodFormModal";
 import ContainerFoodEditModal from "./FoodEditModal";
 import "./ContainerPage.css";
-import { removeFood } from "../../redux/container";
 
 function ContainerPage() {
     const { id } = useParams();
