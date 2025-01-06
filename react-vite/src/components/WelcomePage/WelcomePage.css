@@ -92,3 +92,20 @@
     background-color: #2f855a;
     color: white;
 }
+
+.welcome-buttons button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    background-color: #38a169;
+    color: #ffffff; 
+}
+
+.welcome-buttons button:hover {
+    background-color: #2f855a;
+    color: white;
+}
+

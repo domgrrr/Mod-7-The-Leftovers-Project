@@ -3,10 +3,28 @@
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
+import axios from "axios"; //installed axios to handle the demo login
+import { useNavigate } from "react-router-dom";
 import logo from "../../../../images/Favicon.png";
 import "./WelcomePage.css";
 
 function WelcomePage() {
+    const navigate = useNavigate(); //added this line to use the navigate function
+
+    const handleDemoLogin = async () => { //added this function to handle the demo login
+        try {
+            const response = await axios.post('/api/auth/login', { //added it here in the frontend because i didnt wanna add any new routes to the backend argh
+                email: 'demo@aa.io',
+                password: 'password',
+            });
+            if (response.status === 200) {
+                navigate('/dash'); // Redirect to dashboard
+            }
+        } catch (error) {
+            console.error('Demo login failed:', error); // Log any errors
+        }
+    };
+
     return (
         <div className="welcome-page">
             <div className="logo-container">
@@ -32,6 +50,9 @@ function WelcomePage() {
                     itemText="Sign Up"
                     modalComponent={<SignupFormModal />}
                 />
+                <button onClick={handleDemoLogin} className="demo-login-button"> 
+                    Demo Login
+                </button>
             </div>
         </div>
     );
