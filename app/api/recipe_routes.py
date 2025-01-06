@@ -60,7 +60,7 @@ def recipe(id):
     return recipe_details if len(recipe_info) > 0 else {"Empty"}
 
 #POST RECIPEEEE
-@recipe_routes.route('/new') #post new recipe
+@recipe_routes.route('/new', methods=['POST']) #post new recipe //added post because it wasnt recognizing it was a post method
 @login_required
 def new_recipe():
     """
@@ -108,3 +108,36 @@ def new_recipe():
         db.session.commit() #commit all changes to db
         return recipe.to_dict() #return the recipe as a dictionaryå
     return recipe_form.errors, 400 #return errors if form is invalid a 400 error
+
+# PUT update recipe
+@recipe_routes.route('/<int:id>', methods=['PUT'])
+@login_required
+def update_recipe(id):
+    """
+    Updates an existing recipe
+    """
+    recipe = Recipe.query.get(id)
+    if recipe.user_id != current_user.id:
+        return {'error': 'Unauthorized'}, 403
+
+    data = request.get_json()
+    recipe.name = data['name']
+    recipe.directions = data['directions']
+    recipe.image_url = data['image_url']
+    db.session.commit()
+    return recipe.to_dict()
+
+# DELETE recipe
+@recipe_routes.route('/<int:id>', methods=['DELETE'])
+@login_required
+def delete_recipe(id):
+    """
+    Deletes an existing recipe
+    """
+    recipe = Recipe.query.get(id)
+    if recipe.user_id != current_user.id:
+        return {'error': 'Unauthorized'}, 403
+
+    db.session.delete(recipe)
+    db.session.commit()
+    return {'message': 'Recipe deleted'}

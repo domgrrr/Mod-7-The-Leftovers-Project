@@ -6,7 +6,7 @@ import OpenModalMenuItem from "./OpenModalMenuItem";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
 import "./Navigation.css";
-import logo from "../../../../images/freshly-logo.png";
+import logo from "../../../../images/Freshly2.png";
 
 function Navigation() {
   const [showMenu, setShowMenu] = useState(false);
@@ -54,7 +54,7 @@ function Navigation() {
             <NavLink to="/dash">Home</NavLink>
           </li>
           <li>
-            <NavLink to="/recipes">Recipes</NavLink>
+            <NavLink to="/recipes/user">Manage Recipes</NavLink>
           </li>
           <li>
             <ProfileButton />
