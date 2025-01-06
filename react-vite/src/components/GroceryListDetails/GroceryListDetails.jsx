@@ -6,11 +6,19 @@ import "./GroceryListDetails.css"; // Importing the CSS file for styling.
 const GroceryListDetails = ({ list }) => {
   const dispatch = useDispatch(); // useDispatch hook to get access to the dispatch function.
 
+  //we need to add the fetchGroceryListFood thunk action to fetch the list items!!!!!!
+
   // Function to handle marking an item as purchased.
   const handleItemPurchase = (itemId) => {
     console.log(`Marking item with ID ${itemId} as purchased in list ${list.id}`);
     dispatch(updateGroceryList({ listId: list.id, itemId, purchased: true })); // Dispatching an action to update the grocery list.
   };
+
+   // Check if list and list.items are defined just to avoid map error for the moment because seems like we dont have a list to map through which
+   // is giving us the error at the moment
+  if (!list || !list.items) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="grocery-list-details">
