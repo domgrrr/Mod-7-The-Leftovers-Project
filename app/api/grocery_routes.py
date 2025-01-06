@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 from app.models import Grocery, Grocery_Food, Food, db
-from app.forms import GroceryForm
+from app.forms import GroceryForm, GroceryItemForm
 
 grocery_routes = Blueprint('grocery_lists', __name__)
 
@@ -81,11 +81,14 @@ def create_grocery_list():
             # Add items to the grocery list
             for item_data in form.items.data:
                 if all(k in item_data for k in ('food_id', 'quantity', 'purchased')):
+                    foodForm = GroceryItemForm(data=item_data)
+                    foodForm['csrf_token'].data = request.cookies['csrf_token']
+                    print("Form_DATA", foodForm.data)
                     grocery_item = Grocery_Food(
                         grocery_id=grocery_list.id,
-                        food_id=item_data['food_id'],
-                        amount=item_data['quantity'],
-                        purchased=item_data['purchased'],
+                        food_id=form.data['food_id'],
+                        amount=form.data['quantity'],
+                        purchased=form.data['purchased'],
                     )
                     db.session.add(grocery_item)
 
