@@ -40,7 +40,7 @@ function ContainerPage() {
                     </div>
                     </div>
                     <div>
-                        <button type="button" onClick={removeFood(item?.relation_id)}>Remove Item</button>
+                        <button type="button" onClick={() => removeFood(item?.relation_id)}>Remove Item</button>
                         <button>Edit Item</button>
                     </div>
                 </div>
