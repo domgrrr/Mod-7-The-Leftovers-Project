@@ -87,7 +87,7 @@ def new_food(id):
 #     Edit food amount and/or expiration
 #     """ 
 
-@container_routes.route('/<int:id>/delete')
+@container_routes.route('/<int:id>/delete', methods=['DELETE'])
 @login_required
 def delete_food(id):
     """

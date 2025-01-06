@@ -25,7 +25,6 @@ def user_recipes():
     all_user_recipes = Recipe.query.filter(Recipe.user_id == current_user.id)
     return {'recipes': [recipe.to_dict() for recipe in all_user_recipes]}
 
-# '/<int:id>' get all ingredients for specific recipe 
 @recipe_routes.route('/<int:id>')
 @login_required
 def recipe(id):
@@ -36,11 +35,11 @@ def recipe(id):
         Recipe,
         Recipe_Food,
         Food
-    ).join(Recipe_Food, Recipe_Food.recipe_id == Recipe.id).join(
-        Food, Food.id == Recipe_Food.food_id
+    ).outerjoin(Recipe_Food, Recipe_Food.recipe_id == Recipe.id).outerjoin( 
+        Food, Food.id == Recipe_Food.food_id #had to add a outerjoin so that if theres NO ingredients its still a recipe!
     ).filter(Recipe.id == id).all()
     
-    if not recipe_info: #if theres no recipe id just return this error
+    if not recipe_info:  # if there's no recipe found
         return {'error': 'Recipe not found'}, 404
 
     recipe_details = { 
@@ -55,12 +54,15 @@ def recipe(id):
                 "name": food_obj.name,
                 "amount": food_relation.amount
             } for (_, food_relation, food_obj) in recipe_info
+            if food_relation is not None and food_relation.food_id is not None
         ]
     }
-    return recipe_details if len(recipe_info) > 0 else {"Empty"}
+
+    return recipe_details
+
 
 #POST RECIPEEEE
-@recipe_routes.route('/new', methods=['POST']) #post new recipe //added post because it wasnt recognizing it was a post method
+@recipe_routes.route('/new', methods=['POST']) #post new recipe //added post because it wasnt recognizing it was a post
 @login_required
 def new_recipe():
     """
