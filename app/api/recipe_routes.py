@@ -25,7 +25,6 @@ def user_recipes():
     all_user_recipes = Recipe.query.filter(Recipe.user_id == current_user.id)
     return {'recipes': [recipe.to_dict() for recipe in all_user_recipes]}
 
-# '/<int:id>' get all ingredients for specific recipe 
 @recipe_routes.route('/<int:id>')
 @login_required
 def recipe(id):
@@ -36,11 +35,11 @@ def recipe(id):
         Recipe,
         Recipe_Food,
         Food
-    ).join(Recipe_Food, Recipe_Food.recipe_id == Recipe.id).join(
-        Food, Food.id == Recipe_Food.food_id
+    ).outerjoin(Recipe_Food, Recipe_Food.recipe_id == Recipe.id).outerjoin( 
+        Food, Food.id == Recipe_Food.food_id #had to add a outerjoin so that if theres NO ingredients its still a recipe!
     ).filter(Recipe.id == id).all()
     
-    if not recipe_info: #if theres no recipe id just return this error
+    if not recipe_info:  # if there's no recipe found
         return {'error': 'Recipe not found'}, 404
 
     recipe_details = { 
@@ -55,12 +54,15 @@ def recipe(id):
                 "name": food_obj.name,
                 "amount": food_relation.amount
             } for (_, food_relation, food_obj) in recipe_info
+            if food_relation is not None and food_relation.food_id is not None
         ]
     }
-    return recipe_details if len(recipe_info) > 0 else {"Empty"}
+
+    return recipe_details
+
 
 #POST RECIPEEEE
-@recipe_routes.route('/new') #post new recipe
+@recipe_routes.route('/new', methods=['POST']) #post new recipe //added post because it wasnt recognizing it was a post
 @login_required
 def new_recipe():
     """
@@ -108,3 +110,36 @@ def new_recipe():
         db.session.commit() #commit all changes to db
         return recipe.to_dict() #return the recipe as a dictionaryå
     return recipe_form.errors, 400 #return errors if form is invalid a 400 error
+
+# PUT update recipe
+@recipe_routes.route('/<int:id>', methods=['PUT'])
+@login_required
+def update_recipe(id):
+    """
+    Updates an existing recipe
+    """
+    recipe = Recipe.query.get(id)
+    if recipe.user_id != current_user.id:
+        return {'error': 'Unauthorized'}, 403
+
+    data = request.get_json()
+    recipe.name = data['name']
+    recipe.directions = data['directions']
+    recipe.image_url = data['image_url']
+    db.session.commit()
+    return recipe.to_dict()
+
+# DELETE recipe
+@recipe_routes.route('/<int:id>', methods=['DELETE'])
+@login_required
+def delete_recipe(id):
+    """
+    Deletes an existing recipe
+    """
+    recipe = Recipe.query.get(id)
+    if recipe.user_id != current_user.id:
+        return {'error': 'Unauthorized'}, 403
+
+    db.session.delete(recipe)
+    db.session.commit()
+    return {'message': 'Recipe deleted'}

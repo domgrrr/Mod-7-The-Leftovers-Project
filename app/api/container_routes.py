@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from flask_login import current_user, login_required
 from app.models import Container, Container_Food, Food, db
 from app.forms import FoodItemForm
+from datetime import datetime
 
 container_routes = Blueprint('containers', __name__)
 
@@ -30,6 +31,7 @@ def container(id):
     # To see this in the console: print("OBJECT HERE:", container_info)
     food_arr = [
         {
+            "relation_id": food_relation.id,
             "food_id": food_relation.food_id,
             "name": food_obj.name,
             "type": food_obj.type,
@@ -54,10 +56,6 @@ def new_food(id):
     """
     Adds food to a container
     """
-
-    # data = request.data[2:]  #.args.get['food']
-    # print("ARRAY DATA????:", data)
-    # print("id", id)
     
     def process_form(food):
         form = FoodItemForm(data=food)
@@ -69,17 +67,36 @@ def new_food(id):
                 food_id=form.data['food_id'], 
                 container_id=form.data['container_id'],
                 amount=form.data['amount'], 
-                expiration=form.data['expiration'] 
+                expiration=datetime.strptime(form.data["expiration"], "%Y-%m-%d").date() if form.data['expiration'] != "" else None
             )
             db.session.add(food_item)
         return {'message': 'doing something'}
     
-    data = request.get_json()['food']
-    for food in data:
-        process_form(food)
-    return {'message': 'doing something'}
+    with db.session.no_autoflush:
+        data = request.get_json()['food']
+        for food in data:
+            process_form(food)
+            print('FOOD_DATA', food)
+        db.session.commit()
+        return {'message': 'doing something'}
 
-    
+# @container_routes.route('/<int:id>/edit')
+# @login_required
+# def edit_food():
+#     """
+#     Edit food amount and/or expiration
+#     """ 
+
+@container_routes.route('/<int:id>/delete', methods=['DELETE'])
+@login_required
+def delete_food(id):
+    """
+    Deletes food item from container
+    """
+    food_relation = Container_Food.query.get(id)
+    db.session.delete(food_relation)
+    db.session.commit()
+    return {'message': 'Food deleted'}
     
 #master list of all foods in ALL containers
 @container_routes.route('/masterlist') #we can change this to /all or /list-all whichever preferred

@@ -51,60 +51,25 @@ export const addFoodItems = createAsyncThunk(
       return rejectWithValue(error.message || "Unsuccessful Food to Container")
     }
   }
-)
+);
 
-// export const thunkLogin = createAsyncThunk(
-//   "session/login",
-//   async ({ email, password }, { rejectWithValue }) => {
-//     try {
-//       const res = await fetch("/api/auth/login", {
-//         method: "POST",
-//         headers: {"Content-Type": "application/json"},
-//         body: JSON.stringify({ email, password }),
-//       });
-//       const data = await res.json();
-//       if (!res.ok) {
-//         return rejectWithValue(data);
-//       }
-//       return data;
-//     } catch (error) {
-//       return rejectWithValue(error.message || "Login Error");
-//     }
-//   }
-// );
+export const removeFood = createAsyncThunk(
+  "container/removeFood",
+  async (id, { rejectWithValue }) => {
+    try {
 
-// export const thunkLogout = createAsyncThunk(
-//   "session/logout",
-//   async (_, { rejectWithValue }) => {
-//     try {
-//       const res = await fetch("/api/auth/logout");
-//       const data = await res.json();
-//       return data.message;
-//     } catch (error) {
-//       return rejectWithValue(error.message || "Logout Error");
-//     }
-//   }
-// );
-
-// export const thunkSignup = createAsyncThunk(
-//   "session/signup",
-//   async ({ username, email, password }, { rejectWithValue }) => {
-//     try {
-//       const res = await fetch("/api/auth/signup", {
-//         method: "POST",
-//         headers: {"Content-Type": "application/json"},
-//         body: JSON.stringify({ username, email, password }),
-//       });
-//       const data = await res.json();
-//       if (!res.ok) {
-//         return rejectWithValue(data);
-//       }
-//       return data.user;
-//     } catch (error) {
-//       return rejectWithValue(error.message || "Signup Error");
-//     }
-//   }
-// )
+      const res = await fetch(`/api/container/${id}/delete`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        return rejectWithValue(data);
+      }
+      return { "message": "Delete Ok" }
+    } catch (error) {
+      return rejectWithValue(error.message || "Unsuccessful Delete")
+  }
+ }
+);
 
 const containerSlice = createSlice({
   name: "containers",
@@ -148,6 +113,19 @@ const containerSlice = createSlice({
         state.loading = false;
         // state.container = action.payload;
       })
+      .addCase(removeFood.pending, (state) => {
+        state.loading = true;
+        state.errors = null;
+      })
+      .addCase(removeFood.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload;
+      })
+      .addCase(removeFood.fulfilled, (state, action) => {
+        state.loading = false;
+        // state.container = action.payload;
+
+      });
   }
 });
 

@@ -11,12 +11,19 @@ def seed_foods():
             al_bool = True
         else:
             al_bool = False
+
+        # Handle empty alias_id
+        alias_id = None if item[4] == "" else item[4]
+        # If it's not empty, convert to integer
+        if alias_id is not None:
+            alias_id = int(alias_id)
+
         food_item = Food(
             name=item[0],
             type=item[1],
             image_url=item[2],
             alias_bool=al_bool,
-            alias_id=item[4]
+            alias_id=alias_id
         )
         db.session.add(food_item)
     db.session.commit()
