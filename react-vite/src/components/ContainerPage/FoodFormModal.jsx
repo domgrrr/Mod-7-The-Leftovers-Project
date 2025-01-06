@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { addFoodItems } from "../../redux/container";
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
@@ -8,6 +8,7 @@ import './FoodFormModal.css'
 
 function ContainerFoodFormModal() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
   const { foods, loading } = useSelector(store => store.food);
   const [addedFoodItems, setAddedFood] = useState([{food_name: '', food_id: '', amount: '', expiration: ''}]);
@@ -31,6 +32,12 @@ function ContainerFoodFormModal() {
       setErrors(serverResponse);
     } else {
       closeModal();
+    }
+
+    if (serverResponse.type === "session/login/rejected") {
+      useEffect(() => {
+        dispatch(getAllFoods());
+      }, [dispatch])
     }
   };
 
@@ -84,13 +91,18 @@ function ContainerFoodFormModal() {
                     placeholder="Optional"
                 />
             </label>
+            {i === 0 ? null : (<button type="button" onClick={() => removeItem(i)}>Remove</button>)}
         </div>
     )
   }
 
   const newItem = () => {
     setAddedFood([...addedFoodItems, {food_id: '', amount: '', expiration: ''}])
-  }
+  };
+
+  const removeItem = (index) => {
+    setAddedFood((prev) => (prev.filter((_, i) => i !== index)));
+  };
 
   return (
     <>
