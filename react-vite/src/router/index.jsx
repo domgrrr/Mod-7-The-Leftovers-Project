@@ -50,6 +50,10 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute element={<GroceryListPage />}/>
       },
       {
+        path: "/groceries/:listId",
+        element: <ProtectedRoute element={<GroceryListPage />} />
+      },
+      {
         path: "/recipes", // ADDED THE RECIPE PAGE PATH
         element: <ProtectedRoute element={<RecipePage />} />,
       },
