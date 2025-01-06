@@ -18,7 +18,7 @@ const GroceryListDetails = ({ listId }) => {
   }, [dispatch, listId]); // Dependency array ensures this runs only when `dispatch` or `listId` changes.
 
   // Function to handle marking an item as purchased.
-  const handleItemPurchase = (food_id) => { //changed id to food_id
+  const handleItemPurchase = (food_id) => { //changed id to food_id for clarity
     console.log(`Marking item with ID ${food_id} as purchased in list ${listId}`);
     dispatch(updateGroceryList({ listId, food_id, purchased: true })); // Dispatching an action to update the grocery list.
   };

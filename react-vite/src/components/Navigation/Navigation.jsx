@@ -54,7 +54,7 @@ function Navigation() {
             <NavLink to="/dash">Home</NavLink>
           </li>
           <li>
-            <NavLink to="/recipes">Recipes</NavLink>
+            <NavLink to="/recipes/user">Manage Recipes</NavLink>
           </li>
           <li>
             <ProfileButton />

@@ -32,10 +32,29 @@ export const fetchRecipes = createAsyncThunk( //fetch all the recipes from backe
         }
     }
 );
+
+// Fetch user-specific recipes from backend
+export const fetchUserRecipes = createAsyncThunk(
+  'recipes/fetchUserRecipes',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch('/api/recipe/user');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      return data.recipes;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
   
   const initialState = { //initial state for recipes , we can put it higher if needed not sure
     recipes: [],
     recipe: null,
+    userRecipes: [],
     loading: false,
     errors: null,
   };
@@ -68,6 +87,18 @@ export const fetchRecipes = createAsyncThunk( //fetch all the recipes from backe
             state.recipeDetails = action.payload;
           })
           .addCase(fetchRecipeDetails.rejected, (state, action) => {
+            state.loading = false;
+            state.errors = action.payload;
+          })
+          .addCase(fetchUserRecipes.pending, (state) => {
+            state.loading = true;
+            state.errors = null;
+          })
+          .addCase(fetchUserRecipes.fulfilled, (state, action) => {
+            state.loading = false;
+            state.userRecipes = action.payload;
+          })
+          .addCase(fetchUserRecipes.rejected, (state, action) => {
             state.loading = false;
             state.errors = action.payload;
           });
