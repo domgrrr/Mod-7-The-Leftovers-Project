@@ -11,5 +11,8 @@ def allFoods():
     """
     Returns all foods
     """
-    all_foods = Food.query.all()
+
+    # TODO: sort alphabetically
+
+    all_foods = Food.query.order_by(Food.name).all()
     return [food.to_dict() for food in all_foods]
