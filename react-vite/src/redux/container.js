@@ -57,17 +57,16 @@ export const removeFood = createAsyncThunk(
   "container/removeFood",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/container/${id}/delete`, {
+
+      const res = await fetch(`/api/container/${id}/delete`, {
         method: 'DELETE',
       });
-      if (!res.ok) {
-        const data = await response.json();
+      if (!response.ok) {
         return rejectWithValue(data);
       }
-      return id;
+      return { "message": "Delete Ok" }
     } catch (error) {
-      return rejectWithValue(error.message || "Unsuccessful Delete");
-    }
+      return rejectWithValue(error.message || "Unsuccessful Delete")
   }
 );
 
@@ -124,6 +123,7 @@ const containerSlice = createSlice({
       .addCase(removeFood.fulfilled, (state, action) => {
         state.loading = false;
         // state.container = action.payload;
+
       });
   }
 });
