@@ -62,7 +62,6 @@ def new_food(id):
         form = FoodItemForm(data=food)
         form['csrf_token'].data = request.cookies['csrf_token']
         form['container_id'].data = id
-        print("Form_DATA", form.data)
         if form.validate_on_submit():
             food_item = Container_Food( 
                 food_id=form.data['food_id'], 
@@ -81,12 +80,13 @@ def new_food(id):
         db.session.commit()
         return {'message': 'doing something'}
 
-# @container_routes.route('/<int:id>/edit')
-# @login_required
-# def edit_food():
-#     """
-#     Edit food amount and/or expiration
-#     """ 
+@container_routes.route('/<int:id>/edit', methods=['PUT'])
+@login_required
+def edit_food():
+    """
+    Edit food amount and/or expiration
+    """ 
+
 
 @container_routes.route('/<int:id>/delete', methods=['DELETE'])
 @login_required

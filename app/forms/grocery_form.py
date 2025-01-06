@@ -50,24 +50,6 @@ class GroceryForm(FlaskForm):
         min_entries=1,  # Requires at least one item in the grocery list.
     )
 
-    recipe_id = IntegerField(
-        "Recipe ID",
-        validators=[
-            Optional(),  # This field is optional.
-            NumberRange(min=1, message="Recipe ID must be a positive integer."),
-        ],
-    )
-
-    # Custom validator to ensure the provided recipe_id exists in the Recipe table.
-    def validate_recipe_id(self, field):
-        if field.data:  # Only validate if a recipe_id is provided.
-            print(f"Validating recipe_id: {field.data}")  # Log the recipe_id being validated.
-            recipe = Recipe.query.get(field.data)
-            if not recipe:
-                error_message = f"Recipe ID {field.data} does not exist in the database."
-                print(f"ValidationError: {error_message}")  # Log the validation error.
-                raise ValidationError(error_message)
-
 # Explanation and Debugging Logs:
 # 1. `GroceryItemForm`:
 #    - Handles validation for individual grocery items, ensuring `food_id` exists in the Food table and is a positive integer.
