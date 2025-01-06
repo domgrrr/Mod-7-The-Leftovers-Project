@@ -1,24 +1,28 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { addFoodItems } from "../../redux/container"; // transition to edit a food 
+import { getContainer, addFoodItems } from "../../redux/container"; // transition to edit a food 
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { getAllFoods } from "../../redux/food";
 import './FoodFormModal.css'
 
-function ContainerFoodEditModal({ food }) {
+function ContainerFoodEditModal({ item }) {
   const dispatch = useDispatch();
   // const navigate = useNavigate();
   const { id } = useParams();
-  const [foodItem, setFoodItem] = useState({food_name: food?.name, food_id: food?.food_id, amount: food?.amount, expiration: food?.expiration});
+  const [foodItem, setFoodItem] = useState({food_name: item?.name, food_id: item?.food_id, amount: item?.amount, expiration: item?.expiration});
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+
+  useEffect(() => {
+    dispatch(getContainer(id));
+  }, [dispatch])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const serverResponse = await dispatch(  
-      addFoodItems({ id, food_id })
+      addFoodItems({ id, foodItem })
     );
 
     if (serverResponse.type === "session/login/rejected") {
@@ -41,9 +45,9 @@ function ContainerFoodEditModal({ food }) {
 
         <form onSubmit={handleSubmit}>
             <div className="food-item">
-                    <img src={food?.image_url} alt={food?.name}/>
+                    <img src={item?.image_url} alt={item?.name}/>
                     <div className="food-item-details">  
-                    <div>{food?.name}</div>
+                    <div>{item?.name}</div>
                     </div>
             </div>
             <label>
@@ -70,7 +74,7 @@ function ContainerFoodEditModal({ food }) {
                     })}
                 />
             </label>
-            <button type="Submit">Add Items</button>
+            <button type="Submit">Update Item</button>
         </form>
         </>
     </>
