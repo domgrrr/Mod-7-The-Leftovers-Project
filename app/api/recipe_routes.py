@@ -60,7 +60,7 @@ def recipe(id):
     return recipe_details if len(recipe_info) > 0 else {"Empty"}
 
 #POST RECIPEEEE
-@recipe_routes.route('/new') #post new recipe
+@recipe_routes.route('/new', methods=['POST']) #post new recipe //added post because it wasnt recognizing it was a post method
 @login_required
 def new_recipe():
     """
