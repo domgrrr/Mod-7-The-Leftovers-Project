@@ -1,6 +1,6 @@
 import { Link, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getAllContainers } from "../../redux/container";
 import { FaBook, FaShoppingCart, FaWarehouse, FaSnowflake, FaBoxOpen } from 'react-icons/fa';
 import "./DashBoard.css";
@@ -9,17 +9,18 @@ function DashBoard() {
     const dispatch = useDispatch();
     const { user, loading } = useSelector((store) => store.session);
     const containers = useSelector((store) => store.container.containers)
-    console.log("con", containers)
 
     if (!user) {
         return <Navigate to="/welcome" />; //why isnt this working?
     }
-
     useEffect(() => {
-        dispatch(getAllContainers());
+        dispatch(getAllContainers()).finally(() => setLoading(false)); //once loading is done, it is set to false
     }, [dispatch]);
-    
-    
+
+    if (loading) { //if loading is true render message, if loading is false then continue on to returning containers
+        return <div>Loading...</div>;
+    }
+
     return (
         <>
         {loading ? (
@@ -48,6 +49,7 @@ function DashBoard() {
                     {/*<Link>All</Link>*/}
                 </div>
             </div>
+
         )}
         </>
     )
