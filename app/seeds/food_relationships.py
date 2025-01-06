@@ -57,8 +57,8 @@ def undo_recipe_foods():
 
 def undo_grocery_foods():
     if environment == "production":
-        db.session.execute(f"TRUNCATE table {SCHEMA}.grocery_foods RESTART IDENTITY CASCADE;")
+        db.session.execute(f"TRUNCATE table {SCHEMA}.grocery_list_foods RESTART IDENTITY CASCADE;")
     else: 
-        db.session.execute(text("DELETE FROM grocery_foods"))
+        db.session.execute(text("DELETE FROM grocery_list_foods"))
         
     db.session.commit()

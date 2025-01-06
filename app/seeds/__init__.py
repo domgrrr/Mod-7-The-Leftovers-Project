@@ -26,7 +26,7 @@ def seed():
         # Make sure to add all your other model's undo functions below
         undo_users()
         undo_containers()
-        # undo_foods()
+        undo_foods()
         undo_grocery_lists()
         undo_recipes()
         undo_container_foods()
@@ -34,7 +34,7 @@ def seed():
         undo_grocery_foods()
     seed_users()
     seed_containers()
-    # seed_foods()
+    seed_foods()
     seed_grocery_lists()
     seed_recipes()
     seed_container_foods()
@@ -48,7 +48,7 @@ def seed():
 def undo():
     undo_users()
     undo_containers()
-    # undo_foods()
+    undo_foods()
     undo_grocery_lists()
     undo_recipes()
     undo_container_foods()
