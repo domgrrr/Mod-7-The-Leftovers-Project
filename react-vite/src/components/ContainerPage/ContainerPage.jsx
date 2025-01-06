@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { getContainer, removeFood } from "../../redux/container";
 import OpenModalButton from "../OpenModalButton";
 import ContainerFoodFormModal from "./FoodFormModal";
+import ContainerFoodEditModal from "./FoodEditModal";
 import "./ContainerPage.css";
 function ContainerPage() {
     const { id } = useParams();
@@ -41,7 +42,11 @@ function ContainerPage() {
                     </div>
                     <div>
                         <button type="button" onClick={() => removeFood(item?.relation_id)}>Remove Item</button>
-                        <button>Edit Item</button>
+                        <OpenModalButton 
+                            buttonText="Edit Item"
+                            modalComponent={<ContainerFoodEditModal />}
+                            food={item}
+                        />
                     </div>
                 </div>
             ))}

@@ -89,6 +89,11 @@ function ContainerFoodFormModal() {
                     className='date-input'
                     type='date'
                     placeholder="Optional"
+                    onChange = {(e) => setAddedFood(addedFoodItems.map((food, j) => i === j ? {
+                      food_id: food.food_id,
+                      amount: food.amount,
+                      expiration: e.target.value
+                  } : food))}
                 />
             </label>
             {i === 0 ? null : (<button type="button" onClick={() => removeItem(i)}>Remove</button>)}
