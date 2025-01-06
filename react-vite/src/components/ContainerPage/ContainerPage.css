@@ -1,0 +1,70 @@
+.container-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.container-page h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #25995c;
+}
+.food-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+.food-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.food-item img {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.food-item-details {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.food-item-details div {
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.food-item-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.food-item-buttons button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.food-item-buttons button:hover {
+    background-color: #0056b3;
+}

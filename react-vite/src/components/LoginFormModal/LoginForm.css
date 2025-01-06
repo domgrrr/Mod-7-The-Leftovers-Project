@@ -1,0 +1,90 @@
+/* LoginForm.css */
+
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .modal-content {
+    background-color: #f5f8f6;
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 450px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    color: #4caf50; /* Fresh green for the header */
+    margin-bottom: 30px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #3a3a3a;
+  }
+  
+  input[type="text"],
+  input[type="password"] {
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #d1e7dc; /* Soft green border */
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+  
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    outline: none;
+    border-color: #4caf50; /* Fresh green border on focus */
+  }
+  
+  button[type="submit"] {
+    padding: 15px;
+    font-size: 18px;
+    background-color: #4caf50; /* Fresh green background */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+  }
+  
+  p {
+    color: #e74c3c; /* Red for errors */
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 500px) {
+    .modal-content {
+      padding: 20px;
+      width: 85%;
+    }
+  
+    h1 {
+      font-size: 24px;
+    }
+  }
+  
