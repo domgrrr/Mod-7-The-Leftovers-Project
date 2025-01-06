@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom"
 import { useEffect } from "react";
-import { getContainer } from "../../redux/container";
+import { getContainer, removeFood } from "../../redux/container";
 import OpenModalButton from "../OpenModalButton";
 import ContainerFoodFormModal from "./FoodFormModal";
 import "./ContainerPage.css";
@@ -15,7 +15,7 @@ function ContainerPage() {
     }, [dispatch])
 
     const removeFood = (relation_id) => {
-
+        console.log(relation_id)
     }
 
     return (
@@ -40,7 +40,7 @@ function ContainerPage() {
                     </div>
                     </div>
                     <div>
-                        <button type="button" onClick={removeFood}>Remove Item</button>
+                        <button type="button" onClick={removeFood(item?.relation_id)}>Remove Item</button>
                     </div>
                 </div>
             ))}

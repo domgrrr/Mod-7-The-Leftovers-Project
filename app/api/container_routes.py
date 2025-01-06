@@ -89,11 +89,14 @@ def new_food(id):
 
 @container_routes.route('/<int:id>/delete')
 @login_required
-def delete_food(food_id):
+def delete_food(id):
     """
     Deletes food item from container
     """
-    
+    food_relation = Container_Food.query.get(id)
+    db.session.delete(food_relation)
+    db.session.commit()
+    return {'message': 'Food deleted'}
     
 #master list of all foods in ALL containers
 @container_routes.route('/masterlist') #we can change this to /all or /list-all whichever preferred
