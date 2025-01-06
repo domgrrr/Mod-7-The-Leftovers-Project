@@ -5,6 +5,8 @@ import { getContainer } from "../../redux/container";
 import OpenModalButton from "../OpenModalButton";
 import ContainerFoodFormModal from "./FoodFormModal";
 import "./ContainerPage.css";
+import { removeFood } from "../../redux/container";
+
 function ContainerPage() {
     const { id } = useParams();
     const dispatch = useDispatch();
@@ -14,9 +16,10 @@ function ContainerPage() {
         dispatch(getContainer(id));
     }, [dispatch])
 
-    const removeFood = (relation_id) => {
-
-    }
+    const handleRemoveFood = (relation_id) => {
+        dispatch(removeFood(relation_id));
+      };
+    
 
     return (
         <div className="container-page">
@@ -40,7 +43,8 @@ function ContainerPage() {
                     </div>
                     </div>
                     <div>
-                        <button type="button" onClick={removeFood}>Remove Item</button>
+                        <button type="button"
+                         onClick={() => handleRemoveFood(item.relation_id)}>Remove Item</button>
                     </div>
                 </div>
             ))}
