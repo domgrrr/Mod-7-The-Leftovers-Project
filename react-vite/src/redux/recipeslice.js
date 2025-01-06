@@ -49,6 +49,69 @@ export const fetchUserRecipes = createAsyncThunk(
     }
   }
 );
+// Add a new recipe
+export const addRecipe = createAsyncThunk(
+  'recipes/addRecipe',
+  async (recipe, { rejectWithValue }) => {
+    try {
+      const response = await fetch('/api/recipe/new', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(recipe),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Update an existing recipe
+export const updateRecipe = createAsyncThunk(
+  'recipes/updateRecipe',
+  async (recipe, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/recipe/${recipe.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(recipe),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Delete a recipe
+export const deleteRecipe = createAsyncThunk(
+  'recipes/deleteRecipe',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/recipe/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return { id };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
   
   const initialState = { //initial state for recipes , we can put it higher if needed not sure
@@ -101,6 +164,24 @@ export const fetchUserRecipes = createAsyncThunk(
           .addCase(fetchUserRecipes.rejected, (state, action) => {
             state.loading = false;
             state.errors = action.payload;
+          })
+          .addCase(addRecipe.fulfilled, (state, action) => {
+            state.userRecipes.push(action.payload);
+            state.recipes.push(action.payload);
+          })
+          .addCase(updateRecipe.fulfilled, (state, action) => {
+            const index = state.userRecipes.findIndex(recipe => recipe.id === action.payload.id);
+            if (index !== -1) {
+              state.userRecipes[index] = action.payload;
+            }
+            const mainIndex = state.recipes.findIndex(recipe => recipe.id === action.payload.id);
+            if (mainIndex !== -1) {
+              state.recipes[mainIndex] = action.payload;
+            }
+          })
+          .addCase(deleteRecipe.fulfilled, (state, action) => {
+            state.userRecipes = state.userRecipes.filter(recipe => recipe.id !== action.payload.id);
+            state.recipes = state.recipes.filter(recipe => recipe.id !== action.payload.id);
           });
       },
     });

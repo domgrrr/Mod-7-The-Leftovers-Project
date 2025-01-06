@@ -5,7 +5,7 @@ import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
 import axios from "axios"; //installed axios to handle the demo login
 import { useNavigate } from "react-router-dom";
-import logo from "../../../../images/Favicon.png";
+import logo from "../../../../images/Favicon2.png";
 import "./WelcomePage.css";
 
 function WelcomePage() {
