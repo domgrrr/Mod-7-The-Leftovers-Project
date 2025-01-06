@@ -41,23 +41,27 @@ const GroceryListDetails = ({ listId }) => {
     await dispatch(updateGroceryList({ listId, addedItems }));
   };
 
-  if (!list) {
+  if (list === undefined) {
     return <div>Loading...</div>; // Loading state if the list is not yet available
   }
 
   return (
     <div className="grocery-list-details">
-      <h2>{list.name}</h2>
-      <ul>
-        {list.items?.map(({ food_id, name, quantity, purchased }) => (
-          <li key={food_id} className={purchased ? "purchased" : ""}>
-            {name} - {quantity}
-            <button onClick={() => handleItemPurchase(food_id)}>
-              {purchased ? "Purchased" : "Mark as Purchased"}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <h2>{list.name || "Unnamed List"}</h2>
+      {list.items && list.items.length > 0 ? (
+        <ul>
+          {list.items.map(({ food_id, name, quantity, purchased }) => (
+            <li key={food_id} className={purchased ? "purchased" : ""}>
+              {name} - {quantity}
+              <button onClick={() => handleItemPurchase(food_id)}>
+                {purchased ? "Purchased" : "Mark as Purchased"}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No items in this list.</p> // Message for an empty list
+      )}
 
       {/* Form for adding new items */}
       <form onSubmit={handleSubmit}>
@@ -109,4 +113,5 @@ const GroceryListDetails = ({ listId }) => {
 };
 
 export default GroceryListDetails;
+
 
