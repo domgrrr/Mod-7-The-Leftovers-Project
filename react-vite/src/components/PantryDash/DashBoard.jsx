@@ -1,6 +1,6 @@
 import { Link, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getAllContainers } from "../../redux/container";
 import { FaBook, FaShoppingCart, FaWarehouse, FaSnowflake, FaBoxOpen } from 'react-icons/fa';
 import "./DashBoard.css";
@@ -9,16 +9,19 @@ function DashBoard() {
     const dispatch = useDispatch();
     const user = useSelector((store) => store.session.user);
     const containers = useSelector((store) => store.container.containers)
+    const [loading, setLoading] = useState(true); //added a loading state that indicates the data is still being fetched
 
     if (!user) {
         return <Navigate to="/welcome" />; //why isnt this working?
     }
-
     useEffect(() => {
-        dispatch(getAllContainers());
+        dispatch(getAllContainers()).finally(() => setLoading(false)); //once loading is done, it is set to false
     }, [dispatch]);
-    
-    
+
+    if (loading) { //if loading is true render message, if loading is false then continue on to returning containers
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className="dashboard-container">
             <h1>Your Dashboard</h1>
@@ -31,13 +34,13 @@ function DashBoard() {
                 </Link>
             </div>
             <div className="dashboard-links bottom-row">
-                <Link to={`/container/${containers?.containers[0].id}`}>
+                <Link to={`/container/${containers?.containers[0]?.id}`}>
                 <FaBoxOpen /> Pantry
                 </Link>
-                <Link to={`/container/${containers?.containers[1].id}`}>
+                <Link to={`/container/${containers?.containers[1]?.id}`}>
                 <FaWarehouse /> Fridge
                 </Link>
-                <Link to={`/container/${containers?.containers[2].id}`}>
+                <Link to={`/container/${containers?.containers[2]?.id}`}>
                 <FaSnowflake /> Freezer
                 </Link>
                 {/*<Link>All</Link>*/}
