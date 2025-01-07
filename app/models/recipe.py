@@ -17,6 +17,7 @@ class Recipe(db.Model):
     image_url = db.Column(db.String, nullable=True)
     # private = db.Column(db.Boolean, nullable=False)  
     # ingredients = db.Column(JSON, nullable=False)  
+    
 
     def to_dict(self): #is this needed? 
         return {
