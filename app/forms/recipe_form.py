@@ -13,4 +13,4 @@ class RecipeForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
     directions = TextAreaField('directions', validators=[DataRequired()])
     image_url = StringField('image_url')
-    # recipe_foods = FieldList(FormField(RecipeFood)) # handles list of ingredients for the recipe, need to validate this?
+    recipe_foods = FieldList(FormField(RecipeFood)) # handles list of ingredients for the recipe, need to validate this?
