@@ -8,67 +8,56 @@ grocery_routes = Blueprint('grocery_lists', __name__)
 @grocery_routes.route('/')
 @login_required
 def grocery_lists():
-    """
-    Returns all the user's grocery lists.
-    """
+    """Return the user's grocery lists."""
     try:
-        all_grocery_lists = Grocery.query.filter(Grocery.user_id == current_user.id).all()
-        if not all_grocery_lists:
+        # Get all grocery lists for the current user
+        grocery_lists = Grocery.query.filter(Grocery.user_id == current_user.id).all()
+
+        # If no lists, return empty
+        if not grocery_lists:
             return jsonify({'grocery_lists': []}), 204
-        return jsonify({'grocery_lists': [grocery.to_dict() for grocery in all_grocery_lists]}), 200
-    except Exception as e:
-        return jsonify({'error': 'An error occurred while fetching grocery lists.'}), 500
+
+        # Otherwise, return the lists
+        return jsonify({'grocery_lists': [grocery.to_dict() for grocery in grocery_lists]}), 200
+    except:
+        return jsonify({'error': 'Error fetching grocery lists.'}), 500
 
 @grocery_routes.route('/<int:id>')
 @login_required
 def grocery(id):
-    """
-    Returns foods in a grocery list.
-    """
+    """Return details of a specific grocery list."""
     try:
+        # Get the specific grocery list
         grocery_list = Grocery.query.filter_by(id=id, user_id=current_user.id).first()
+
         if not grocery_list:
-            return jsonify({'error': 'Grocery list not found or unauthorized'}), 404
+            return jsonify({'error': 'Not found or unauthorized'}), 404
 
-        grocery_info = db.session.query(
-            Grocery,
-            Grocery_Food,
-            Food
-        ).join(Grocery_Food, Grocery_Food.grocery_id == Grocery.id).join(
-            Food, Food.id == Grocery_Food.food_id
-        ).filter(Grocery.id == id).all()
+        # Get the items in the grocery list
+        grocery_items = db.session.query(Grocery_Food, Food).join(Grocery_Food, Grocery_Food.food_id == Food.id).filter(Grocery_Food.grocery_id == id).all()
 
-        if not grocery_info:
-            return jsonify({id: []}), 200
+        # Prepare the item data to return
+        items = [{
+            "food_id": item.food_id,
+            "name": item.name,
+            "amount": grocery_item.amount,
+            "purchased": grocery_item.purchased
+        } for grocery_item, item in grocery_items]
 
-        food_arr = [
-            {
-                "food_id": food_relation.food_id,
-                "name": food_obj.name,
-                "type": food_obj.type,
-                "image_url": food_obj.image_url,
-                "amount": food_relation.amount,
-                "purchased": food_relation.purchased,
-                "alias_bool": food_obj.alias_bool,
-                "alias_id": food_obj.alias_id
-            } for (_, food_relation, food_obj) in grocery_info
-        ]
-        return jsonify({id: food_arr}), 200
-    except Exception as e:
-        return jsonify({'error': 'An error occurred while fetching grocery list details.'}), 500
+        return jsonify({id: items}), 200
+    except:
+        return jsonify({'error': 'Error fetching grocery list.'}), 500
 
 @grocery_routes.route('/', methods=['POST'])
 @login_required
 def create_grocery_list():
-    """
-    Creates a new grocery list with items.
-    """
+    """Create a new grocery list with items."""
     form = GroceryForm()
     form['csrf_token'].data = request.cookies.get('csrf_token')
 
     if form.validate_on_submit():
         try:
-            # Create new grocery list
+            # Create the grocery list
             grocery_list = Grocery(
                 name=form.name.data,
                 date=form.date.data,
@@ -78,65 +67,62 @@ def create_grocery_list():
             db.session.add(grocery_list)
             db.session.commit()
 
-            # Add items to the grocery list
+            # Add the items to the list
             for item_data in form.items.data:
-                if all(k in item_data for k in ('food_id', 'quantity', 'purchased')):
-                    foodForm = GroceryItemForm(data=item_data)
-                    foodForm['csrf_token'].data = request.cookies['csrf_token']
-                    print("Form_DATA", foodForm.data)
+                if 'food_id' in item_data and 'quantity' in item_data and 'purchased' in item_data:
                     grocery_item = Grocery_Food(
                         grocery_id=grocery_list.id,
-                        food_id=form.data['food_id'],
-                        amount=form.data['quantity'],
-                        purchased=form.data['purchased'],
+                        food_id=item_data['food_id'],
+                        amount=item_data['quantity'],
+                        purchased=item_data['purchased'],
                     )
                     db.session.add(grocery_item)
 
             db.session.commit()
             return jsonify(grocery_list.to_dict()), 201
-        except Exception as e:
-            return jsonify({'error': 'An error occurred while creating the grocery list.'}), 500
-    else:
-        return jsonify({"errors": form.errors}), 400
+        except:
+            return jsonify({'error': 'Error creating grocery list.'}), 500
+
+    return jsonify({"errors": form.errors}), 400
 
 @grocery_routes.route('/<int:id>', methods=['PUT'])
 @login_required
 def update_grocery_list(id):
-    """
-    Updates the name of a grocery list.
-    """
+    """Update the grocery list name."""
     try:
+        # Find the grocery list
         grocery = Grocery.query.filter(Grocery.id == id, Grocery.user_id == current_user.id).first()
 
         if not grocery:
-            return jsonify({'error': 'Grocery list not found or unauthorized'}), 404
+            return jsonify({'error': 'Not found or unauthorized'}), 404
 
+        # Get the new name
         data = request.get_json()
         new_name = data.get("name", "").strip()
 
         if not new_name:
-            return jsonify({'error': 'A valid name is required'}), 400
+            return jsonify({'error': 'Valid name required'}), 400
 
         grocery.name = new_name
         db.session.commit()
         return jsonify(grocery.to_dict()), 200
-    except Exception as e:
-        return jsonify({'error': 'An error occurred while updating the grocery list.'}), 500
+    except:
+        return jsonify({'error': 'Error updating grocery list.'}), 500
 
 @grocery_routes.route('/<int:id>', methods=['DELETE'])
 @login_required
 def delete_grocery_list(id):
-    """
-    Deletes a grocery list.
-    """
+    """Delete a grocery list."""
     try:
+        # Find the grocery list
         grocery = Grocery.query.filter(Grocery.id == id, Grocery.user_id == current_user.id).first()
 
         if not grocery:
-            return jsonify({'error': 'Grocery list not found or unauthorized'}), 404
+            return jsonify({'error': 'Not found or unauthorized'}), 404
 
+        # Delete the list
         db.session.delete(grocery)
         db.session.commit()
-        return jsonify({'message': 'Grocery list deleted successfully'}), 200
-    except Exception as e:
-        return jsonify({'error': 'An error occurred while deleting the grocery list.'}), 500
+        return jsonify({'message': 'Grocery list deleted.'}), 200
+    except:
+        return jsonify({'error': 'Error deleting grocery list.'}), 500
