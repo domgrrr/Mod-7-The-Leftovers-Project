@@ -14,3 +14,4 @@ class RecipeForm(FlaskForm):
     directions = TextAreaField('directions', validators=[DataRequired()])
     image_url = StringField('image_url')
     recipe_foods = FieldList(FormField(RecipeFood)) # handles list of ingredients for the recipe, need to validate this?
+    #this is needed to avoid 500 issue i guess^?
