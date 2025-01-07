@@ -2,7 +2,7 @@ from flask import Blueprint, request #importing request
 from flask_login import current_user, login_required
 # import correct forms here
 from app.models import Recipe, db, Food, Recipe_Food
-from app.forms import RecipeForm
+from app.forms import RecipeForm, RecipeFood
 
 recipe_routes = Blueprint('recipes', __name__)
 
@@ -70,46 +70,52 @@ def new_recipe():
     """
     # went ahead and did similar based off auth_routes.py
 
-    # food_item = RecipeFood()
-
-    # def food_item_iterable():
-    #   process food item
-    #   add to session db.session.add(item)
-    # food_item_iterable for ... SEE BELOW
-    recipe_form = RecipeForm() #Instantiate the form
-    recipe_form['csrf_token'].data = request.cookies['csrf_token'] #add csrf token to form
-    #if statement to validate form
-    if recipe_form.validate_on_submit(): #if form is valid extract data
-        name = recipe_form.data['name']
-        directions = recipe_form.data['directions']
-        image_url = recipe_form.data['image_url']
-        recipe_foods = recipe_form.data['recipe_foods']
-
-        recipe = Recipe(
-            name=name,
-            directions=directions,
-            image_url=image_url,
-            user_id=current_user.id
-        )
-        db.session.add(recipe)
-        db.session.commit()
-
-        def process_food_item(food_item):
-            food_id = food_item['food_id'] #uh double check if food_item is correct
-            amount = food_item['amount']
-            new_recipe_food = Recipe_Food( #relationship between recipe and food
-                recipe_id=recipe.id,
-                food_id=food_id,
-                amount=amount
+    # helper function to process each each individual form
+    def process_form(food, rId):
+        form = RecipeFood(data=food)
+        form['csrf_token'].data = request.cookies['csrf_token']
+        form['recipe_id'].data = rId
+        if form.validate_on_submit():
+            food_item = Recipe_Food( 
+                food_id=form.data['food_id'], 
+                recipe_id=form.data['recipe_id'],
+                amount=form.data['amount'], 
             )
-            db.session.add(new_recipe_food) #add to session
+            db.session.add(food_item)
+            return (food_item, True)
+        return (form.errors, False)
+
+    with db.session.no_autoflush:
+
+        recipe_form = RecipeForm() #Instantiate the form
+        recipe_form['csrf_token'].data = request.cookies['csrf_token'] #add csrf token to form
+        #if statement to validate form
+        if recipe_form.validate_on_submit(): #if form is valid extract data
+            name = recipe_form.data['name']
+            directions = recipe_form.data['directions']
+            image_url = recipe_form.data['image_url']
+            recipe_foods = recipe_form.data['recipe_foods']
+
+            recipe = Recipe(
+                name=name,
+                directions=directions,
+                image_url=image_url,
+                user_id=current_user.id
+            )
+            db.session.add(recipe)
+            db.session.commit()
+        else:
+            return recipe_form.errors, 400 #return errors if form is invalid a 400 error
+
+        newRecipeObj = db.session.query(Recipe).order_by(Recipe.id.desc()).first()
 
         for food_item in recipe_foods: #loop through recipe_foods
-            process_food_item(food_item) #call/process each food item
+            (returnValue, valid) = process_form(food_item, newRecipeObj.id) #call/process each food item
+            if not valid:
+                return returnValue
 
         db.session.commit() #commit all changes to db
         return recipe.to_dict() #return the recipe as a dictionaryå
-    return recipe_form.errors, 400 #return errors if form is invalid a 400 error
 
 # PUT update recipe
 @recipe_routes.route('/<int:id>', methods=['PUT'])

@@ -62,7 +62,7 @@ export const createGroceryList = createAsyncThunk(
   "groceryLists/createGroceryList",
   async (groceryList, thunkAPI) => {
     try {
-      const response = await fetch(`/api/grocery/new`, {
+      const response = await fetch(`/api/groceries/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
