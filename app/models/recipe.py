@@ -11,7 +11,7 @@ class Recipe(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) #added
+    user_id = db.Column(db.Integer, db.ForeignKey(f'{SCHEMA}.users.id' if environment == "production" else 'users.id'), nullable=False) #added
     name = db.Column(db.String(100), nullable=False) #added (name of recipe)
     directions = db.Column(db.Text, nullable=False)  
     image_url = db.Column(db.String, nullable=True)
@@ -33,6 +33,6 @@ class Recipe_Food(db.Model):
         __container_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
-    food_id = db.Column(db.Integer, db.ForeignKey('foods.id'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey(f'{SCHEMA}.recipes.id' if environment == "production" else 'recipes.id'), nullable=False)
+    food_id = db.Column(db.Integer, db.ForeignKey(f'{SCHEMA}.recipes.id' if environment == "production" else 'foods.id'), nullable=False)
     amount = db.Column(db.String)
