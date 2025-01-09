@@ -12,10 +12,8 @@ class Grocery(db.Model):
     name = db.Column(db.String(20), nullable=False)
     completed = db.Column(db.Boolean, nullable=False)
 
-    user = db.relationship('User', back_populates='Grocery')
-    container_food = db.relationship(
+    grocery_food = db.relationship(
         'Grocery_Food', 
-        back_populates='grocery_lists', 
         cascade="all, delete-orphan", 
         primaryjoin="Grocery.id == Grocery_Food.grocery_id"
     )
@@ -40,6 +38,3 @@ class Grocery_Food(db.Model):
     food_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('foods.id')), nullable=False)
     amount = db.Column(db.String)
     purchased = db.Column(db.Boolean, nullable=False)
-
-    grocery = db.relationship('Grocery', back_populates='grocery_list_foods')
-    food = db.relationship('Food', back_populates='grocery_list_foods')

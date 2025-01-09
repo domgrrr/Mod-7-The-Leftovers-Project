@@ -10,10 +10,8 @@ class Container(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
     storage_type = db.Column(db.String(12), nullable=False)
 
-    user = db.relationship('User', back_populates='containers')
     container_food = db.relationship(
-        'Container_Food', 
-        back_populates='containers', 
+        'Container_Food',  
         cascade="all, delete-orphan", 
         primaryjoin="Container.id == Container_Food.container_id"
     )
@@ -36,9 +34,6 @@ class Container_Food(db.Model):
     food_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('foods.id')), nullable=False)
     amount = db.Column(db.String)
     expiration = db.Column(db.Date)
-
-    container = db.relationship('Container', back_populates='container_foods')
-    food = db.relationship('Food', back_populates='container_foods')
 
     def to_dict(self):
         return {
