@@ -23,9 +23,11 @@ const GroceryListPage = () => {
     setSelectedList(list); // Updating the local state with the selected list.
   };
 
-  // Toggles the form's visibility.
   const toggleForm = () => {
-    setShowForm((prev) => !prev);
+    setShowForm((prev) => !prev); // Toggle the form visibility.
+    if (showForm) {
+      dispatch(fetchGroceryLists()); // Fetch grocery lists after the form closes.
+    }
   };
 
   return (

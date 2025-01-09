@@ -24,6 +24,7 @@ class Recipe(db.Model):
         primaryjoin="Recipe.id == Recipe_Food.recipe_id"
     )
 
+
     def to_dict(self): #is this needed? 
         return {
             'id': self.id,

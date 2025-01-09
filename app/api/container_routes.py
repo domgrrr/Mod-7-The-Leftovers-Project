@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_login import current_user, login_required
 from app.models import Container, Container_Food, Food, db
 from app.forms import FoodItemForm
@@ -50,24 +50,24 @@ def container(id):
     return {"storage_type": container_info[0][0].storage_type, "food_items": food_arr} if len(container_info) > 0 else {"Empty"}
     # return {'foods': [food.to_dict() for food in container_foods]}
 
-@container_routes.route('/<int:id>/new', methods=['POST'])
+@container_routes.route('/<int:id>/add', methods=['POST'])
 @login_required
 def new_food(id):
     """
     Adds food to a container
     """
     
+    # helper function to process each each individual form
     def process_form(food):
         form = FoodItemForm(data=food)
         form['csrf_token'].data = request.cookies['csrf_token']
         form['container_id'].data = id
-        print("Form_DATA", form.data)
         if form.validate_on_submit():
             food_item = Container_Food( 
                 food_id=form.data['food_id'], 
                 container_id=form.data['container_id'],
                 amount=form.data['amount'], 
-                expiration=datetime.strptime(form.data["expiration"], "%Y-%m-%d").date() if form.data['expiration'] != "" else None
+                expiration=datetime.strptime(form.data["expiration"], "%Y-%m-%d").date() if form.data['expiration'] not in ["", None] else None
             )
             db.session.add(food_item)
         return {'message': 'doing something'}
@@ -80,12 +80,30 @@ def new_food(id):
         db.session.commit()
         return {'message': 'doing something'}
 
-# @container_routes.route('/<int:id>/edit')
-# @login_required
-# def edit_food():
-#     """
-#     Edit food amount and/or expiration
-#     """ 
+@container_routes.route('/<int:id>/edit', methods=['PUT'])
+@login_required
+def edit_food(id):
+    """
+    Edit food amount and/or expiration
+    """
+    data = request.get_json()['food']
+    form = FoodItemForm(data=data)
+    relation = data['relation_id']
+    print("DDDData", data)
+    form['csrf_token'].data = request.cookies['csrf_token']
+    form['container_id'].data = id
+    # print("FFForm_DDAta", form.data)
+    if form.validate_on_submit():
+        food_item = Container_Food.query.get(relation)
+        if not food_item:
+            return {'error': "food relation not found"}
+        food_item.food_id=form.data['food_id'], 
+        food_item.container_id=form.data['container_id'],
+        food_item.amount=form.data['amount'], 
+        food_item.expiration=datetime.strptime(form.data["expiration"], "%Y-%m-%d").date() if form.data['expiration'] not in ["", None] else None
+        db.session.commit()
+        return { 'message': 'food edit complete' }
+    return {'error': 'food edit error'}
 
 @container_routes.route('/<int:id>/delete', methods=['DELETE'])
 @login_required
@@ -93,10 +111,13 @@ def delete_food(id):
     """
     Deletes food item from container
     """
-    food_relation = Container_Food.query.get(id)
-    db.session.delete(food_relation)
-    db.session.commit()
-    return {'message': 'Food deleted'}
+    try: 
+        food_relation = Container_Food.query.get(id)
+        db.session.delete(food_relation)
+        db.session.commit()
+        return jsonify({'message': 'Food deleted'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
     
 #master list of all foods in ALL containers
 @container_routes.route('/masterlist') #we can change this to /all or /list-all whichever preferred

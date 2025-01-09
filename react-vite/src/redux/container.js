@@ -37,10 +37,30 @@ export const addFoodItems = createAsyncThunk(
   "container/addFood",
   async ({ id, addedFoodItems }, { rejectWithValue }) => {
     try {
-      const res = await fetch(`/api/container/${id}/new`, {
+      const res = await fetch(`/api/container/${id}/add`, {
         method: "POST", 
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({food: addedFoodItems})
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return rejectWithValue(data);
+      }
+      return data // return data.food
+    } catch (error) {
+      return rejectWithValue(error.message || "Unsuccessful Food to Container")
+    }
+  }
+);
+
+export const editFoodItem = createAsyncThunk(
+  "container/editFood",
+  async ({ id, foodItem }, { rejectWithValue }) => {
+    try {
+      const res = await fetch(`/api/container/${id}/edit`, {
+        method: "PUT", 
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({food: foodItem})
       });
       const data = await res.json();
       if (!res.ok) {
@@ -58,12 +78,9 @@ export const removeFood = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
 
-      const res = await fetch(`/api/container/${id}/delete`, {
+      await fetch(`/api/container/${id}/delete`, {
         method: 'DELETE',
       });
-      if (!response.ok) {
-        return rejectWithValue(data);
-      }
       return { "message": "Delete Ok" }
     } catch (error) {
       return rejectWithValue(error.message || "Unsuccessful Delete")
@@ -110,6 +127,18 @@ const containerSlice = createSlice({
         state.errors = action.payload;
       })
       .addCase(addFoodItems.fulfilled, (state, action) => {
+        state.loading = false;
+        // state.container = action.payload;
+      })
+      .addCase(editFoodItem.pending, (state) => {
+        state.loading = true;
+        state.errors = null;
+      })
+      .addCase(editFoodItem.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload;
+      })
+      .addCase(editFoodItem.fulfilled, (state, action) => {
         state.loading = false;
         // state.container = action.payload;
       })
