@@ -7,8 +7,16 @@ class Container(db.Model):
         __container_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(f'{SCHEMA}.users.id' if environment == "production" else 'users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
     storage_type = db.Column(db.String(12), nullable=False)
+
+    user = db.relationship('User', back_populates='containers')
+    container_food = db.relationship(
+        'Container_Food', 
+        back_populates='containers', 
+        cascade="all, delete-orphan", 
+        primaryjoin="Container.id == Container_Food.container_id"
+    )
 
     def to_dict(self):
         return {
@@ -24,10 +32,13 @@ class Container_Food(db.Model):
         __container_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    container_id = db.Column(db.Integer, db.ForeignKey('containers.id'), nullable=False)
-    food_id = db.Column(db.Integer, db.ForeignKey('foods.id'), nullable=False)
+    container_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('containers.id')), nullable=False)
+    food_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('foods.id')), nullable=False)
     amount = db.Column(db.String)
     expiration = db.Column(db.Date)
+
+    container = db.relationship('Container', back_populates='container_foods')
+    food = db.relationship('Food', back_populates='container_foods')
 
     def to_dict(self):
         return {
