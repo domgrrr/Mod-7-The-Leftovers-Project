@@ -1,53 +1,112 @@
-import { useDispatch } from "react-redux"; // Importing useDispatch to dispatch Redux actions.
-import { updateGroceryList } from "../../redux/groceryListsSlice"; // Importing the action to update a grocery list.
-import { fetchGroceryListFoods } from "../../redux/groceryListsSlice"; // Importing the action to fetch a grocery list's foods.
-import GroceryForm from "../GroceryForm"; // Importing a form component to add items to a grocery list.
-import "./GroceryListDetails.css"; // Importing the CSS file for styling.
-import { useSelector } from "react-redux"; // Importing the useSelector hook to get access to the Redux store.
-import { useEffect } from "react"; // Importing the useEffect hook to run side effects in function components.
-
+import { useDispatch, useSelector } from "react-redux"; // Importing useDispatch and useSelector hooks for Redux
+import { updateGroceryList, fetchGroceryListFoods } from "../../redux/groceryListsSlice"; // Importing Redux actions
+import GroceryForm from "../GroceryForm"; // Importing form component for adding items
+import { useState, useEffect } from "react"; // Importing hooks for state management and side effects
+import "./GroceryListDetails.css"; // Importing the CSS file for styling
 
 const GroceryListDetails = ({ listId }) => {
-  const dispatch = useDispatch(); // useDispatch hook to get access to the dispatch function.
-  const list = useSelector((state) => state.groceryLists.foodsByListId[listId]); // Getting the grocery list from the Redux 
-  
-  //we need to add the fetchGroceryListFood thunk action to fetch specific grocery list foods
-  
-  useEffect(() => {
-    dispatch(fetchGroceryListFoods(listId)); // Fetching the grocery list foods using thunk action.
-  }, [dispatch, listId]); // Dependency array ensures this runs only when `dispatch` or `listId` changes.
+  const dispatch = useDispatch(); // useDispatch hook to get access to the dispatch function
+  const list = useSelector((state) => state.groceryLists.foodsByListId[listId]); // Getting the grocery list from Redux store
+  const foods = useSelector((state) => state.foods); // Getting all foods from Redux store
+  const [addedItems, setAddedItems] = useState([{ food_name: '', food_id: '', quantity: '', purchased: false }]); // State for new items
 
-  // Function to handle marking an item as purchased.
-  const handleItemPurchase = (food_id) => { //changed id to food_id for clarity
-    console.log(`Marking item with ID ${food_id} as purchased in list ${listId}`);
-    dispatch(updateGroceryList({ listId, food_id, purchased: true })); // Dispatching an action to update the grocery list.
+  // Fetch the grocery list foods on mount
+  useEffect(() => {
+    dispatch(fetchGroceryListFoods(listId)); // Fetching foods specific to the grocery list
+  }, [dispatch, listId]);
+
+  // Function to handle marking an item as purchased
+  const handleItemPurchase = (food_id) => {
+    dispatch(updateGroceryList({ listId, food_id, purchased: true }));
   };
 
-   // Check if list and list.items are defined this is also to avoid the map error!
-  if (!list) {
-    return <div>Loading...</div>;
+  // Function to update food name and ID dynamically
+  const setFoodName = (value, i) => {
+    const setID = () => {
+      const searchFood = foods?.find(food => food.name === value);
+      return searchFood ? searchFood.id : ''; // Return ID based on food name
+    };
+
+    setAddedItems(addedItems.map((item, j) =>
+      i === j
+        ? { ...item, food_name: value, food_id: setID() }
+        : item
+    ));
+  };
+
+  // Function to handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Dispatching an action to add new items
+    await dispatch(updateGroceryList({ listId, addedItems }));
+  };
+
+  if (list === undefined) {
+    return <div>Loading...</div>; // Loading state if the list is not yet available
   }
 
   return (
     <div className="grocery-list-details">
-      {/* Displaying the name of the grocery list */}
-      <h2>{list.name}</h2>
+      <h2>{list.name || "Unnamed List"}</h2>
+      {list.items && list.items.length > 0 ? (
+        <ul>
+          {list.items.map(({ food_id, name, quantity, purchased }) => (
+            <li key={food_id} className={purchased ? "purchased" : ""}>
+              {name} - {quantity}
+              <button onClick={() => handleItemPurchase(food_id)}>
+                {purchased ? "Purchased" : "Mark as Purchased"}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No items in this list.</p> // Message for an empty list
+      )}
 
-      {/* Rendering the list of items in the grocery list */}
-      <ul>
-        {list.map(({ food_id, name, amount, purchased }) => (
-          <li key={food_id} className={purchased ? "purchased" : ""}>
-            {/* Displaying the item's name and amount */}
-            {name} - {amount}
-            {/* Button to mark the item as purchased */}
-            <button onClick={() => handleItemPurchase(food_id)}>
-              {purchased ? "Purchased" : "Mark as Purchased"} 
+      {/* Form for adding new items */}
+      <form onSubmit={handleSubmit}>
+        {addedItems.map((item, i) => (
+          <div key={`form_${i}`}>
+            <label>
+              Food Name
+              <select
+                onChange={(e) => setFoodName(e.target.value, i)}
+                required
+              >
+                <option value="">--Choose an Option--</option>
+                {foods?.map((food, i) => (
+                  <option key={`option_${i}`} value={food.name}>
+                    {food.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Quantity
+              <input
+                type="text"
+                value={item.quantity}
+                placeholder="Optional"
+                onChange={(e) =>
+                  setAddedItems(addedItems.map((food, j) =>
+                    i === j
+                      ? { ...food, quantity: e.target.value }
+                      : food
+                  ))
+                }
+              />
+            </label>
+            <button type="button" onClick={() => setAddedItems(addedItems.filter((_, index) => index !== i))}>
+              Remove
             </button>
-          </li>
+          </div>
         ))}
-      </ul>
+        <button type="button" onClick={() => setAddedItems([...addedItems, { food_name: '', food_id: '', quantity: '', purchased: false }])}>
+          Add Item
+        </button>
+        <button type="submit">Submit Items</button>
+      </form>
 
-      {/* Including a form to add new items to the grocery list */}
       <GroceryForm listId={listId} />
     </div>
   );
