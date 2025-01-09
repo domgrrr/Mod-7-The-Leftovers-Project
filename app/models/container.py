@@ -10,7 +10,7 @@ class Container(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
     storage_type = db.Column(db.String(12), nullable=False)
 
-    container_foods = db.relationship(
+    container_food = db.relationship(
         'Container_Food',  
         cascade="all, delete-orphan", 
         primaryjoin="Container.id == Container_Food.container_id"

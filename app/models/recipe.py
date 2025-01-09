@@ -16,7 +16,6 @@ class Recipe(db.Model):
     # private = db.Column(db.Boolean, nullable=False)  
     # ingredients = db.Column(JSON, nullable=False) 
 
-    user = db.relationship('User', back_populates='recipes')
     recipe_food = db.relationship(
         'Recipe_Food',  
         cascade="all, delete-orphan", 

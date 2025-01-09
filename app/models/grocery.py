@@ -12,7 +12,7 @@ class Grocery(db.Model):
     name = db.Column(db.String(20), nullable=False)
     completed = db.Column(db.Boolean, nullable=False)
 
-    container_food = db.relationship(
+    grocery_food = db.relationship(
         'Grocery_Food', 
         cascade="all, delete-orphan", 
         primaryjoin="Grocery.id == Grocery_Food.grocery_id"
