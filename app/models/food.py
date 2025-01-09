@@ -16,7 +16,7 @@ class Food(db.Model):
     container_food = db.relationship(
         'Container_Food', 
         cascade="all, delete-orphan", 
-        primaryjoin="User.id == Container_Food.food_id"
+        primaryjoin="Food.id == Container_Food.food_id"
     )
     grocery_food = db.relationship(
         'Grocery_Food', 
