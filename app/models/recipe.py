@@ -43,5 +43,5 @@ class Recipe_Food(db.Model):
     food_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('foods.id')), nullable=False)
     amount = db.Column(db.String)
 
-    recipe = db.relationship('Recipe', back_populates='recipe_foods')
-    food = db.relationship('Food', back_populates='recipe_foods')
+    recipe = db.relationship('Recipe', back_populates='recipe_food')
+    food = db.relationship('Food', back_populates='recipe_food')

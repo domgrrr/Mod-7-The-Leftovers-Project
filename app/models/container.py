@@ -11,9 +11,9 @@ class Container(db.Model):
     storage_type = db.Column(db.String(12), nullable=False)
 
     user = db.relationship('User', back_populates='containers')
-    container_food = db.relationship(
+    container_foods = db.relationship(
         'Container_Food', 
-        back_populates='containers', 
+        back_populates='container', 
         cascade="all, delete-orphan", 
         primaryjoin="Container.id == Container_Food.container_id"
     )

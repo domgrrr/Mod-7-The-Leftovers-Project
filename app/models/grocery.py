@@ -12,10 +12,10 @@ class Grocery(db.Model):
     name = db.Column(db.String(20), nullable=False)
     completed = db.Column(db.Boolean, nullable=False)
 
-    user = db.relationship('User', back_populates='Grocery')
+    user = db.relationship('User', back_populates='grocery_lists')
     container_food = db.relationship(
         'Grocery_Food', 
-        back_populates='grocery_lists', 
+        back_populates='grocery', 
         cascade="all, delete-orphan", 
         primaryjoin="Grocery.id == Grocery_Food.grocery_id"
     )

@@ -15,19 +15,19 @@ class Food(db.Model):
 
     container_food = db.relationship(
         'Container_Food', 
-        back_populates='users', 
+        back_populates='food', 
         cascade="all, delete-orphan", 
-        primaryjoin="User.id == Container_Food.user_id"
+        primaryjoin="User.id == Container_Food.food_id"
     )
     grocery_food = db.relationship(
         'Grocery_Food', 
-        back_populates='foods', 
+        back_populates='food', 
         cascade="all, delete-orphan", 
         primaryjoin="Food.id == Grocery_Food.food_id"
     )
-    recipe = db.relationship(
+    recipe_food = db.relationship(
         'Recipe_Food', 
-        back_populates='foods', 
+        back_populates='food', 
         cascade="all, delete-orphan", 
         primaryjoin="Food.id == Recipe_Food.food_id"
     )
