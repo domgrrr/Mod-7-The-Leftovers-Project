@@ -7,10 +7,18 @@ class Grocery(db.Model):
         __grocery_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(f'{SCHEMA}.users.id' if environment == "production" else 'users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
     date = db.Column(db.Date, nullable=False)
     name = db.Column(db.String(20), nullable=False)
     completed = db.Column(db.Boolean, nullable=False)
+
+    user = db.relationship('User', back_populates='Grocery')
+    container_food = db.relationship(
+        'Grocery_Food', 
+        back_populates='grocery_lists', 
+        cascade="all, delete-orphan", 
+        primaryjoin="Grocery.id == Grocery_Food.grocery_id"
+    )
 
     def to_dict(self):
         return {
@@ -28,7 +36,10 @@ class Grocery_Food(db.Model):
         __container_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    grocery_id = db.Column(db.Integer, db.ForeignKey(f'{SCHEMA}.grocery_lists.id' if environment == "production" else 'grocery_lists.id'), nullable=False)
-    food_id = db.Column(db.Integer, db.ForeignKey(f'{SCHEMA}.foods.id' if environment == "production" else 'foods.id'), nullable=False)
+    grocery_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('grocery_lists.id')), nullable=False)
+    food_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('foods.id')), nullable=False)
     amount = db.Column(db.String)
     purchased = db.Column(db.Boolean, nullable=False)
+
+    grocery = db.relationship('Grocery', back_populates='grocery_list_foods')
+    food = db.relationship('Food', back_populates='grocery_list_foods')

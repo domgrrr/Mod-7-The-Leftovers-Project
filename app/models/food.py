@@ -13,6 +13,25 @@ class Food(db.Model):
     alias_bool = db.Column(db.Boolean, nullable=False)
     alias_id = db.Column(db.Integer, db.ForeignKey("foods.id"))
 
+    container_food = db.relationship(
+        'Container_Food', 
+        back_populates='users', 
+        cascade="all, delete-orphan", 
+        primaryjoin="User.id == Container_Food.user_id"
+    )
+    grocery_food = db.relationship(
+        'Grocery_Food', 
+        back_populates='foods', 
+        cascade="all, delete-orphan", 
+        primaryjoin="Food.id == Grocery_Food.food_id"
+    )
+    recipe = db.relationship(
+        'Recipe_Food', 
+        back_populates='foods', 
+        cascade="all, delete-orphan", 
+        primaryjoin="Food.id == Recipe_Food.food_id"
+    )
+
     def to_dict(self):
         return {
             'id': self.id,
