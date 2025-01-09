@@ -18,8 +18,7 @@ class Recipe(db.Model):
 
     user = db.relationship('User', back_populates='recipes')
     recipe_food = db.relationship(
-        'Recipe_Food', 
-        back_populates='recipes', 
+        'Recipe_Food',  
         cascade="all, delete-orphan", 
         primaryjoin="Recipe.id == Recipe_Food.recipe_id"
     )
@@ -43,6 +42,3 @@ class Recipe_Food(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('recipes.id')), nullable=False)
     food_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('foods.id')), nullable=False)
     amount = db.Column(db.String)
-
-    recipe = db.relationship('Recipe', back_populates='recipe_food')
-    food = db.relationship('Food', back_populates='recipe_food')

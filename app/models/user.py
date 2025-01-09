@@ -16,20 +16,17 @@ class User(db.Model, UserMixin):
     hashed_password = db.Column(db.String(255), nullable=False)
 
     containers = db.relationship(
-        'Container', 
-        back_populates='user', 
+        'Container',  
         cascade="all, delete-orphan", 
         primaryjoin="User.id == Container.user_id"
     )
     grocery_lists = db.relationship(
-        'Grocery', 
-        back_populates='user', 
+        'Grocery',  
         cascade="all, delete-orphan", 
         primaryjoin="User.id == Grocery.user_id"
     )
     recipes = db.relationship(
-        'Recipe', 
-        back_populates='user', 
+        'Recipe',  
         cascade="all, delete-orphan", 
         primaryjoin="User.id == Recipe.user_id"
     )
