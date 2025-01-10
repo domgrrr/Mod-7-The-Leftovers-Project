@@ -1,8 +1,8 @@
 """init_migration
 
-Revision ID: 950848696885
+Revision ID: aae31a57164d
 Revises: 
-Create Date: 2025-01-09 14:42:01.125503
+Create Date: 2025-01-10 11:09:58.252491
 
 """
 from alembic import op
@@ -13,7 +13,7 @@ environment = os.getenv("FLASK_ENV")
 SCHEMA = os.environ.get("SCHEMA")
 
 # revision identifiers, used by Alembic.
-revision = '950848696885'
+revision = 'aae31a57164d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,7 +32,6 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
-
     if environment == "production":
         op.execute(f"ALTER TABLE foods SET SCHEMA {SCHEMA};")
 
@@ -45,7 +44,6 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
-
     if environment == "production":
         op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
 
@@ -56,7 +54,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-
     if environment == "production":
         op.execute(f"ALTER TABLE containers SET SCHEMA {SCHEMA};")
 
@@ -69,7 +66,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-
     if environment == "production":
         op.execute(f"ALTER TABLE grocery_lists SET SCHEMA {SCHEMA};")
 
@@ -82,7 +78,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-
     if environment == "production":
         op.execute(f"ALTER TABLE recipes SET SCHEMA {SCHEMA};")
 
@@ -96,7 +91,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['food_id'], ['foods.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-
     if environment == "production":
         op.execute(f"ALTER TABLE container_foods SET SCHEMA {SCHEMA};")
 
@@ -110,7 +104,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['grocery_id'], ['grocery_lists.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-
     if environment == "production":
         op.execute(f"ALTER TABLE grocery_list_foods SET SCHEMA {SCHEMA};")
 
@@ -123,7 +116,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['recipe_id'], ['recipes.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-
     if environment == "production":
         op.execute(f"ALTER TABLE recipe_foods SET SCHEMA {SCHEMA};")
     # ### end Alembic commands ###
