@@ -4,7 +4,7 @@ class Grocery_Food(db.Model):
     __tablename__ = 'grocery_list_foods'
 
     if environment == "production":
-        __container_args__ = {'schema': SCHEMA}
+        __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
     grocery_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('grocery_lists.id')), nullable=False)
