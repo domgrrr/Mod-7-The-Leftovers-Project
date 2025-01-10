@@ -4,9 +4,9 @@ from .containers import seed_containers, undo_containers
 from .foods import seed_foods, undo_foods
 from .grocery import seed_grocery_lists, undo_grocery_lists
 from .recipes import seed_recipes, undo_recipes
-from .food_relationships import (
-    seed_container_foods, undo_container_foods, seed_recipe_foods, undo_recipe_foods, seed_grocery_foods, undo_grocery_foods
-)
+from .container_foods import seed_container_foods, undo_container_foods 
+from .grocery_foods import seed_grocery_foods, undo_grocery_foods
+from .recipe_foods import seed_recipe_foods, undo_recipe_foods
 
 
 from app.models.db import db, environment, SCHEMA
