@@ -11,16 +11,18 @@ function DashBoard() {
     const containers = useSelector((store) => store.container.containers)
 
     useEffect(() => {
-        dispatch(getAllContainers()); //once loading is done, it is set to false
-    }, [dispatch]);
+        if (!loading) {
+            dispatch(getAllContainers()); //once loading is done, it is set to false
+        }
+    }, [dispatch, loading]);
     
     if (!user) {
         return <Navigate to="/welcome" />; //why isnt this working?
     }
 
-    if (loading) { //if loading is true render message, if loading is false then continue on to returning containers
-        return <div>Loading...</div>;
-    }
+    // if (loading) { //if loading is true render message, if loading is false then continue on to returning containers
+    //     return <div>Loading...</div>;
+    // }
 
     return (
         <>
