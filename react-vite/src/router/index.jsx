@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Navigate to="/dash"/>,
+        element: <ProtectedRoute element={<Navigate to="/dash"/>}/>,
       },
       {
         path: "login",
