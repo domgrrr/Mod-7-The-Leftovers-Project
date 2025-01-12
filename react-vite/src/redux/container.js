@@ -55,9 +55,9 @@ export const addFoodItems = createAsyncThunk(
 
 export const editFoodItem = createAsyncThunk(
   "container/editFood",
-  async ({ id, foodItem }, { rejectWithValue }) => {
+  async ({ foodID, foodItem }, { rejectWithValue }) => {
     try {
-      const res = await fetch(`/api/container/${id}/edit`, {
+      const res = await fetch(`/api/container/${foodID}/edit`, {
         method: "PUT", 
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({food: foodItem})
@@ -126,7 +126,7 @@ const containerSlice = createSlice({
         state.loading = false;
         state.errors = action.payload;
       })
-      .addCase(addFoodItems.fulfilled, (state, action) => {
+      .addCase(addFoodItems.fulfilled, (state) => {
         state.loading = false;
         // state.container = action.payload;
       })
@@ -138,7 +138,7 @@ const containerSlice = createSlice({
         state.loading = false;
         state.errors = action.payload;
       })
-      .addCase(editFoodItem.fulfilled, (state, action) => {
+      .addCase(editFoodItem.fulfilled, (state) => {
         state.loading = false;
         // state.container = action.payload;
       })
@@ -150,7 +150,7 @@ const containerSlice = createSlice({
         state.loading = false;
         state.errors = action.payload;
       })
-      .addCase(removeFood.fulfilled, (state, action) => {
+      .addCase(removeFood.fulfilled, (state) => {
         state.loading = false;
         // state.container = action.payload;
 

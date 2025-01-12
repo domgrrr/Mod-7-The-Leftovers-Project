@@ -86,24 +86,28 @@ def edit_food(id):
     """
     Edit food amount and/or expiration
     """
-    data = request.get_json()['food']
-    form = FoodItemForm(data=data)
-    relation = data['relation_id']
-    print("DDDData", data)
-    form['csrf_token'].data = request.cookies['csrf_token']
-    form['container_id'].data = id
-    # print("FFForm_DDAta", form.data)
-    if form.validate_on_submit():
-        food_item = Container_Food.query.get(relation)
-        if not food_item:
-            return {'error': "food relation not found"}
-        food_item.food_id=form.data['food_id'], 
-        food_item.container_id=form.data['container_id'],
-        food_item.amount=form.data['amount'], 
-        food_item.expiration=datetime.strptime(form.data["expiration"], "%Y-%m-%d").date() if form.data['expiration'] not in ["", None] else None
-        db.session.commit()
-        return { 'message': 'food edit complete' }
-    return {'error': 'food edit error'}
+    try: 
+        data = request.get_json()['food']
+        form = FoodItemForm(data=data)
+        # relation = data['relation_id']
+        # print("!!!!!DDDData", relation)
+        form['csrf_token'].data = request.cookies['csrf_token']
+        # form['container_id'].data = id
+        print("!!!FormData", form.data)
+        # print("FFForm_DDAta", form.data)
+        if form.validate_on_submit():
+            food_item = Container_Food.query.get(id)
+            if not food_item:
+                return {'error': "food relation not found"}
+            food_item.food_id=form.data['food_id'] 
+            food_item.container_id=form.data['container_id']
+            food_item.amount=form.data['amount'] 
+            food_item.expiration=datetime.strptime(form.data["expiration"], "%Y-%m-%d").date() if form.data['expiration'] not in ["", None] else None
+            db.session.commit()
+            return { 'message': 'food edit complete' }
+        return { 'error': 'invalid form' }
+    except Exception as e:
+        return {'error': str(e)}, 500
 
 @container_routes.route('/<int:id>/delete', methods=['DELETE'])
 @login_required

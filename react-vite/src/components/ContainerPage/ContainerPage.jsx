@@ -20,8 +20,8 @@ function ContainerPage() {
     const handleRemoveFood = (relation_id) => {
         dispatch(removeFood(relation_id));
         dispatch(getContainer(id));
+        window.location.reload();
     };
-
 
     return (
         <div className="container-page">
@@ -50,9 +50,7 @@ function ContainerPage() {
                         <OpenModalButton 
                             buttonText="Edit Item"
                             modalComponent={<ContainerFoodEditModal item={item}/>}
-                            
                         />
-                        
                     </div>
                 </div>
             ))}
