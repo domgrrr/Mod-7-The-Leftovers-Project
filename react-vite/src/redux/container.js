@@ -55,9 +55,9 @@ export const addFoodItems = createAsyncThunk(
 
 export const editFoodItem = createAsyncThunk(
   "container/editFood",
-  async ({ id, foodItem }, { rejectWithValue }) => {
+  async ({ foodID, foodItem }, { rejectWithValue }) => {
     try {
-      const res = await fetch(`/api/container/${id}/edit`, {
+      const res = await fetch(`/api/container/${foodID}/edit`, {
         method: "PUT", 
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({food: foodItem})

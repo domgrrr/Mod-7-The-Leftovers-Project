@@ -12,10 +12,10 @@ function ContainerFoodEditModal({ item }) {
 
   // State for tracking the food item details being edited.
   const [foodItem, setFoodItem] = useState({
+    container_id: id,
     food_id: item?.food_id,
     amount: item?.amount,
-    expiration: item?.expiration,
-    relation_id: item?.relation_id
+    expiration: item?.expiration
   });
 
   // State for tracking form errors.
@@ -31,8 +31,12 @@ function ContainerFoodEditModal({ item }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("D", foodItem);
+
+    const foodID = item?.relation_id;
+
     const serverResponse = await dispatch(
-      editFoodItem({ id, foodItem }) // Updated `foodItem` key to `addedFoodItems` to match expected API payload.
+      editFoodItem({ foodID, foodItem }) // Updated `foodItem` key to `addedFoodItems` to match expected API payload.
     );
 
     // Check for errors in the server response.
