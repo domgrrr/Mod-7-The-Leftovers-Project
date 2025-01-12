@@ -10,6 +10,7 @@ import RecipeDetailsPage from '../components/RecipeDetailsPage/RecipeDetailsPage
 import ContainerPage from '../components/ContainerPage/ContainerPage';
 import WelcomePage from '../components/WelcomePage/WelcomePage';
 import UserRecipes from '../components/UserRecipes/UserRecipes';
+
 // Define the ProtectedRoute component
 const ProtectedRoute = ({ element }) => {
   const user = useSelector((store) => store.session.user);
