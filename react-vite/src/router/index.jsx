@@ -23,8 +23,8 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: "/",
-        element: <ProtectedRoute element={<Navigate to="/dash"/>}/>,
+        path: "",
+        element: <Navigate to="/welcome"/>,
       },
       {
         path: "login",
