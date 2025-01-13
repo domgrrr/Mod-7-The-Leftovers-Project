@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'; // Removed React
 import { useSelector, useDispatch } from 'react-redux';
 // import { Link } from 'react-router-dom';
-import { fetchUserRecipes, deleteRecipe } from '../../redux/recipeslice';
+import { fetchUserRecipes, deleteRecipe, fetchRecipeDetails } from '../../redux/recipeslice';
 import RecipeFormModal from '../RecipeFormModal/RecipeFormModal'; // Import the RecipeFormModal component
 import './UserRecipes.css'; // Import the UserRecipes component styles
 // Define UserRecipes component to display user's recipes
 const UserRecipes = () => {
-  const { userRecipes, loading, errors } = useSelector((state) => state.recipes);
+  const { userRecipes, recipeDetails, loading, errors } = useSelector((state) => state.recipes);
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentRecipe, setCurrentRecipe] = useState(null);
@@ -21,6 +21,7 @@ const UserRecipes = () => {
   };
 
   const handleEditRecipe = (recipe) => {
+    dispatch(fetchRecipeDetails(recipe.id));
     setCurrentRecipe(recipe);
     setIsModalOpen(true);
   };
@@ -56,6 +57,7 @@ const UserRecipes = () => {
       {isModalOpen && (
         <RecipeFormModal
           recipe={currentRecipe}
+          currIngredients={recipeDetails.ingredients}
           onClose={() => setIsModalOpen(false)}
         />
       )}
