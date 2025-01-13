@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom"; // Removed unused `useNavigate` import
-import { addFoodItems } from "../../redux/container";
+import { addFoodItems, getContainer } from "../../redux/container";
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { getAllFoods } from "../../redux/food";
@@ -33,6 +33,8 @@ function ContainerFoodFormModal() {
     } else {
       closeModal();
     }
+
+    dispatch(getContainer(id));
   };
 
   // Updates food name and ID dynamically

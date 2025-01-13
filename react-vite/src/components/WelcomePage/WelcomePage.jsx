@@ -3,23 +3,45 @@
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
-import axios from "axios"; //installed axios to handle the demo login
+// import axios from "axios"; //installed axios to handle the demo login
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import logo from "../../../../images/Favicon2.png";
 import "./WelcomePage.css";
+import { thunkLogin } from "../../redux/session";
 
 function WelcomePage() {
     const navigate = useNavigate(); //added this line to use the navigate function
+    const dispatch = useDispatch();
+    const user = useSelector((store) => store.session.user);
+
+    // const handleDemoLogin = async () => { //added this function to handle the demo login
+    //     try {
+    //         const response = await axios.post('/api/auth/login', { //added it here in the frontend because i didnt wanna add any new routes to the backend argh
+    //             email: 'demo@aa.io',
+    //             password: 'password',
+    //         });
+    //         if (response.status === 200) {
+    //             navigate('/dash'); // Redirect to dashboard
+    //         }
+    //     } catch (error) {
+    //         console.error('Demo login failed:', error); // Log any errors
+    //     }
+    // };
+
+    if (user) {
+        navigate('/dash')
+    }
 
     const handleDemoLogin = async () => { //added this function to handle the demo login
         try {
-            const response = await axios.post('/api/auth/login', { //added it here in the frontend because i didnt wanna add any new routes to the backend argh
-                email: 'demo@aa.io',
-                password: 'password',
-            });
-            if (response.status === 200) {
-                navigate('/dash'); // Redirect to dashboard
-            }
+            const email = 'demo@aa.io';
+            const password = 'password';
+            dispatch(thunkLogin({
+                email,
+                password
+            }));
+            navigate('/dash');
         } catch (error) {
             console.error('Demo login failed:', error); // Log any errors
         }

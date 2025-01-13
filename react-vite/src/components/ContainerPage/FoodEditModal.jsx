@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom"; // Removed `useNavigate` since it's not being used.
-import { getContainer, addFoodItems } from "../../redux/container"; // Corrected comment: "transition to edit a food" to make it clear.
+import { getContainer, editFoodItem } from "../../redux/container"; // Corrected comment: "transition to edit a food" to make it clear.
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
-import { getAllFoods } from "../../redux/food";
 import './FoodFormModal.css';
 
 function ContainerFoodEditModal({ item }) {
@@ -13,10 +12,10 @@ function ContainerFoodEditModal({ item }) {
 
   // State for tracking the food item details being edited.
   const [foodItem, setFoodItem] = useState({
-    food_name: item?.name,
+    container_id: id,
     food_id: item?.food_id,
     amount: item?.amount,
-    expiration: item?.expiration,
+    expiration: item?.expiration
   });
 
   // State for tracking form errors.
@@ -32,8 +31,12 @@ function ContainerFoodEditModal({ item }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("D", foodItem);
+
+    const foodID = item?.relation_id;
+
     const serverResponse = await dispatch(
-      addFoodItems({ id, addedFoodItems: foodItem }) // Updated `foodItem` key to `addedFoodItems` to match expected API payload.
+      editFoodItem({ foodID, foodItem }) // Updated `foodItem` key to `addedFoodItems` to match expected API payload.
     );
 
     // Check for errors in the server response.
@@ -42,7 +45,7 @@ function ContainerFoodEditModal({ item }) {
     } else {
       closeModal(); // Close the modal on successful update.
       // Fetch updated list of foods after a successful update.
-      dispatch(getAllFoods());
+      dispatch(getContainer(id));
     }
   };
 

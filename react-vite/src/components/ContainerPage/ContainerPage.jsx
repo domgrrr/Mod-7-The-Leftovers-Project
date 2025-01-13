@@ -14,13 +14,14 @@ function ContainerPage() {
 
     useEffect(() => {
         dispatch(getContainer(id));
-    }, [dispatch])
+    }, [dispatch, id])
 
 
     const handleRemoveFood = (relation_id) => {
         dispatch(removeFood(relation_id));
-      };
-
+        dispatch(getContainer(id));
+        window.location.reload();
+    };
 
     return (
         <div className="container-page">
@@ -45,19 +46,17 @@ function ContainerPage() {
                     </div>
                     <div>
                         <button type="button"
-                         onClick={() => handleRemoveFood(item.relation_id)}>Remove Item</button>
+                         onClick={() => handleRemoveFood(item?.relation_id)}>Remove Item</button>
                         <OpenModalButton 
                             buttonText="Edit Item"
                             modalComponent={<ContainerFoodEditModal item={item}/>}
-                            
                         />
-                        
                     </div>
                 </div>
             ))}
         </div>
       </div>
     )
-};
+}
 
 export default ContainerPage;

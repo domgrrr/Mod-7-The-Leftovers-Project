@@ -15,6 +15,22 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
 
+    containers = db.relationship(
+        'Container',  
+        cascade="all, delete-orphan", 
+        primaryjoin="User.id == Container.user_id"
+    )
+    grocery_lists = db.relationship(
+        'Grocery',  
+        cascade="all, delete-orphan", 
+        primaryjoin="User.id == Grocery.user_id"
+    )
+    recipes = db.relationship(
+        'Recipe',  
+        cascade="all, delete-orphan", 
+        primaryjoin="User.id == Recipe.user_id"
+    )
+
     @property
     def password(self):
         return self.hashed_password
