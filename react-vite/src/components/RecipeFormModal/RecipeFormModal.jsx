@@ -4,13 +4,13 @@ import { addRecipe, updateRecipe } from "../../redux/recipeslice";
 import { getAllFoods } from "../../redux/food";
 import "./RecipeFormModal.css";
 
-function RecipeFormModal({ recipe, onClose }) {
+function RecipeFormModal({ recipe, currIngredients, onClose }) {
   const dispatch = useDispatch();
   const { foods } = useSelector(store => store.food);
   const [name, setName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [directions, setDirections] = useState("");
-  const [ingredients, setIngredients] = useState([{ food_name: '', food_id: '', amount: '', expiration: '' }]);
+  const [ingredients, setIngredients] = useState([{ food_name: '', food_id: '', amount: ''}]);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -18,16 +18,16 @@ function RecipeFormModal({ recipe, onClose }) {
       setName(recipe.name);
       setImageUrl(recipe.image_url);
       setDirections(recipe.directions);
-      setIngredients(recipe.ingredients || []);
+      setIngredients(currIngredients);
     }
-  }, [recipe]);
+  }, [recipe, currIngredients]);
 
   useEffect(() => {
     dispatch(getAllFoods());
   }, [dispatch]);
 
   const handleAddIngredient = () => {
-    setIngredients([...ingredients, { food_name: '', food_id: '', amount: '', expiration: '' }]);
+    setIngredients([...ingredients, { food_name: '', food_id: '', amount: ''}]);
   };
 
   const handleRemoveIngredient = (index) => {
@@ -77,10 +77,16 @@ function RecipeFormModal({ recipe, onClose }) {
             required
           >
             <option value="">--Choose an Option--</option>
-            {foods?.map((food, i) => (
-              <option key={`option_${i}`} value={food.name}>
-                {food.name}
-              </option>
+            {foods?.map((food, ind) => (
+              recipe && food.name === ingredients[i].name ? (
+                <option key={`option_${ind}`} value={food.name} selected>
+                  {food.name}
+                </option>
+              ) : (
+                <option key={`option_${ind}`} value={food.name}>
+                  {food.name}
+                </option>
+              )
             ))}
           </select>
         </label>
@@ -95,24 +101,6 @@ function RecipeFormModal({ recipe, onClose }) {
                 ingredients.map((ingredient, j) =>
                   i === j
                     ? { ...ingredient, amount: e.target.value }
-                    : ingredient
-                )
-              )
-            }
-          />
-        </label>
-        <label>
-          Expiration
-          <input
-            className="date-input"
-            type="date"
-            value={ingredients[i].expiration}
-            placeholder="Optional"
-            onChange={(e) =>
-              setIngredients(
-                ingredients.map((ingredient, j) =>
-                  i === j
-                    ? { ...ingredient, expiration: e.target.value }
                     : ingredient
                 )
               )
