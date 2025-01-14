@@ -65,7 +65,7 @@ export const thunkSignup = createAsyncThunk(
       if (!res.ok) {
         return rejectWithValue(data);
       }
-      return data.user;
+      return data;
     } catch (error) {
       return rejectWithValue(error.message || "Signup Error");
     }
