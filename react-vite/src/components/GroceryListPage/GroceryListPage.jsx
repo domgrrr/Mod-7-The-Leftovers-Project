@@ -67,7 +67,7 @@ const GroceryListPage = () => {
       {selectedList ? (
         <>
           <h2>Details for: {selectedList.name}</h2>
-          <GroceryListDetails list={selectedList} />
+          <GroceryListDetails listId={selectedList.id} />
         </>
       ) : (
         <p>Select a grocery list to view its details.</p>

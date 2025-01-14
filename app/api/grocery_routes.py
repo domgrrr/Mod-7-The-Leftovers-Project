@@ -36,9 +36,11 @@ def grocery(id):
         # Get the items in the grocery list
         grocery_items = db.session.query(Grocery_Food, Food).join(Grocery_Food, Grocery_Food.food_id == Food.id).filter(Grocery_Food.grocery_id == id).all()
 
+        print("!!! items", grocery_items)
+
         # Prepare the item data to return
         items = [{
-            "food_id": item.food_id,
+            "food_id": grocery_item.food_id,
             "name": item.name,
             "amount": grocery_item.amount,
             "purchased": grocery_item.purchased
