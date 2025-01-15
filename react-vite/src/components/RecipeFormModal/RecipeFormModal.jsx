@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addRecipe, updateRecipe } from "../../redux/recipeslice";
+import { addRecipe, updateRecipe, fetchRecipeDetails } from "../../redux/recipeslice";
 import { getAllFoods } from "../../redux/food";
 import "./RecipeFormModal.css";
 
@@ -10,7 +10,7 @@ function RecipeFormModal({ recipe, currIngredients, onClose }) {
   const [name, setName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [directions, setDirections] = useState("");
-  const [ingredients, setIngredients] = useState([{ food_name: '', food_id: '', amount: ''}]);
+  const [ingredients, setIngredients] = useState([{ food_id: '', amount: ''}]);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -18,7 +18,12 @@ function RecipeFormModal({ recipe, currIngredients, onClose }) {
       setName(recipe.name);
       setImageUrl(recipe.image_url);
       setDirections(recipe.directions);
-      setIngredients(currIngredients);
+      if (currIngredients && currIngredients.length > 0) {
+        setIngredients(currIngredients.map(ing => ({
+          food_id: ing.food_id,
+          amount: ing.amount || ''
+        })));
+      }
     }
   }, [recipe, currIngredients]);
 
@@ -27,45 +32,48 @@ function RecipeFormModal({ recipe, currIngredients, onClose }) {
   }, [dispatch]);
 
   const handleAddIngredient = () => {
-    setIngredients([...ingredients, { food_name: '', food_id: '', amount: ''}]);
+    setIngredients([...ingredients, { food_id: '', amount: ''}]);
   };
 
   const handleRemoveIngredient = (index) => {
     setIngredients(ingredients.filter((_, i) => i !== index));
   };
 
-  const setFoodName = (value, i) => {
-    const setID = () => {
-      const searchFood = foods?.find(searchFood => searchFood.name === value);
-      return searchFood?.name === value ? searchFood?.id : '';
-    };
+ // ...existing code...
 
-    setIngredients(ingredients.map((ingredient, j) =>
-      i === j
-        ? { ...ingredient, food_name: value, food_id: setID() }
-        : ingredient
-    ));
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // Filter out any ingredients with empty food_id
+  const validIngredients = ingredients.filter(ing => ing.food_id); //filter ingredients
+
+  const newRecipe = { //include recipe_foods in the new recipe object
+    name,
+    image_url: imageUrl,
+    directions,
+    recipe_foods: validIngredients // Ensure this field is correctly named
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  console.log("Submitting recipe:", newRecipe); // Debugging line
 
-    const newRecipe = {
-      name,
-      image_url: imageUrl,
-      directions,
-      recipe_foods: ingredients
+  const action = recipe // Check if we're editing or adding a recipe
+    ? updateRecipe({ ...newRecipe, id: recipe.id }) 
+    : addRecipe(newRecipe);
+    
+  const result = await dispatch(action);
+
+  if (result.type.endsWith("rejected")) {
+    setErrors(result.payload);
+  } else {
+    // Fetch the updated recipe details if we're editing
+    if (recipe) {
+      await dispatch(fetchRecipeDetails(recipe.id));
     }
+    onClose();
+  }
+};
 
-    const action = recipe ? updateRecipe({ ...newRecipe, id: recipe.id }) : addRecipe(newRecipe);
-    const result = await dispatch(action);
-
-    if (result.type.endsWith("rejected")) {
-      setErrors(result.payload);
-    } else {
-      onClose();
-    }
-  };
+// ...existing code...
 
   const formRep = (i) => {
     return (
@@ -73,20 +81,22 @@ function RecipeFormModal({ recipe, currIngredients, onClose }) {
         <label>
           Food Name
           <select
-            onChange={(e) => setFoodName(e.target.value, i)}
+            value={ingredients[i].food_id}
+            onChange={(e) => {
+              const newIngredients = [...ingredients];
+              newIngredients[i] = {
+                ...newIngredients[i],
+                food_id: e.target.value
+              };
+              setIngredients(newIngredients);
+            }}
             required
           >
             <option value="">--Choose an Option--</option>
-            {foods?.map((food, ind) => (
-              recipe && food.name === ingredients[i].name ? (
-                <option key={`option_${ind}`} value={food.name} selected>
-                  {food.name}
-                </option>
-              ) : (
-                <option key={`option_${ind}`} value={food.name}>
-                  {food.name}
-                </option>
-              )
+            {foods?.map((food) => (
+              <option key={food.id} value={food.id}>
+                {food.name}
+              </option>
             ))}
           </select>
         </label>
@@ -96,15 +106,14 @@ function RecipeFormModal({ recipe, currIngredients, onClose }) {
             type="text"
             value={ingredients[i].amount}
             placeholder="Optional"
-            onChange={(e) =>
-              setIngredients(
-                ingredients.map((ingredient, j) =>
-                  i === j
-                    ? { ...ingredient, amount: e.target.value }
-                    : ingredient
-                )
-              )
-            }
+            onChange={(e) => {
+              const newIngredients = [...ingredients];
+              newIngredients[i] = {
+                ...newIngredients[i],
+                amount: e.target.value
+              };
+              setIngredients(newIngredients);
+            }}
           />
         </label>
         {i === 0 ? null : (

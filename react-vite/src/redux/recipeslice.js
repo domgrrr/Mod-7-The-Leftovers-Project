@@ -76,7 +76,7 @@ export const addRecipe = createAsyncThunk(
 // Update an existing recipe
 export const updateRecipe = createAsyncThunk(
   'recipes/updateRecipe',
-  async (recipe, { rejectWithValue }) => {
+  async (recipe, { dispatch, rejectWithValue }) => {
     try {
       const response = await fetch(`/api/recipe/${recipe.id}`, {
         method: 'PUT',
@@ -89,6 +89,9 @@ export const updateRecipe = createAsyncThunk(
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
+      // Refresh the recipe details and user recipes
+      dispatch(fetchRecipeDetails(recipe.id));
+      dispatch(fetchUserRecipes());
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
