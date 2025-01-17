@@ -46,7 +46,7 @@ def grocery(id):
             "purchased": grocery_item.purchased
         } for grocery_item, item in grocery_items]
 
-        return jsonify({id: items}), 200
+        return jsonify({'foods': items}), 200
     except:
         return jsonify({'error': 'Error fetching grocery list.'}), 500
 

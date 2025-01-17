@@ -16,7 +16,7 @@ const GroceryListDetails = ({ listId, list }) => {
   const foodNameToIdMap = useMemo(() => {
     return allFoods?.reduce((food) => {
       const map = {};
-      console.log("!!!", map);
+      // console.log("!!!", map);
       map[food.name] = food.id;
       return map;
     }, {});
@@ -25,7 +25,7 @@ const GroceryListDetails = ({ listId, list }) => {
   useEffect(() => {
     dispatch(fetchGroceryListFoods(listId));
     dispatch(getAllFoods());
-  }, [dispatch]);
+  }, [dispatch, listId]);
 
   const handleItemPurchase = (food_id) => {
     dispatch(updateGroceryList({ listId, food_id, purchased: true }));
@@ -67,10 +67,10 @@ const GroceryListDetails = ({ listId, list }) => {
   };
 
   const renderListItems = () => {
-    return list.items.map((item) => (
+    return foods?.map((item) => (
       <li key={item.food_id}>
-        <span>{item.food_name}</span>
-        <span> - Quantity: {item.quantity || "N/A"}</span>
+        <span>{item.name}</span>
+        <span> - Quantity: {item.amount || "N/A"}</span>
         <button onClick={() => handleItemPurchase(item.food_id)}>
           {item.purchased ? "Purchased" : "Mark as Purchased"}
         </button>
@@ -93,7 +93,7 @@ const GroceryListDetails = ({ listId, list }) => {
   return (
     <div className="grocery-list-details">
       <h2>{list.name || "Unnamed List"}</h2>
-      {list.items && list.items.length > 0 ? (
+      {foods ? (
         <ul>{renderListItems()}</ul>
       ) : (
         <p>No items in this list.</p>

@@ -36,7 +36,7 @@ export const fetchGroceryListFoods = createAsyncThunk(
   async (listId, thunkAPI) => {
     const url = `/api/groceries/${listId}`;
     const data = await apiRequest(url, {}, thunkAPI);
-    return data;
+    return data.foods;
   }
 );
 
