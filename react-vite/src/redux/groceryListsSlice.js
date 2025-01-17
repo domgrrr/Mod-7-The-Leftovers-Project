@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
 // Utility function for API requests
 const apiRequest = async (url, options = {}, thunkAPI) => {
   try {
@@ -13,15 +14,19 @@ const apiRequest = async (url, options = {}, thunkAPI) => {
   }
 };
 
-// Fetch all grocery lists
+// Utility function to normalize an array by id
+const normalizeById = (array) =>
+  array.reduce((acc, item) => {
+    acc[item.id] = item;
+    return acc;
+  }, {});
+
+// Async thunks
 export const fetchGroceryLists = createAsyncThunk(
   "groceryLists/fetchGroceryLists",
-  async (_, thunkAPI) => {
-    return apiRequest(`/api/groceries/`, {}, thunkAPI);
-  }
+  async (_, thunkAPI) => apiRequest("/api/groceries/", {}, thunkAPI)
 );
 
-// Fetch foods for a specific grocery list
 export const fetchGroceryListFoods = createAsyncThunk(
   "groceryLists/fetchGroceryListFoods",
   async (listId, thunkAPI) => {
@@ -31,7 +36,6 @@ export const fetchGroceryListFoods = createAsyncThunk(
   }
 );
 
-// Create a new grocery list
 export const createGroceryList = createAsyncThunk(
   "groceryLists/createGroceryList",
   async (name, thunkAPI) => {
@@ -45,7 +49,6 @@ export const createGroceryList = createAsyncThunk(
   }
 );
 
-// Update an existing grocery list
 export const updateGroceryList = createAsyncThunk(
   "groceryLists/updateGroceryList",
   async ({ listId, name }, thunkAPI) => {
@@ -59,7 +62,6 @@ export const updateGroceryList = createAsyncThunk(
   }
 );
 
-// Delete a grocery list
 export const deleteGroceryList = createAsyncThunk(
   "groceryLists/deleteGroceryList",
   async (listId, thunkAPI) => {
@@ -70,13 +72,14 @@ export const deleteGroceryList = createAsyncThunk(
   }
 );
 
-// Reducer and initial state
+// Initial state
 const initialState = {
   lists: {},
   loading: false,
   error: null,
 };
 
+// Slice definition
 const groceryListsSlice = createSlice({
   name: "groceryLists",
   initialState,
@@ -90,10 +93,7 @@ const groceryListsSlice = createSlice({
       })
       .addCase(fetchGroceryLists.fulfilled, (state, action) => {
         state.loading = false;
-        state.lists = action.payload.reduce((acc, list) => {
-          acc[list.id] = list;
-          return acc;
-        }, {});
+        state.lists = normalizeById(action.payload || []);
       })
       .addCase(fetchGroceryLists.rejected, (state, action) => {
         state.loading = false;
@@ -106,8 +106,8 @@ const groceryListsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchGroceryListFoods.fulfilled, (state, action) => {
-        const { listId, foods } = action.payload;
         state.loading = false;
+        const { listId, foods } = action.payload;
         if (state.lists[listId]) {
           state.lists[listId].foods = foods;
         }
@@ -166,5 +166,6 @@ const groceryListsSlice = createSlice({
 });
 
 export default groceryListsSlice.reducer;
+
 
 
