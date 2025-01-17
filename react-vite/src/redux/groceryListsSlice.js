@@ -15,16 +15,20 @@ const apiRequest = async (url, options = {}, thunkAPI) => {
 };
 
 // Utility function to normalize an array by id
-const normalizeById = (array) =>
-  array.reduce((acc, item) => {
-    acc[item.id] = item;
-    return acc;
-  }, {});
+// const normalizeById = (array) =>
+//   array.reduce((acc, item) => {
+//     acc[item.id] = item;
+//     return acc;
+//   }, {});
 
 // Async thunks
 export const fetchGroceryLists = createAsyncThunk(
   "groceryLists/fetchGroceryLists",
-  async (_, thunkAPI) => apiRequest("/api/groceries/", {}, thunkAPI)
+  async (_, thunkAPI) => {
+    const data = await apiRequest("/api/groceries/", {}, thunkAPI);
+    // console.log("!!!data", data)
+    return data;
+  }
 );
 
 export const fetchGroceryListFoods = createAsyncThunk(
@@ -32,7 +36,7 @@ export const fetchGroceryListFoods = createAsyncThunk(
   async (listId, thunkAPI) => {
     const url = `/api/groceries/${listId}`;
     const data = await apiRequest(url, {}, thunkAPI);
-    return { listId, foods: data.foods || [] };
+    return data;
   }
 );
 
@@ -74,7 +78,8 @@ export const deleteGroceryList = createAsyncThunk(
 
 // Initial state
 const initialState = {
-  lists: {},
+  lists: null,
+  foods: null,
   loading: false,
   error: null,
 };
@@ -93,7 +98,7 @@ const groceryListsSlice = createSlice({
       })
       .addCase(fetchGroceryLists.fulfilled, (state, action) => {
         state.loading = false;
-        state.lists = normalizeById(action.payload || []);
+        state.lists = action.payload.grocery_lists;
       })
       .addCase(fetchGroceryLists.rejected, (state, action) => {
         state.loading = false;
@@ -107,10 +112,7 @@ const groceryListsSlice = createSlice({
       })
       .addCase(fetchGroceryListFoods.fulfilled, (state, action) => {
         state.loading = false;
-        const { listId, foods } = action.payload;
-        if (state.lists[listId]) {
-          state.lists[listId].foods = foods;
-        }
+        state.foods = action.payload;
       })
       .addCase(fetchGroceryListFoods.rejected, (state, action) => {
         state.loading = false;

@@ -54,7 +54,7 @@ const handleSubmit = async (e) => {
     recipe_foods: validIngredients // Ensure this field is correctly named
   };
 
-  console.log("Submitting recipe:", newRecipe); // Debugging line
+  // console.log("Submitting recipe:", newRecipe); // Debugging line
 
   const action = recipe // Check if we're editing or adding a recipe
     ? updateRecipe({ ...newRecipe, id: recipe.id }) 

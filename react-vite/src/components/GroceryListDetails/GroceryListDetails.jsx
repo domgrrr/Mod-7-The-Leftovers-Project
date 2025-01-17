@@ -1,55 +1,56 @@
 import { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateGroceryList, fetchGroceryListFoods } from "../../redux/groceryListsSlice";
+import { getAllFoods } from "../../redux/food";
 import GroceryForm from "../GroceryForm";
 import "./GroceryListDetails.css";
 
-const GroceryListDetails = ({ listId }) => {
+const GroceryListDetails = ({ listId, list }) => {
   const dispatch = useDispatch();
-  const list = useSelector((state) => state.groceryLists.foodsByListId[listId]);
-  const foods = useSelector((state) => state.foods);
+  // const list = useSelector((state) => state.groceryLists.foodsByListId[listId]);
+  const allFoods = useSelector((state) => state.foods);
+  const { foods } = useSelector((state) => state.groceryLists)
   const [addedItems, setAddedItems] = useState([{ food_name: '', food_id: '', quantity: '', purchased: false }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const foodNameToIdMap = useMemo(() => {
-    return foods.reduce((map, food) => {
+    return allFoods?.reduce((food) => {
+      const map = {};
+      console.log("!!!", map);
       map[food.name] = food.id;
       return map;
     }, {});
-  }, [foods]);
+  }, [allFoods]);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      dispatch(fetchGroceryListFoods(listId));
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [dispatch, listId]);
+    dispatch(fetchGroceryListFoods(listId));
+    dispatch(getAllFoods());
+  }, [dispatch]);
 
   const handleItemPurchase = (food_id) => {
     dispatch(updateGroceryList({ listId, food_id, purchased: true }));
   };
 
   const setFoodName = (value, i) => {
-    setAddedItems((prev) =>
-      prev.map((item, j) =>
+    const newItemList =
+      addedItems?.map((item, j) =>
         i === j
           ? { ...item, food_name: value, food_id: foodNameToIdMap[value] || '' }
           : item
       )
-    );
+      setAddedItems(newItemList);
   };
 
   const handleQuantityChange = (value, index) => {
-    setAddedItems((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, quantity: value } : item
-      )
+    const newItemList = addedItems?.map((item, i) =>
+      i === index ? { ...item, quantity: value } : item
     );
+    setAddedItems(newItemList);
   };
 
   const handleRemoveItem = (index) => {
-    setAddedItems((prev) => prev.filter((_, i) => i !== index));
+    const newItemList = addedItems?.filter((_, i) => i !== index);
+    setAddedItems(newItemList);
   };
 
   const handleSubmit = async (e) => {
@@ -78,7 +79,7 @@ const GroceryListDetails = ({ listId }) => {
   };
 
   const renderFoodOptions = () => {
-    return foods.map((food) => (
+    return allFoods?.map((food) => (
       <option key={food.id} value={food.name}>
         {food.name}
       </option>
@@ -98,7 +99,7 @@ const GroceryListDetails = ({ listId }) => {
         <p>No items in this list.</p>
       )}
       <form onSubmit={handleSubmit}>
-        {addedItems.map((item, i) => (
+        {addedItems?.map((item, i) => (
           <div key={`form_${i}`}>
             <label>
               Food Name

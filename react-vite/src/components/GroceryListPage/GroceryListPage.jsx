@@ -13,13 +13,13 @@ const GroceryListPage = () => {
 
   // Fetch grocery lists when the component mounts
   useEffect(() => {
-    console.log("GroceryListPage mounted. Fetching grocery lists...");
+    // console.log("GroceryListPage mounted. Fetching grocery lists...");
     dispatch(fetchGroceryLists());
   }, [dispatch]);
 
   // Automatically select the first list if available
   useEffect(() => {
-    if (groceryLists.length > 0 && !selectedList) {
+    if (groceryLists?.length > 0 && !selectedList) {
       setSelectedList(groceryLists[0]);
     }
   }, [groceryLists, selectedList]);
@@ -58,7 +58,7 @@ const GroceryListPage = () => {
       )}
 
       {/* Display the list of grocery lists */}
-      {groceryLists.length > 0 ? (
+      {groceryLists?.length > 0 ? (
         <ul className="grocery-list-page__list-container" aria-label="Grocery Lists">
           {groceryLists.map((list) => (
             <li
@@ -83,7 +83,7 @@ const GroceryListPage = () => {
       {selectedList ? (
         <>
           <h2>Details for: {selectedList.name}</h2>
-          <GroceryListDetails listId={selectedList.id} />
+          <GroceryListDetails listId={selectedList.id} list={selectedList}/>
         </>
       ) : (
         <p>Select a grocery list to view its details.</p>

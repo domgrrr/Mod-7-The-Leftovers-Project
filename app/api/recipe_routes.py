@@ -75,6 +75,7 @@ def new_recipe():
         form = RecipeFood(data=food)
         form['csrf_token'].data = request.cookies['csrf_token']
         form['recipe_id'].data = rId
+        # print("!!!", food, "!!!", rId)
         if form.validate_on_submit():
             food_item = Recipe_Food( 
                 food_id=form.data['food_id'], 
@@ -94,7 +95,7 @@ def new_recipe():
             name = recipe_form.data['name']
             directions = recipe_form.data['directions']
             image_url = recipe_form.data['image_url']
-            recipe_foods = recipe_form.data['recipe_foods']
+            # recipe_foods = recipe_form.data['recipe_foods']
 
             recipe = Recipe(
                 name=name,
@@ -107,15 +108,18 @@ def new_recipe():
         else:
             return recipe_form.errors, 400 #return errors if form is invalid a 400 error
 
+        data = request.get_json()
         newRecipeObj = db.session.query(Recipe).order_by(Recipe.id.desc()).first()
+        # print("!!!!", newRecipeObj, newRecipeObj.name)
 
-        for food_item in recipe_foods: #loop through recipe_foods
+        for food_item in data['recipe_foods']: #loop through recipe_foods
+            # print("!!!", food_item)
             (returnValue, valid) = process_form(food_item, newRecipeObj.id) #call/process each food item
             if not valid:
                 return returnValue
 
         db.session.commit() #commit all changes to db
-        return recipe.to_dict() #return the recipe as a dictionaryå
+        return recipe.to_dict() #return the recipe as a dictionary
 
 # PUT update recipe
 @recipe_routes.route('/<int:id>', methods=['PUT'])
