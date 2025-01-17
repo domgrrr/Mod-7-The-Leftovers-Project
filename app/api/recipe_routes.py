@@ -132,7 +132,20 @@ def update_recipe(id):
     recipe.name = data['name']
     recipe.directions = data['directions']
     recipe.image_url = data['image_url']
-    db.session.commit()
+
+    # Clear existing ingredients
+    Recipe_Food.query.filter_by(recipe_id=id).delete() #cleared existing ingredients to add updated ones everytime we edit/update
+
+    # Add updated ingredients
+    for food_item in data['recipe_foods']:
+        new_food = Recipe_Food(
+            food_id=food_item['food_id'],
+            recipe_id=id,
+            amount=food_item['amount']
+        )
+        db.session.add(new_food) #loop through recipe_foods and add them to db
+
+    db.session.commit() #commit changes
     return recipe.to_dict()
 
 # DELETE recipe
