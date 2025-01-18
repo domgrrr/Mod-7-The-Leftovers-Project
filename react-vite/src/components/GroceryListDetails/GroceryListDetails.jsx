@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateGroceryList, fetchGroceryListFoods } from "../../redux/groceryListsSlice";
 import { getAllFoods } from "../../redux/food";
+import OpenModalButton from "../OpenModalButton";
 import GroceryForm from "../GroceryForm";
 import "./GroceryListDetails.css";
 
@@ -93,12 +94,16 @@ const GroceryListDetails = ({ listId, list }) => {
   return (
     <div className="grocery-list-details">
       <h2>{list.name || "Unnamed List"}</h2>
+      <OpenModalButton 
+          modalComponent={<GroceryForm grocery={list} currIngredients={foods}/>}
+          buttonText="Edit List"
+        />
       {foods && foods.length > 1 ? (
         <ul>{renderListItems()}</ul>
       ) : (
         <p>No items in this list.</p>
       )}
-      <form onSubmit={handleSubmit}>
+      {/* <form onSubmit={handleSubmit}>
         {addedItems?.map((item, i) => (
           <div key={`form_${i}`}>
             <label>
@@ -140,7 +145,7 @@ const GroceryListDetails = ({ listId, list }) => {
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Submitting..." : "Submit Items"}
         </button>
-      </form>
+      </form> */}
       {/* <GroceryForm listId={listId} /> */}
     </div>
   );

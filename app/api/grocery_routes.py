@@ -57,7 +57,8 @@ def create_grocery_list():
     form = GroceryForm()
     form['csrf_token'].data = request.cookies.get('csrf_token')
 
-    print("!!!", form.data)
+    print("!!! form", form.data)
+    print("!!! form", request.data)
 
     if form.validate_on_submit():
         try:
