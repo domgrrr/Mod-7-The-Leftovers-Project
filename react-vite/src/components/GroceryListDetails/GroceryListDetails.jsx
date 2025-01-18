@@ -93,7 +93,7 @@ const GroceryListDetails = ({ listId, list }) => {
   return (
     <div className="grocery-list-details">
       <h2>{list.name || "Unnamed List"}</h2>
-      {foods ? (
+      {foods && foods.length > 1 ? (
         <ul>{renderListItems()}</ul>
       ) : (
         <p>No items in this list.</p>
@@ -141,7 +141,7 @@ const GroceryListDetails = ({ listId, list }) => {
           {isSubmitting ? "Submitting..." : "Submit Items"}
         </button>
       </form>
-      <GroceryForm listId={listId} />
+      {/* <GroceryForm listId={listId} /> */}
     </div>
   );
 };

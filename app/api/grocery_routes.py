@@ -57,13 +57,15 @@ def create_grocery_list():
     form = GroceryForm()
     form['csrf_token'].data = request.cookies.get('csrf_token')
 
+    print("!!!", form.data)
+
     if form.validate_on_submit():
         try:
             # Create the grocery list
             grocery_list = Grocery(
                 name=form.name.data,
                 date=form.date.data,
-                completed=form.completed.data,
+                completed=False,
                 user_id=current_user.id,
             )
             db.session.add(grocery_list)
@@ -101,6 +103,7 @@ def update_grocery_list(id):
         # Get the new name
         data = request.get_json()
         new_name = data.get("name", "").strip()
+        
 
         if not new_name:
             return jsonify({'error': 'Valid name required'}), 400

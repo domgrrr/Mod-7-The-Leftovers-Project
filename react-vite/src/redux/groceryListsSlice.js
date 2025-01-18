@@ -42,12 +42,12 @@ export const fetchGroceryListFoods = createAsyncThunk(
 
 export const createGroceryList = createAsyncThunk(
   "groceryLists/createGroceryList",
-  async (name, thunkAPI) => {
+  async (newList, thunkAPI) => {
     const url = `/api/groceries/`;
     const options = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify(newList),
     };
     return apiRequest(url, options, thunkAPI);
   }

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchGroceryLists } from "../../redux/groceryListsSlice";
 import GroceryListDetails from "../GroceryListDetails";
 import GroceryForm from "../GroceryForm";
+import OpenModalButton from "../OpenModalButton";
 import "./GroceryListPage.css";
 
 const GroceryListPage = () => {
@@ -45,17 +46,21 @@ const GroceryListPage = () => {
       {/* Section to create a new grocery list */}
       <div className="grocery-list-page__create-new-list">
         <h3>Create a New Grocery List</h3>
-        <button onClick={toggleForm} className="grocery-list-page__button">
+        <OpenModalButton 
+          modalComponent={<GroceryForm grocery={null} currIngredients={null}/>}
+          buttonText="Add List"
+        />
+        {/* <button onClick={toggleForm} className="grocery-list-page__button">
           {showForm ? "Close Form" : "Add List"}
-        </button>
+        </button> */}
       </div>
 
       {/* Display the GroceryForm when showForm is true */}
-      {showForm && (
+      {/* {showForm && (
         <div className="grocery-list-page__form-container">
           <GroceryForm onClose={toggleForm} />
         </div>
-      )}
+      )} */}
 
       {/* Display the list of grocery lists */}
       {groceryLists?.length > 0 ? (
@@ -71,7 +76,7 @@ const GroceryListPage = () => {
               tabIndex={0}
               onKeyDown={(e) => e.key === "Enter" && handleListClick(list)}
             >
-              {list.name} - {list.completed ? "Completed" : "Incomplete"}
+              {list.name} {/* - {list.completed ? "Completed" : "Incomplete"} */}
             </li>
           ))}
         </ul>
