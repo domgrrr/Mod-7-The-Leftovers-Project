@@ -28,8 +28,22 @@ const GroceryListDetails = ({ listId, list }) => {
     dispatch(getAllFoods());
   }, [dispatch, listId]);
 
-  const handleItemPurchase = (food_id) => {
-    dispatch(updateGroceryList({ listId, food_id, purchased: true }));
+
+//updating function for hadle item purchase
+  const handleItemPurchase = async (food_id) => {
+    try {
+      await dispatch(updateGroceryList({ 
+        listId, 
+        food_id,
+        purchased: true 
+      })).unwrap(); //unwrap will return the fulfilled value 
+      
+      // Refresh the list to get updated purchase status just adding for error logging to see if updating does anything
+      await dispatch(fetchGroceryListFoods(listId)); // Fetching foods specific to the grocery list
+    } catch (error) {
+      console.error('Failed to update purchase status:', error); // Error handling
+    }
+
   };
 
   const setFoodName = (value, i) => {
@@ -94,12 +108,28 @@ const GroceryListDetails = ({ listId, list }) => {
   return (
     <div className="grocery-list-details">
       <h2>{list.name || "Unnamed List"}</h2>
-      <OpenModalButton 
-          modalComponent={<GroceryForm grocery={list} currIngredients={foods}/>}
-          buttonText="Edit List"
-        />
-      {foods && foods.length > 1 ? (
-        <ul>{renderListItems()}</ul>
+      {list.items && list.items.length > 0 ? (
+        <ul className="grocery-items-list">
+          {list.items.map(({ food_id, name, quantity, purchased }) => (
+            <li 
+              key={food_id} 
+              className={`grocery-item ${purchased ? "purchased-item" : ""}`}
+            >
+              {/* Item details  and purchase button section test after */}
+              <div className="item-details">
+                <span className="item-name">{name}</span>
+                <span className="item-quantity">- {quantity || 'N/A'}</span>
+              </div>
+              <button 
+                className={`purchase-button ${purchased ? "purchased-button" : ""}`}
+                onClick={() => handleItemPurchase(food_id)}
+                disabled={purchased}
+              >
+                {purchased ? "Purchased" : "Mark as Purchased"}
+              </button>
+            </li>
+          ))}
+        </ul>
       ) : (
         <p>No items in this list.</p>
       )}
