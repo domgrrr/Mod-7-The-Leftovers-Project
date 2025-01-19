@@ -1,16 +1,19 @@
 import { useEffect } from "react";  // removed useState, useMemo
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGroceryListFoods } from "../../redux/groceryListsSlice"; // removed: updateGroceryList
+import { deleteGroceryList } from "../../redux/groceryListsSlice"; //import the delete thunk
 import { getAllFoods } from "../../redux/food";
 import OpenModalButton from "../OpenModalButton";
 import GroceryForm from "../GroceryForm";
 import "./GroceryListDetails.css";
+import { useNavigate } from "react-router-dom";
 
 const GroceryListDetails = ({ listId, list }) => {
   const dispatch = useDispatch();
   // const list = useSelector((state) => state.groceryLists.foodsByListId[listId]);
   // const allFoods = useSelector((state) => state.foods);
   const { foods } = useSelector((state) => state.groceryLists)
+  const navigate = useNavigate(); //adding navigate bc as soon as list is deleted, we want to go back/refresh grocery list
   // const [addedItems, setAddedItems] = useState([{ food_name: '', food_id: '', quantity: '', purchased: false }]);
   // const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -27,6 +30,19 @@ const GroceryListDetails = ({ listId, list }) => {
     dispatch(fetchGroceryListFoods(listId));
     dispatch(getAllFoods());
   }, [dispatch, listId]);
+
+  // handle delete list, instead of a open form model lets just add a confirmation
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this list?')) { //tbh this is way easier instead of adding a modal/form
+      try {
+        await dispatch(deleteGroceryList(listId)).unwrap(); //unwrap returns the value of the promise
+        navigate('/groceries'); //go back to groceries page
+        window.location.reload(); //refresh the page
+      } catch (error) {
+        console.error('Failed to delete list:', error); //if error, log it
+      }
+    }
+  };
 
   // const handleItemPurchase = (food_id) => {
   //   dispatch(updateGroceryList({ listId, food_id, purchased: true }));
@@ -98,6 +114,9 @@ const GroceryListDetails = ({ listId, list }) => {
           modalComponent={<GroceryForm grocery={list} currIngredients={foods}/>}
           buttonText="Edit List"
         />
+         <button onClick={handleDelete} className="delete-button"> 
+          Delete List
+        </button>
       {foods && foods.length > 0 ? (
         <ul>{renderListItems()}</ul>
       ) : (
