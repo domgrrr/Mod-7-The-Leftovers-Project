@@ -26,7 +26,7 @@ function ContainerPage() {
     return (
         <div className="container-page">
             <h1>{container?.storage_type.charAt(0).toUpperCase() + container?.storage_type.slice(1)}</h1>
-            <div>
+            <div className="add-food-button">
                 <OpenModalButton 
                     buttonText="Add Food"
                     modalComponent={<ContainerFoodFormModal />}
@@ -44,7 +44,7 @@ function ContainerPage() {
                           ${item?.expiration ? (`expiration: ${item?.expiration.slice(5, 16)}`) : ''}`}
                     </div>
                     </div>
-                    <div>
+                    <div className="food-item-buttons">
                         <button type="button"
                          onClick={() => handleRemoveFood(item?.relation_id)}>Remove Item</button>
                         <OpenModalButton 
