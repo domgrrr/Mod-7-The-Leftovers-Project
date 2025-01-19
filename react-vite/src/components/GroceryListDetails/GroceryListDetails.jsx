@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect } from "react";  // removed useState, useMemo
 import { useDispatch, useSelector } from "react-redux";
-import { updateGroceryList, fetchGroceryListFoods } from "../../redux/groceryListsSlice";
+import { fetchGroceryListFoods } from "../../redux/groceryListsSlice"; // removed: updateGroceryList
 import { getAllFoods } from "../../redux/food";
 import OpenModalButton from "../OpenModalButton";
 import GroceryForm from "../GroceryForm";
@@ -9,28 +9,28 @@ import "./GroceryListDetails.css";
 const GroceryListDetails = ({ listId, list }) => {
   const dispatch = useDispatch();
   // const list = useSelector((state) => state.groceryLists.foodsByListId[listId]);
-  const allFoods = useSelector((state) => state.foods);
+  // const allFoods = useSelector((state) => state.foods);
   const { foods } = useSelector((state) => state.groceryLists)
-  const [addedItems, setAddedItems] = useState([{ food_name: '', food_id: '', quantity: '', purchased: false }]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [addedItems, setAddedItems] = useState([{ food_name: '', food_id: '', quantity: '', purchased: false }]);
+  // const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const foodNameToIdMap = useMemo(() => {
-    return allFoods?.reduce((food) => {
-      const map = {};
-      // console.log("!!!", map);
-      map[food.name] = food.id;
-      return map;
-    }, {});
-  }, [allFoods]);
+  // const foodNameToIdMap = useMemo(() => {
+  //   return allFoods?.reduce((food) => {
+  //     const map = {};
+  //     // console.log("!!!", map);
+  //     map[food.name] = food.id;
+  //     return map;
+  //   }, {});
+  // }, [allFoods]);
 
   useEffect(() => {
     dispatch(fetchGroceryListFoods(listId));
     dispatch(getAllFoods());
   }, [dispatch, listId]);
 
-  const handleItemPurchase = (food_id) => {
-    dispatch(updateGroceryList({ listId, food_id, purchased: true }));
-  };
+  // const handleItemPurchase = (food_id) => {
+  //   dispatch(updateGroceryList({ listId, food_id, purchased: true }));
+  // };
 
   // const setFoodName = (value, i) => {
   //   const newItemList =
@@ -71,10 +71,10 @@ const GroceryListDetails = ({ listId, list }) => {
     return foods?.map((item) => (
       <li key={item.food_id}>
         <span>{item.name}</span>
-        <span> - Quantity: {item.amount || "N/A"}</span>
-        <button onClick={() => handleItemPurchase(item.food_id)}>
+        <span> Quantity: {item.amount || "N/A"}</span>
+        {/* <button onClick={() => handleItemPurchase(item.food_id)}>
           {item.purchased ? "Purchased" : "Mark as Purchased"}
-        </button>
+        </button> */}
       </li>
     ));
   };

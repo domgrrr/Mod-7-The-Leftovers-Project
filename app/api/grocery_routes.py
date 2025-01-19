@@ -19,6 +19,7 @@ def grocery_lists():
             return jsonify({'grocery_lists': []}), 204
 
         # Otherwise, return the lists
+        # print("!!!", jsonify({'grocery_lists': [grocery.to_dict() for grocery in grocery_lists]}).data)
         return jsonify({'grocery_lists': [grocery.to_dict() for grocery in grocery_lists]}), 200
     except:
         return jsonify({'error': 'Error fetching grocery lists.'}), 500
@@ -37,7 +38,7 @@ def grocery(id):
         # Get the items in the grocery list
         grocery_items = db.session.query(Grocery_Food, Food).join(Grocery_Food, Grocery_Food.food_id == Food.id).filter(Grocery_Food.grocery_id == id).all()
 
-        print("!!! items", grocery_items)
+        # print("!!! items", grocery_items)
 
         # Prepare the item data to return
         items = [{
@@ -107,26 +108,38 @@ def create_grocery_list():
 @login_required
 def update_grocery_list(id):
     """Update the grocery list name."""
-    try:
-        # Find the grocery list
-        grocery = Grocery.query.filter(Grocery.id == id, Grocery.user_id == current_user.id).first()
+    with db.session.no_autoflush:
+        try:
+            # Find the grocery list
+            grocery = Grocery.query.get(id)
+            if grocery.user_id != current_user.id:
+                return {'error': 'Unauthorized'}, 403
 
-        if not grocery:
-            return jsonify({'error': 'Not found or unauthorized'}), 404
+            if not grocery:
+                return jsonify({'error': 'Not found or unauthorized'}), 404
+            
+            data = request.get_json()
+            # print('!!!', data)
+            grocery.name = data['name']
+            grocery.date = datetime.strptime(data['date'], "%Y-%m-%d").date()
+            # print("!!!!", grocery.date)
 
-        # Get the new name
-        data = request.get_json()
-        new_name = data.get("name", "").strip()
-        
+            Grocery_Food.query.filter_by(grocery_id=id).delete() #cleared existing ingredients to add updated ones everytime we edit/update
 
-        if not new_name:
-            return jsonify({'error': 'Valid name required'}), 400
+            # Add updated ingredients
+            for food_item in data['grocery_foods']:
+                new_food = Grocery_Food(
+                    food_id=food_item['food_id'],
+                    grocery_id=id,
+                    amount=food_item['amount'],
+                    purchased=False
+                )
+                db.session.add(new_food) #loop through recipe_foods and add them to db
 
-        grocery.name = new_name
-        db.session.commit()
-        return jsonify(grocery.to_dict()), 200
-    except:
-        return jsonify({'error': 'Error updating grocery list.'}), 500
+            db.session.commit() #commit changes
+            return grocery.to_dict()
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
 
 @grocery_routes.route('/<int:id>', methods=['DELETE'])
 @login_required

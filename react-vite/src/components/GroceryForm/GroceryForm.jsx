@@ -54,6 +54,8 @@ const handleSubmit = async (e) => {
     grocery_foods: validIngredients // Ensure this field is correctly named
   };
 
+  console.log('!!!', newRecipe);
+
   // console.log("Submitting recipe:", newRecipe); // Debugging line
 
   const action = grocery // Check if we're editing or adding a recipe
@@ -131,7 +133,7 @@ const handleSubmit = async (e) => {
     <div className="modal-backdrop">
       <div className="recipe-form-modal">
         <div className="modal-content">
-          <h1>{grocery ? "Edit GroceryList" : "Add New GroceryList"}</h1>
+          <h1>{grocery ? "Edit Grocery List" : "Add New Grocery List"}</h1>
           {errors.server && <p>{errors.server}</p>}
           <form onSubmit={handleSubmit}>
             <label>
