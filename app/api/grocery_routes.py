@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 from app.models import Grocery, Grocery_Food, Food, db
 from app.forms import GroceryForm, GroceryItemForm
+from datetime import datetime
 
 grocery_routes = Blueprint('grocery_lists', __name__)
 
@@ -54,41 +55,53 @@ def grocery(id):
 @login_required
 def create_grocery_list():
     """Create a new grocery list with items."""
-    form = GroceryForm()
-    form['csrf_token'].data = request.cookies.get('csrf_token')
+    
+    def process_form(food, gId):
+        form = GroceryItemForm(data=food)
+        form['csrf_token'].data = request.cookies['csrf_token']
+        form['grocery_id'].data = gId
+        # print("!!!", food, "!!!", gId)
+        if form.validate_on_submit():
+            food_item = Grocery_Food( 
+                food_id=form.data['food_id'], 
+                grocery_id=form.data['grocery_id'],
+                amount=form.data['amount'], 
+                purchased=False
+            )
+            db.session.add(food_item)
+            return (food_item, True)
+        return (form.errors, False)
+    
+    with db.session.no_autoflush:
+        form = GroceryForm()
+        form['csrf_token'].data = request.cookies.get('csrf_token')
 
-    print("!!! form", form.data)
-    print("!!! form", request.data)
-
-    if form.validate_on_submit():
-        try:
+        print("!!! form", form.data)
+        print("!!! form", request.data)
+        if form.validate_on_submit():
+            
             # Create the grocery list
             grocery_list = Grocery(
-                name=form.name.data,
-                date=form.date.data,
+                name=form.data['name'],
+                date=form.data['date'],
                 completed=False,
                 user_id=current_user.id,
             )
             db.session.add(grocery_list)
             db.session.commit()
+        else:
+            return form.errors, 400
 
-            # Add the items to the list
-            for item_data in form.items.data:
-                if 'food_id' in item_data and 'quantity' in item_data and 'purchased' in item_data:
-                    grocery_item = Grocery_Food(
-                        grocery_id=grocery_list.id,
-                        food_id=item_data['food_id'],
-                        amount=item_data['quantity'],
-                        purchased=item_data['purchased'],
-                    )
-                    db.session.add(grocery_item)
-
-            db.session.commit()
-            return jsonify(grocery_list.to_dict()), 201
-        except:
-            return jsonify({'error': 'Error creating grocery list.'}), 500
-
-    return jsonify({"errors": form.errors}), 400
+        data = request.get_json()
+        newGroceryObj = db.session.query(Grocery).order_by(Grocery.id.desc()).first()
+            
+        for food_item in data['grocery_foods']:
+            (returnValue, valid) = process_form(food_item, newGroceryObj.id)
+            if not valid:
+                return returnValue
+        
+        db.session.commit()
+        return jsonify(grocery_list.to_dict()), 201
 
 @grocery_routes.route('/<int:id>', methods=['PUT'])
 @login_required

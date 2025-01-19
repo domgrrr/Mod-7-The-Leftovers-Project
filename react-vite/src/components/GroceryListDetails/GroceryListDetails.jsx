@@ -32,40 +32,40 @@ const GroceryListDetails = ({ listId, list }) => {
     dispatch(updateGroceryList({ listId, food_id, purchased: true }));
   };
 
-  const setFoodName = (value, i) => {
-    const newItemList =
-      addedItems?.map((item, j) =>
-        i === j
-          ? { ...item, food_name: value, food_id: foodNameToIdMap[value] || '' }
-          : item
-      )
-      setAddedItems(newItemList);
-  };
+  // const setFoodName = (value, i) => {
+  //   const newItemList =
+  //     addedItems?.map((item, j) =>
+  //       i === j
+  //         ? { ...item, food_name: value, food_id: foodNameToIdMap[value] || '' }
+  //         : item
+  //     )
+  //     setAddedItems(newItemList);
+  // };
 
-  const handleQuantityChange = (value, index) => {
-    const newItemList = addedItems?.map((item, i) =>
-      i === index ? { ...item, quantity: value } : item
-    );
-    setAddedItems(newItemList);
-  };
+  // const handleQuantityChange = (value, index) => {
+  //   const newItemList = addedItems?.map((item, i) =>
+  //     i === index ? { ...item, quantity: value } : item
+  //   );
+  //   setAddedItems(newItemList);
+  // };
 
-  const handleRemoveItem = (index) => {
-    const newItemList = addedItems?.filter((_, i) => i !== index);
-    setAddedItems(newItemList);
-  };
+  // const handleRemoveItem = (index) => {
+  //   const newItemList = addedItems?.filter((_, i) => i !== index);
+  //   setAddedItems(newItemList);
+  // };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      await dispatch(updateGroceryList({ listId, addedItems }));
-      setAddedItems([{ food_name: '', food_id: '', quantity: '', purchased: false }]);
-    } catch (error) {
-      console.error("Failed to submit items", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setIsSubmitting(true);
+  //   try {
+  //     await dispatch(updateGroceryList({ listId, addedItems }));
+  //     setAddedItems([{ food_name: '', food_id: '', quantity: '', purchased: false }]);
+  //   } catch (error) {
+  //     console.error("Failed to submit items", error);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
 
   const renderListItems = () => {
     return foods?.map((item) => (
@@ -79,13 +79,13 @@ const GroceryListDetails = ({ listId, list }) => {
     ));
   };
 
-  const renderFoodOptions = () => {
-    return allFoods?.map((food) => (
-      <option key={food.id} value={food.name}>
-        {food.name}
-      </option>
-    ));
-  };
+  // const renderFoodOptions = () => {
+  //   return allFoods?.map((food) => (
+  //     <option key={food.id} value={food.name}>
+  //       {food.name}
+  //     </option>
+  //   ));
+  // };
 
   if (list === undefined) {
     return <div>Loading...</div>;
@@ -98,7 +98,7 @@ const GroceryListDetails = ({ listId, list }) => {
           modalComponent={<GroceryForm grocery={list} currIngredients={foods}/>}
           buttonText="Edit List"
         />
-      {foods && foods.length > 1 ? (
+      {foods && foods.length > 0 ? (
         <ul>{renderListItems()}</ul>
       ) : (
         <p>No items in this list.</p>

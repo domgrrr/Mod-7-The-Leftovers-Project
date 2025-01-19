@@ -1,17 +1,17 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, IntegerField, FieldList, FormField
+from wtforms import StringField, BooleanField, DateField, IntegerField, FieldList, FormField
 from wtforms.validators import DataRequired
 from app.models import Food
 
 # Simplified sub-form for individual grocery list items.
 class GroceryItemForm(FlaskForm):
     food_id = IntegerField(
-        "Food ID", 
+        "food_id", 
         validators=[DataRequired(message="Food ID is required.")]
     )
-    quantity = StringField(
-        "Quantity", 
-        validators=[DataRequired(message="Quantity is required.")]
+    grocery_id = IntegerField('grocery_id', validators=[DataRequired()])
+    amount = StringField(
+        "amount"
     )
     purchased = BooleanField("Purchased", default=False)
 
@@ -24,11 +24,12 @@ class GroceryItemForm(FlaskForm):
 # Main form for creating a grocery list.
 class GroceryForm(FlaskForm):
     name = StringField(
-        "List Name", 
+        "name", 
         validators=[DataRequired(message="List name is required.")]
     )
+    date = DateField("date", validators=[DataRequired()])
     completed = BooleanField("Completed", default=False)  # Tracks if the list is completed.
-    items = FieldList(FormField(GroceryItemForm), min_entries=1)  # Requires at least one item.
+    items = FieldList(FormField(GroceryItemForm))  # Requires at least one item.
 
 
 # Explanation and Debugging Logs:
