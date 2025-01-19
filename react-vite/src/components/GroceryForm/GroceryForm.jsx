@@ -131,7 +131,7 @@ const handleSubmit = async (e) => {
     <div className="modal-backdrop">
       <div className="recipe-form-modal">
         <div className="modal-content">
-          <h1>{grocery ? "Edit GroceryList" : "Add New GroceryList"}</h1>
+          <h1>{grocery ? "Edit Grocery List" : "Add New Grocery List"}</h1>
           {errors.server && <p>{errors.server}</p>}
           <form onSubmit={handleSubmit}>
             <label>

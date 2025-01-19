@@ -1,4 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
+from datetime import date
 
 class Grocery(db.Model):
     __tablename__ = 'grocery_lists'
@@ -22,7 +23,7 @@ class Grocery(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'date': self.date,
+            'date': self.date.strftime('%Y-%m-%d'),
             'name': self.name,
             'completed': self.completed
         }

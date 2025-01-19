@@ -19,6 +19,7 @@ def grocery_lists():
             return jsonify({'grocery_lists': []}), 204
 
         # Otherwise, return the lists
+        # print("!!!", jsonify({'grocery_lists': [grocery.to_dict() for grocery in grocery_lists]}).data)
         return jsonify({'grocery_lists': [grocery.to_dict() for grocery in grocery_lists]}), 200
     except:
         return jsonify({'error': 'Error fetching grocery lists.'}), 500
@@ -37,7 +38,7 @@ def grocery(id):
         # Get the items in the grocery list
         grocery_items = db.session.query(Grocery_Food, Food).join(Grocery_Food, Grocery_Food.food_id == Food.id).filter(Grocery_Food.grocery_id == id).all()
 
-        print("!!! items", grocery_items)
+        # print("!!! items", grocery_items)
 
         # Prepare the item data to return
         items = [{
