@@ -40,18 +40,21 @@
   color: #6c757d;
 }
 
-.grocery-list-details button {
-  background-color: #007bff;
-  border-radius: 5px;
-  font-size: 14px;
-  padding: 8px 15px;
-  margin-left: 15px;
+.grocery-list-details button{
+  display: inline-block;
+  margin-top: 10px;
+  border: none;
+  font-weight: lighter;
+  padding: 5px 10px;
+  border-radius: 4px;
+  color: #25995c;
+  text-decoration: none;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
 }
-
 .grocery-list-details button:hover {
-  background-color: #0056b3;
-}
-
+  background-color: #cfcfcf;
+}  
 .grocery-list-details .form-container {
   margin-top: 40px;
   width: 100%;

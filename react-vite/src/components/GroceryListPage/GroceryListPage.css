@@ -65,3 +65,18 @@
     background-color: #218838;
   }
   
+  .grocery-list-page__create-new-list button{
+    display: inline-block;
+    margin-top: 10px;
+    border: none;
+    font-weight: lighter;
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: #25995c;
+    text-decoration: none;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+  }
+  .grocery-list-page__create-new-list button:hover {
+    background-color: #cfcfcf;
+  }  
