@@ -1,177 +1,187 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createGroceryList, updateGroceryList, fetchGroceryListFoods, fetchGroceryLists } from "../../redux/groceryListsSlice"
 import { getAllFoods } from "../../redux/food";
-import { useModal } from "../../context/Modal";
-import "./GroceryForm.css";
+import { createGroceryList } from "../../redux/groceryListsSlice";
+import "./GroceryForm.css";  // Add your styles for modal here
 
-function GroceryFormModal({ grocery, currIngredients }) {
+const GroceryForm = ({ onClose }) => {
   const dispatch = useDispatch();
-  const { foods } = useSelector(store => store.food);
-  const [name, setName] = useState("");
-  const [date, setDate] = useState("");
-  const [ingredients, setIngredients] = useState([{ food_id: '', amount: '', purchased: false}]);
-  const [errors, setErrors] = useState({});
-  const { closeModal } = useModal();
+  const { foods } = useSelector((store) => store.food); // Fetch the foods from Redux state
 
-  useEffect(() => {
-    if (grocery) {
-      setName(grocery.name);
-      setDate(grocery.date);
-      if (currIngredients && currIngredients.length > 0) {
-        setIngredients(currIngredients.map(ing => ({
-          food_id: ing.food_id,
-          amount: ing.amount || '',
-          purchased: ing.purchased
-        })));
-      }
-    }
-  }, [grocery, currIngredients]);
+  const [formData, setFormData] = useState({
+    name: "",
+    date: "",
+    completed: false,
+    items: [{ food_id: "", food_name: "", quantity: "", purchased: false }],
+  });
 
   useEffect(() => {
     dispatch(getAllFoods());
   }, [dispatch]);
 
-  const handleAddIngredient = () => {
-    setIngredients([...ingredients, { food_id: '', amount: '', purchased: false}]);
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleRemoveIngredient = (index) => {
-    setIngredients(ingredients.filter((_, i) => i !== index));
+  const handleItemChange = (index, field, value) => {
+    setFormData((prev) => {
+      const updatedItems = [...prev.items];
+      updatedItems[index][field] = value;
+      return { ...prev, items: updatedItems };
+    });
   };
 
- // ...existing code...
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  // Filter out any ingredients with empty food_id
-  const validIngredients = ingredients.filter(ing => ing.food_id); //filter ingredients
-
-  const newRecipe = { //include recipe_foods in the new recipe object
-    name,
-    date,
-    grocery_foods: validIngredients // Ensure this field is correctly named
+  const addItem = () => {
+    setFormData((prev) => ({
+      ...prev,
+      items: [...prev.items, { food_id: "", food_name: "", quantity: "", purchased: false }],
+    }));
   };
 
-  // console.log("Submitting recipe:", newRecipe); // Debugging line
+  const removeItem = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      items: prev.items.filter((_, i) => i !== index),
+    }));
+  };
 
-  const action = grocery // Check if we're editing or adding a recipe
-    ? updateGroceryList({ ...newRecipe, id: grocery.id }) 
-    : createGroceryList(newRecipe);
-    
-  const result = await dispatch(action);
+  const setFoodName = (value, i) => {
+    const setID = () => {
+      const searchFood = foods?.find((food) => food.name === value);
+      return searchFood?.id || ""; // Ensure accurate ID matching
+    };
 
-  if (result.type.endsWith("rejected")) {
-    setErrors(result.payload);
-  } else {
-    // Fetch the updated recipe details if we're editing
-    if (grocery) {
-      await dispatch(fetchGroceryLists()).then(
-        () => dispatch(fetchGroceryListFoods(grocery.id))
-      );
+    setFormData((prev) => {
+      const updatedItems = [...prev.items];
+      updatedItems[i] = { ...updatedItems[i], food_name: value, food_id: setID() };
+      return { ...prev, items: updatedItems };
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("/api/groceries/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          csrf_token: document.cookie.split("=")[1], // CSRF token from cookies
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const createdList = await response.json();
+        dispatch(createGroceryList(createdList));
+        setFormData({
+          name: "",
+          date: "",
+          completed: false,
+          items: [{ food_id: "", food_name: "", quantity: "", purchased: false }],
+        });
+        if (onClose) {
+          onClose(); // Close the modal on success
+        }
+      } else {
+        console.error("Failed to create grocery list");
+      }
+    } catch (error) {
+      console.error("Error creating grocery list:", error);
     }
-    closeModal();
-  }
-};
-
-// ...existing code...
-
-  const formRep = (i) => {
-    return (
-      <div key={`form_${i}`}>
-        <label>
-          Food Name
-          <select
-            value={ingredients[i].food_id}
-            onChange={(e) => {
-              const newIngredients = [...ingredients];
-              newIngredients[i] = {
-                ...newIngredients[i],
-                food_id: e.target.value
-              };
-              setIngredients(newIngredients);
-            }}
-            required
-          >
-            <option value="">--Choose an Option--</option>
-            {foods?.map((food) => (
-              <option key={food.id} value={food.id}>
-                {food.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Amount
-          <input
-            type="text"
-            value={ingredients[i].amount}
-            placeholder="Optional"
-            onChange={(e) => {
-              const newIngredients = [...ingredients];
-              newIngredients[i] = {
-                ...newIngredients[i],
-                amount: e.target.value
-              };
-              setIngredients(newIngredients);
-            }}
-          />
-        </label>
-        {i === 0 ? null : (
-          <button type="button" onClick={() => handleRemoveIngredient(i)}>
-            Remove
-          </button>
-        )}
-      </div>
-    );
   };
+
+  const { name, date, completed, items } = formData;
 
   return (
-    <div className="modal-backdrop">
-      <div className="recipe-form-modal">
+    <div className="modal-backdrop"> {/* Modal background */}
+      <div className="grocery-form-modal"> {/* Modal container */}
         <div className="modal-content">
-          <h1>{grocery ? "Edit GroceryList" : "Add New GroceryList"}</h1>
-          {errors.server && <p>{errors.server}</p>}
+          <h1>Create Grocery List</h1>
           <form onSubmit={handleSubmit}>
             <label>
-              Name
+              List Name:
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => handleChange("name", e.target.value)}
                 required
               />
             </label>
-            {errors.name && <p>{errors.name}</p>}
-            {errors.image_url && <p>{errors.image_url}</p>}
             <label>
-              Date
+              Date:
               <input
                 type="date"
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
+                onChange={(e) => handleChange("date", e.target.value)}
               />
             </label>
-            {errors.date && <p>{errors.date}</p>}
-            <div className="ingredients-section">
-              <h2>Ingredients</h2>
-              {ingredients.map((_, i) => formRep(i))}
-              <button type="button" onClick={handleAddIngredient}>
-                New Ingredient
+            <label>
+              Completed:
+              <input
+                type="checkbox"
+                checked={completed}
+                onChange={(e) => handleChange("completed", e.target.checked)}
+              />
+            </label>
+            <div>
+              <label>Items:</label>
+              {items.map((item, index) => (
+                <div key={index}>
+                  <label>
+                    Food Name:
+                    <select
+                      value={item.food_name}
+                      onChange={(e) => setFoodName(e.target.value, index)}
+                      required
+                    >
+                      <option value="">--Choose an Option--</option>
+                      {foods?.map((food) => (
+                        <option key={food.id} value={food.name}>
+                          {food.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="Food ID"
+                    value={item.food_id}
+                    onChange={(e) => handleItemChange(index, "food_id", e.target.value)}
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Quantity"
+                    value={item.quantity}
+                    onChange={(e) => handleItemChange(index, "quantity", e.target.value)}
+                    required
+                  />
+                  <input
+                    type="checkbox"
+                    checked={item.purchased}
+                    onChange={(e) =>
+                      handleItemChange(index, "purchased", e.target.checked)
+                    }
+                  />
+                  <button type="button" onClick={() => removeItem(index)}>
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button type="button" onClick={addItem}>
+                Add Item
               </button>
             </div>
-            <button type="submit">{grocery ? "Update" : "Add"}</button>
-            <button type="button" onClick={() => closeModal()}>Cancel</button>
+            <button type="submit">Create Grocery List</button>
+            <button type="button" onClick={onClose}>Cancel</button>
           </form>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default GroceryFormModal;
+export default GroceryForm;
 
 
 
