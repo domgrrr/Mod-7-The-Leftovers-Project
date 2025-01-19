@@ -55,12 +55,12 @@ export const createGroceryList = createAsyncThunk(
 
 export const updateGroceryList = createAsyncThunk(
   "groceryLists/updateGroceryList",
-  async ({ listId, name }, thunkAPI) => {
-    const url = `/api/groceries/${listId}`;
+  async (newList, thunkAPI) => {
+    const url = `/api/groceries/${newList.id}`;
     const options = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify(newList),
     };
     return apiRequest(url, options, thunkAPI);
   }
