@@ -36,17 +36,15 @@ def grocery(id):
         # Get the items in the grocery list
         grocery_items = db.session.query(Grocery_Food, Food).join(Grocery_Food, Grocery_Food.food_id == Food.id).filter(Grocery_Food.grocery_id == id).all()
 
-        print("!!! items", grocery_items)
-
         # Prepare the item data to return
         items = [{
-            "food_id": grocery_item.food_id,
+            "food_id": item.food_id,
             "name": item.name,
             "amount": grocery_item.amount,
             "purchased": grocery_item.purchased
         } for grocery_item, item in grocery_items]
 
-        return jsonify({'foods': items}), 200
+        return jsonify({id: items}), 200
     except:
         return jsonify({'error': 'Error fetching grocery list.'}), 500
 
@@ -57,16 +55,13 @@ def create_grocery_list():
     form = GroceryForm()
     form['csrf_token'].data = request.cookies.get('csrf_token')
 
-    print("!!! form", form.data)
-    print("!!! form", request.data)
-
     if form.validate_on_submit():
         try:
             # Create the grocery list
             grocery_list = Grocery(
                 name=form.name.data,
                 date=form.date.data,
-                completed=False,
+                completed=form.completed.data,
                 user_id=current_user.id,
             )
             db.session.add(grocery_list)
@@ -104,7 +99,6 @@ def update_grocery_list(id):
         # Get the new name
         data = request.get_json()
         new_name = data.get("name", "").strip()
-        
 
         if not new_name:
             return jsonify({'error': 'Valid name required'}), 400
