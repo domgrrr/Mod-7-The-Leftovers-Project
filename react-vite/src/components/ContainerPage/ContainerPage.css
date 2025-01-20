@@ -51,6 +51,10 @@
     color: #555;
 }
 
+.food-item-buttons {
+    display: flex;
+    flex-direction: column;
+}
 
 .food-item-buttons button {
     display: inline-block;

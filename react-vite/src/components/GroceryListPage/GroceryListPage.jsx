@@ -10,7 +10,7 @@ const GroceryListPage = () => {
   const dispatch = useDispatch();
   const groceryLists = useSelector((state) => state.groceryLists.lists);
   const [selectedList, setSelectedList] = useState(null);
-  const [showForm, setShowForm] = useState(false);
+  // const [showForm, setShowForm] = useState(false);
 
   // Fetch grocery lists when the component mounts
   useEffect(() => {
@@ -26,12 +26,12 @@ const GroceryListPage = () => {
   }, [groceryLists, selectedList]);
 
   // Toggle the visibility of the form
-  const toggleForm = () => {
-    setShowForm((prev) => !prev);
-    if (showForm) {
-      dispatch(fetchGroceryLists());
-    }
-  };
+  // const toggleForm = () => {
+  //   setShowForm((prev) => !prev);
+  //   if (showForm) {
+  //     dispatch(fetchGroceryLists());
+  //   }
+  // };
 
   // Handle list selection
   const handleListClick = (list) => {
