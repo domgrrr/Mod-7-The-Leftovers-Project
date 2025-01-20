@@ -10,7 +10,7 @@ import "./ContainerPage.css";
 function ContainerPage() {
     const { id } = useParams();
     const dispatch = useDispatch();
-    const container = useSelector((store) => store.container.container)
+    const { container, loading } = useSelector((store) => store.container)
 
     useEffect(() => {
         dispatch(getContainer(id));
@@ -24,38 +24,44 @@ function ContainerPage() {
     };
 
     return (
-        <div className="container-page">
-            <h1>{container?.storage_type.charAt(0).toUpperCase() + container?.storage_type.slice(1)}</h1>
-            <div className="add-food-button">
-                <OpenModalButton 
-                    buttonText="Add Food"
-                    modalComponent={<ContainerFoodFormModal />}
-                />
-            </div>
-            <div className="food-grid">
-            {container?.food_items.map((item) => (
-                <div className="food-item" key={item.id}>
-                    <img src={item?.image_url} alt={item?.name}/>
-                    <div className="food-item-details">  
-                    <div>{item?.name}</div>
-                    <div>
-                        {`${item?.amount ? (`amount: ${item?.amount}`) : ''}
-                          ${item?.amount && item?.expiration ? (', ') : ''}
-                          ${item?.expiration ? (`expiration: ${item?.expiration.slice(5, 16)}`) : ''}`}
-                    </div>
-                    </div>
-                    <div className="food-item-buttons">
-                        <button type="button"
-                         onClick={() => handleRemoveFood(item?.relation_id)}>Remove Item</button>
-                        <OpenModalButton 
-                            buttonText="Edit Item"
-                            modalComponent={<ContainerFoodEditModal item={item}/>}
-                        />
-                    </div>
+        loading ? (
+            <div>Loading...</div>
+        ) : (
+            <div className="container-page">
+                <h1>{container?.storage_type.charAt(0).toUpperCase() + container?.storage_type.slice(1)}</h1>
+                <div className="add-food-button">
+                    <OpenModalButton 
+                        buttonText="Add Food"
+                        modalComponent={<ContainerFoodFormModal />}
+                    />
                 </div>
-            ))}
-        </div>
-      </div>
+                <div className="food-grid">
+                {container?.food_items.length < 1 ? (<div>Empty: Add Food</div>) : (
+                    container?.food_items.map((item) => (
+                        <div className="food-item" key={item.id}>
+                            <img src={item?.image_url} alt={item?.name}/>
+                            <div className="food-item-details">  
+                            <div>{item?.name}</div>
+                            <div>
+                                {`${item?.amount ? (`amount: ${item?.amount}`) : ''}
+                                ${item?.amount && item?.expiration ? (', ') : ''}
+                                ${item?.expiration ? (`expiration: ${item?.expiration.slice(5, 16)}`) : ''}`}
+                            </div>
+                            </div>
+                            <div className="food-item-buttons">
+                                <button type="button"
+                                onClick={() => handleRemoveFood(item?.relation_id)}>Remove Item</button>
+                                <OpenModalButton 
+                                    buttonText="Edit Item"
+                                    modalComponent={<ContainerFoodEditModal item={item}/>}
+                                />
+                            </div>
+                        </div>
+                    ))
+                )}
+                </div>
+            </div>
+        )
     )
 }
 
