@@ -21,7 +21,8 @@ def container(id):
     """
     Returns foods in container
     """
-    container_info = db.session.query(
+    container_info = Container.query.get(id)
+    container_food_info = db.session.query(
         Container,
         Container_Food,
         Food
@@ -29,25 +30,30 @@ def container(id):
         Food, Food.id == Container_Food.food_id
     ).filter(Container.id == id).all()
     # To see this in the console: print("OBJECT HERE:", container_info)
-    food_arr = [
-        {
-            "relation_id": food_relation.id,
-            "food_id": food_relation.food_id,
-            "name": food_obj.name,
-            "type": food_obj.type,
-            "image_url": food_obj.image_url,
-            "amount": food_relation.amount,
-            "expiration": food_relation.expiration,
-            "alias_bool": food_obj.alias_bool,
-            "alias_id": food_obj.alias_id
-        } for (_, food_relation, food_obj) in container_info
-    ]
+    # print("!!!", id)
+    # print("OBJECT HERE:", container_food_info)
+    if container_food_info:
+        food_arr = [
+            {
+                "relation_id": food_relation.id,
+                "food_id": food_relation.food_id,
+                "name": food_obj.name,
+                "type": food_obj.type,
+                "image_url": food_obj.image_url,
+                "amount": food_relation.amount,
+                "expiration": food_relation.expiration,
+                "alias_bool": food_obj.alias_bool,
+                "alias_id": food_obj.alias_id
+            } for (_, food_relation, food_obj) in container_food_info
+        ]
+    else:
+        food_arr = []
     # food_objs_starting_with_c = [
     #     food_obj
     #     for (food, food_obj) in food_objects
     #     if food_obj.name[0] = 'c'
     # ]
-    return {"storage_type": container_info[0][0].storage_type, "food_items": food_arr} if len(container_info) > 0 else {"Empty"}
+    return {"storage_type": container_info.storage_type, "food_items": food_arr}
     # return {'foods': [food.to_dict() for food in container_foods]}
 
 @container_routes.route('/<int:id>/add', methods=['POST'])
