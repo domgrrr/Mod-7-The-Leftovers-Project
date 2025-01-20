@@ -1,33 +1,42 @@
-import { useEffect, useState } from "react"; // Importing necessary React hooks.
-import { useSelector, useDispatch } from "react-redux"; // Importing Redux hooks.
-import { fetchGroceryLists } from "../../redux/groceryListsSlice"; // Importing the action to fetch grocery lists from the Redux slice.
-import GroceryListDetails from "../GroceryListDetails"; // Importing the GroceryListDetails component.
-import GroceryForm from "../GroceryForm"; // Importing the GroceryForm component.
-import "./GroceryListPage.css"; // Importing the CSS file for styling.
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchGroceryLists } from "../../redux/groceryListsSlice";
+import GroceryListDetails from "../GroceryListDetails";
+import GroceryForm from "../GroceryForm";
+import OpenModalButton from "../OpenModalButton";
+import "./GroceryListPage.css";
 
 const GroceryListPage = () => {
-  const dispatch = useDispatch(); // Getting the dispatch function to trigger actions.
-  const groceryLists = useSelector((state) => state.groceryLists.lists); // Selecting the grocery lists from the Redux store.
-  const [selectedList, setSelectedList] = useState(null); // Local state to keep track of the currently selected list.
-  const [showForm, setShowForm] = useState(false); // State to control visibility of the GroceryForm.
+  const dispatch = useDispatch();
+  const groceryLists = useSelector((state) => state.groceryLists.lists);
+  const [selectedList, setSelectedList] = useState(null);
+  // const [showForm, setShowForm] = useState(false);
 
-  // Fetch the grocery lists when the component mounts.
+  // Fetch grocery lists when the component mounts
   useEffect(() => {
-    console.log("Fetching grocery lists...");
-    dispatch(fetchGroceryLists()); // Dispatching the action to fetch grocery lists.
-  }, [dispatch]); // Dependency array ensures this runs only when `dispatch` changes (typically just once).
+    // console.log("GroceryListPage mounted. Fetching grocery lists...");
+    dispatch(fetchGroceryLists());
+  }, [dispatch]);
 
-  // Handles when a user clicks on a list name.
-  const handleListClick = (list) => {
-    console.log(`Selected list: ${list.name}`);
-    setSelectedList(list); // Updating the local state with the selected list.
-  };
-
-  const toggleForm = () => {
-    setShowForm((prev) => !prev); // Toggle the form visibility.
-    if (showForm) {
-      dispatch(fetchGroceryLists()); // Fetch grocery lists after the form closes.
+  // Automatically select the first list if available
+  useEffect(() => {
+    if (groceryLists?.length > 0 && !selectedList) {
+      setSelectedList(groceryLists[0]);
     }
+  }, [groceryLists, selectedList]);
+
+  // Toggle the visibility of the form
+  // const toggleForm = () => {
+  //   setShowForm((prev) => !prev);
+  //   if (showForm) {
+  //     dispatch(fetchGroceryLists());
+  //   }
+  // };
+
+  // Handle list selection
+  const handleListClick = (list) => {
+    console.log(`List selected: ${list.name} (ID: ${list.id})`);
+    setSelectedList(list);
   };
 
   return (
@@ -35,39 +44,51 @@ const GroceryListPage = () => {
       <h1>My Grocery Lists</h1>
 
       {/* Section to create a new grocery list */}
-      <div className="create-new-list">
+      <div className="grocery-list-page__create-new-list">
         <h3>Create a New Grocery List</h3>
-        <button onClick={toggleForm} className="open-form-button">
-          Add List
-        </button>
+        <OpenModalButton 
+          modalComponent={<GroceryForm grocery={null} currIngredients={null}/>}
+          buttonText="Add List"
+        />
+        {/* <button onClick={toggleForm} className="grocery-list-page__button">
+          {showForm ? "Close Form" : "Add List"}
+        </button> */}
       </div>
 
       {/* Display the GroceryForm when showForm is true */}
-      {showForm && (
-        <div className="form-container">
+      {/* {showForm && (
+        <div className="grocery-list-page__form-container">
           <GroceryForm onClose={toggleForm} />
         </div>
+      )} */}
+
+      {/* Display the list of grocery lists */}
+      {groceryLists?.length > 0 ? (
+        <ul className="grocery-list-page__list-container" aria-label="Grocery Lists">
+          {groceryLists.map((list) => (
+            <li
+              key={list.id}
+              onClick={() => handleListClick(list)}
+              className={`grocery-list-page__list-item ${
+                selectedList?.id === list.id ? "selected" : ""
+              }`}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && handleListClick(list)}
+            >
+              {list.name} {/* - {list.completed ? "Completed" : "Incomplete"} */}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="grocery-list-page__no-lists">No grocery lists available. Create one to get started!</p>
       )}
 
-      {/* Displaying the list of grocery lists */}
-      <ul className="list-container">
-        {groceryLists.map((list) => (
-          <li
-            key={list.id} // Using the list ID as a unique key for each list.
-            onClick={() => handleListClick(list)} // Setting the selected list when clicked.
-            className="list-item"
-          >
-            {/* Displaying the name and completion status of the list */}
-            {list.name} - {list.completed ? "Completed" : "Incomplete"}
-          </li>
-        ))}
-      </ul>
-
-      {/* Displaying the details of the selected grocery list */}
+      {/* Display the details of the selected grocery list */}
       {selectedList ? (
         <>
           <h2>Details for: {selectedList.name}</h2>
-          <GroceryListDetails list={selectedList} />
+          <GroceryListDetails listId={selectedList.id} list={selectedList}/>
         </>
       ) : (
         <p>Select a grocery list to view its details.</p>
@@ -77,5 +98,6 @@ const GroceryListPage = () => {
 };
 
 export default GroceryListPage;
+
 
 

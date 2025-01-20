@@ -53,19 +53,37 @@
 
 .food-item-buttons {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
 }
 
 .food-item-buttons button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
+    display: inline-block;
+    margin-top: 10px;
     border: none;
+    font-weight: lighter;
+    padding: 5px 10px;
     border-radius: 4px;
-    cursor: pointer;
+    color: #25995c;
+    text-decoration: none;
+    background-color: white;
     transition: background-color 0.3s ease;
-}
-
+  }
 .food-item-buttons button:hover {
-    background-color: #0056b3;
-}
+    background-color: #cfcfcf;
+  }  
+
+.add-food-button button{
+    display: inline-block;
+    margin-top: 10px;
+    border: none;
+    font-weight: lighter;
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: #25995c;
+    background-color: #f8f9fa;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+.add-food-button button:hover {
+    background-color: #cfcfcf;
+  }  
